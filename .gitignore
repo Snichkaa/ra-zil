@@ -1,0 +1,16 @@
+/wp-admin/
+/wp-includes/
+/wp-content/uploads/
+/wp-content/upgrade/
+/wp-content/plugins/*
+!/wp-content/plugins/razil-core/
+/wp-content/themes/*
+!/wp-content/themes/razil/
+wp-config.php
+wp-*.php
+index.php
+xmlrpc.php
+license.txt
+readme.html
+.htaccess
+debug.log

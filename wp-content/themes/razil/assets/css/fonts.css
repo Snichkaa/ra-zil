@@ -1,0 +1,33 @@
+/* PT Serif - для заголовков */
+@font-face {
+	font-family: 'PT Serif';
+	src: url('../fonts/pt-serif-400.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'PT Serif';
+	src: url('../fonts/pt-serif-700.woff2') format('woff2');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* Golos Text - для основного текста */
+@font-face {
+	font-family: 'Golos Text';
+	src: url('../fonts/golos-text-400.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Golos Text';
+	src: url('../fonts/golos-text-600.woff2') format('woff2');
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}

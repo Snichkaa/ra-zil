@@ -1,0 +1,49 @@
+<!-- wp:template-part {"slug":"header","theme":"razil"} /-->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|xl","right":"var:preset|spacing|md","bottom":"var:preset|spacing|lg","left":"var:preset|spacing|md"}}},"layout":{"type":"default"}} -->
+<div class="wp-block-group alignfull" style="padding: var(--wp--preset--spacing--xl, 32px) var(--wp--preset--spacing--md, 16px) var(--wp--preset--spacing--lg, 24px);">
+
+	<!-- wp:term-title {"style":{"typography":{"fontSize":"var:preset|font-size|xxx-large"}},"textColor":"text"} /-->
+
+	<!-- wp:term-description {"style":{"typography":{"fontSize":"var:preset|font-size|base"}},"textColor":"text-muted"} /-->
+
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|md","right":"var:preset|spacing|md","bottom":"var:preset|spacing|xl","left":"var:preset|spacing|md"}}},"layout":{"type":"default"}} -->
+<div class="wp-block-group alignfull" style="padding: var(--wp--preset--spacing--md, 16px);">
+
+	<!-- wp:query {"queryId":0,"query":{"perPage":24,"pages":0,"offset":0,"postType":"products","order":"asc","orderBy":"title","author":"","search":"","exclude":[],"sticky":"","taxQuery":{"product_category":[]}},"layout":{"type":"grid","columnCount":3,"minimumColumnWidth":"250px"}} -->
+	<div class="wp-block-query">
+
+		<!-- wp:post-template -->
+		<!-- wp:group {"style":{"spacing":{"padding":"var:preset|spacing|md"},"border":{"radius":"4px"},"color":{"background":"var:preset|color|surface"}},"layout":{"type":"default"}} -->
+		<div class="wp-block-group has-background" style="background-color: var(--wp--preset--color--surface); padding: var(--wp--preset--spacing--md, 16px); border-radius: 4px;">
+
+			<!-- wp:post-featured-image {"isLink":true,"style":{"border":{"radius":"4px"}}} /-->
+
+			<!-- wp:post-title {"isLink":true,"style":{"typography":{"fontSize":"var:preset|font-size|large"},"margin":{"top":"var:preset|spacing|sm"}}} /-->
+
+			<!-- wp:paragraph {"style":{"typography":{"fontSize":"var:preset|font-size|base"}},"textColor":"detail"} -->
+			<p style="font-size: var(--wp--preset--font-size--base); color: var(--wp--preset--color--detail);"><strong>Цена указана в товаре</strong></p>
+			<!-- /wp:paragraph -->
+
+		</div>
+		<!-- /wp:group -->
+		<!-- /wp:post-template -->
+
+		<!-- wp:query-pagination -->
+		<div class="wp-block-query-pagination">
+			<!-- wp:query-pagination-previous /-->
+			<!-- wp:query-pagination-numbers /-->
+			<!-- wp:query-pagination-next /-->
+		</div>
+		<!-- /wp:query-pagination -->
+
+	</div>
+	<!-- /wp:query -->
+
+</div>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","theme":"razil"} /-->
