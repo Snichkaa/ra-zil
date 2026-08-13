@@ -1,0 +1,40 @@
+.wp-block-razil-advantages {
+	padding: 3rem 1rem;
+	background-color: var(--rz-surface);
+}
+
+.rz-advantages-list {
+	max-width: 45rem;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+.rz-advantage {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding-bottom: 2rem;
+	border-bottom: 1px solid var(--rz-line);
+
+	&:last-child {
+		border-bottom: none;
+		padding-bottom: 0;
+	}
+}
+
+.rz-advantage-accent {
+	font-size: 1.625rem;
+	font-weight: 400;
+	margin: 0;
+	color: var(--rz-fact);
+	font-family: var(--wp--preset--font-family--pt-serif, 'PT Serif', Georgia, serif);
+}
+
+.rz-advantage-text {
+	margin: 0;
+	color: var(--rz-ink-soft);
+	line-height: 1.65;
+	font-size: 1rem;
+}

@@ -1,0 +1,1 @@
+﻿<?php ?><section class="wp-block-razil-callback-form"><h3><?php echo esc_html($attributes["title"] ?? ""); ?></h3><form class="rz-form"><input type="text" placeholder="Ваше имя" /><input type="tel" placeholder="+7 (___) ___-__-__" /><button type="submit">Перезвоните мне</button></form></section>

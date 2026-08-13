@@ -1,0 +1,1 @@
+﻿<?php $items = isset($attributes["items"]) ? $attributes["items"] : []; ?><dl class="wp-block-razil-kv-list"><?php foreach ($items as $item) { echo "<dt>" . esc_html($item["key"]) . "</dt><dd>" . esc_html($item["value"]) . "</dd>"; } ?></dl>

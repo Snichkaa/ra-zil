@@ -1,0 +1,1 @@
+﻿<?php $items = isset($attributes["items"]) ? $attributes["items"] : []; ?><section class="wp-block-razil-docs-list"><div class="rz-docs"><?php foreach ($items as $item) { echo "<div class=\"rz-doc\"><span>" . esc_html($item["title"]) . "</span><span class=\"rz-doc-type\">" . esc_html($item["type"]) . "</span></div>"; } ?></div></section>

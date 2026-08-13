@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Версия плагина. При её изменении правила URL перегенерируются автоматически.
  */
-define( 'RAZIL_CORE_VERSION', '0.1.0' );
+define( 'RAZIL_CORE_VERSION', '0.2.0' );
 
 /**
  * Путь к папке плагина.
@@ -32,6 +32,7 @@ define( 'RAZIL_CORE_PATH', plugin_dir_path( __FILE__ ) );
 require_once RAZIL_CORE_PATH . 'inc/post-types.php';
 require_once RAZIL_CORE_PATH . 'inc/taxonomies.php';
 require_once RAZIL_CORE_PATH . 'inc/rewrite.php';
+require_once RAZIL_CORE_PATH . 'inc/setup.php';
 
 /**
  * При активации плагина пересобираем правила URL.

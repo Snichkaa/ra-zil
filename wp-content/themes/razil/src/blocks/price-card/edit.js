@@ -1,0 +1,1 @@
+﻿import { useBlockProps } from "@wordpress/block-editor"; export default function Edit( { attributes } ) { return <section { ...useBlockProps() } className="wp-block-razil-price-card"><p>Block content</p></section>; }

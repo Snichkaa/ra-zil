@@ -1,50 +1,351 @@
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|md","right":"var:preset|spacing|md","bottom":"var:preset|spacing|md","left":"var:preset|spacing|md"}},"color":{"background":"var:preset|color|surface","text":"var:preset|color|text"}}} -->
-<div class="wp-block-group alignfull has-text-color has-background" style="background-color: var(--wp--preset--color--surface); color: var(--wp--preset--color--text); padding: var(--wp--preset--spacing--md, 16px);">
-
-	<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between","verticalAlignment":"center"}} -->
-	<div class="wp-block-group">
-
-		<!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"flex-start","verticalAlignment":"center"},"style":{"spacing":{"gap":"var:preset|spacing|lg"}}} -->
-		<div class="wp-block-group">
-
-			<!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(24px, 3vw, 32px)","fontStyle":"normal","fontWeight":"600"}}} -->
-			<h1 style="font-size: clamp(24px, 3vw, 32px); font-style: normal; font-weight: 600;">Земля и Люди</h1>
-			<!-- /wp:heading -->
-
-			<!-- wp:navigation -->
-			<!-- wp:navigation-link {"label":"Услуги","url":"#/uslugi"} /-->
-			<!-- wp:navigation-link {"label":"Каталог","url":"#/katalog"} /-->
-			<!-- wp:navigation-link {"label":"О компании","url":"#/o-kompanii"} /-->
-			<!-- wp:navigation-link {"label":"Контакты","url":"#/kontakty"} /-->
-			<!-- /wp:navigation -->
-
+<header class="rz-header-wrapper">
+	<div class="rz-header-container">
+		<div class="rz-header-left">
+			<h1 class="rz-logo">
+				<a href="/">Земля и Люди</a>
+			</h1>
 		</div>
-		<!-- /wp:group -->
 
-		<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"flex-end","verticalAlignment":"center"},"style":{"spacing":{"gap":"var:preset|spacing|lg"}}} -->
-		<div class="wp-block-group">
+		<nav class="rz-header-nav">
+			<a href="/uslugi/">Услуги</a>
+			<a href="/katalog/">Каталог</a>
+			<a href="/prizhiznenniy-dogovor/">Прижизненный договор</a>
+			<a href="/kontakty/">Контакты</a>
+		</nav>
 
-			<!-- wp:heading {"level":3,"style":{"typography":{"fontSize":"clamp(18px, 1.5vw, 20px)"}}} -->
-			<h3 style="font-size: clamp(18px, 1.5vw, 20px);">
-				<a href="tel:+79241234567" style="color: var(--wp--preset--color--accent);">+7 (924) 123-45-67</a>
-			</h3>
-			<!-- /wp:heading -->
-
-			<!-- wp:buttons -->
-			<div class="wp-block-buttons">
-				<!-- wp:button {"backgroundColor":"accent"} -->
-				<div class="wp-block-button">
-					<a class="wp-block-button__link has-accent-background-color has-background" href="#" style="background-color: var(--wp--preset--color--accent); color: white;">Обратиться</a>
-				</div>
-				<!-- /wp:button -->
-			</div>
-			<!-- /wp:buttons -->
-
+		<div class="rz-header-right">
+			<a href="tel:+79241234567" class="rz-phone">+7 (924) 123-45-67</a>
+			<button class="rz-btn rz-btn-secondary">Вызвать агента</button>
 		</div>
-		<!-- /wp:group -->
 
+		<button class="rz-burger" aria-label="Открыть меню">☰</button>
 	</div>
-	<!-- /wp:group -->
+</header>
 
-</div>
-<!-- /wp:group -->
+<div class="rz-menu-overlay"></div>
+<nav class="rz-mobile-menu">
+	<button class="rz-menu-close" aria-label="Закрыть меню">✕</button>
+
+	<div class="rz-mobile-nav">
+		<a href="/uslugi/">Услуги</a>
+		<a href="/katalog/">Каталог</a>
+		<a href="/prizhiznenniy-dogovor/">Прижизненный договор</a>
+		<a href="/kontakty/">Контакты</a>
+	</div>
+
+	<div class="rz-mobile-footer">
+		<a href="tel:+79241234567" class="rz-phone-mobile">+7 (924) 123-45-67</a>
+		<p>Работаем круглосуточно, включая праздники</p>
+	</div>
+</nav>
+
+<style>
+	.rz-header-wrapper {
+		background-color: var(--rz-surface);
+		color: var(--rz-ink);
+		border-bottom: 1px solid var(--rz-line);
+		position: relative;
+		z-index: 100;
+	}
+
+	.rz-header-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1rem;
+		max-width: 100%;
+	}
+
+	.rz-header-left {
+		flex-shrink: 0;
+	}
+
+	.rz-logo {
+		margin: 0;
+		font-size: clamp(20px, 4vw, 24px);
+		font-weight: 400;
+		line-height: 1.2;
+		font-family: var(--wp--preset--font-family--pt-serif, 'PT Serif', Georgia, serif);
+	}
+
+	.rz-logo a {
+		color: var(--rz-ink);
+		text-decoration: none;
+	}
+
+	.rz-logo a:hover {
+		text-decoration: underline;
+	}
+
+	/* Десктоп меню */
+	.rz-header-nav {
+		display: none;
+		gap: 1.5rem;
+		flex: 1;
+		margin: 0 2rem;
+		font-size: 1rem;
+	}
+
+	.rz-header-nav a {
+		color: var(--rz-ink);
+		text-decoration: none;
+		transition: color 160ms, text-decoration 160ms;
+	}
+
+	.rz-header-nav a:hover {
+		color: var(--rz-action);
+		text-decoration: underline;
+	}
+
+	.rz-header-nav a:focus {
+		outline: 2px solid var(--rz-fact);
+		outline-offset: 2px;
+	}
+
+	/* Правая часть шапки */
+	.rz-header-right {
+		display: none;
+		gap: 1rem;
+		align-items: center;
+		flex-shrink: 0;
+	}
+
+	.rz-phone {
+		color: var(--rz-ink);
+		text-decoration: none;
+		font-weight: 700;
+		font-size: 1.125rem;
+		transition: color 160ms;
+	}
+
+	.rz-phone:hover {
+		color: var(--rz-action);
+	}
+
+	.rz-phone:focus {
+		outline: 2px solid var(--rz-fact);
+		outline-offset: 2px;
+	}
+
+	/* Вторичная кнопка */
+	.rz-btn-secondary {
+		background-color: transparent;
+		color: var(--rz-action);
+		border: 1px solid var(--rz-line);
+		padding: 0.5rem 1.5rem;
+		border-radius: 4px;
+		font-weight: 700;
+		cursor: pointer;
+		transition: background-color 160ms, color 160ms, border-color 160ms;
+	}
+
+	.rz-btn-secondary:hover {
+		background-color: var(--rz-action);
+		color: var(--rz-surface);
+		border-color: var(--rz-action);
+	}
+
+	.rz-btn-secondary:focus {
+		outline: 2px solid var(--rz-fact);
+		outline-offset: 2px;
+	}
+
+	/* Бургер */
+	.rz-burger {
+		background: none;
+		border: none;
+		font-size: 1.5rem;
+		cursor: pointer;
+		color: var(--rz-ink);
+		width: 48px;
+		height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	.rz-burger:focus {
+		outline: 2px solid var(--rz-fact);
+		outline-offset: 2px;
+	}
+
+	/* Мобильное меню */
+	.rz-menu-overlay {
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.5);
+		z-index: 99;
+		transition: opacity 160ms;
+		opacity: 0;
+	}
+
+	.rz-menu-overlay.active {
+		display: block;
+		opacity: 1;
+	}
+
+	.rz-mobile-menu {
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: var(--rz-surface);
+		color: var(--rz-ink);
+		z-index: 100;
+		overflow-y: auto;
+		padding: 1rem;
+		flex-direction: column;
+	}
+
+	.rz-mobile-menu.active {
+		display: flex;
+	}
+
+	.rz-menu-close {
+		background: none;
+		border: none;
+		font-size: 1.5rem;
+		cursor: pointer;
+		color: var(--rz-ink);
+		margin-bottom: 2rem;
+		align-self: flex-end;
+		width: 48px;
+		height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.rz-menu-close:focus {
+		outline: 2px solid var(--rz-fact);
+		outline-offset: 2px;
+	}
+
+	.rz-mobile-nav {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.rz-mobile-nav a {
+		color: var(--rz-ink);
+		text-decoration: none;
+		font-size: 1.25rem;
+		transition: color 160ms;
+	}
+
+	.rz-mobile-nav a:hover {
+		color: var(--rz-action);
+		text-decoration: underline;
+	}
+
+	.rz-mobile-nav a:focus {
+		outline: 2px solid var(--rz-fact);
+		outline-offset: 2px;
+	}
+
+	.rz-mobile-footer {
+		margin-top: auto;
+		padding-top: 2rem;
+		border-top: 1px solid var(--rz-line);
+	}
+
+	.rz-phone-mobile {
+		display: block;
+		color: var(--rz-action);
+		text-decoration: none;
+		font-weight: 700;
+		font-size: 1.125rem;
+		margin-bottom: 0.5rem;
+		transition: color 160ms;
+	}
+
+	.rz-phone-mobile:hover {
+		text-decoration: underline;
+	}
+
+	.rz-mobile-footer p {
+		margin: 0;
+		color: var(--rz-ink-soft);
+		font-size: 0.875rem;
+	}
+
+	/* Адаптивность */
+	@media (max-width: 1023px) {
+		.rz-header-nav,
+		.rz-header-right {
+			display: none !important;
+		}
+		.rz-burger {
+			display: flex;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.rz-header-nav {
+			display: flex;
+		}
+		.rz-header-right {
+			display: flex;
+		}
+		.rz-burger {
+			display: none;
+		}
+		.rz-menu-overlay,
+		.rz-mobile-menu {
+			display: none !important;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.rz-menu-overlay,
+		.rz-mobile-menu {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const burger = document.querySelector('.rz-burger');
+		const menu = document.querySelector('.rz-mobile-menu');
+		const overlay = document.querySelector('.rz-menu-overlay');
+		const closeBtn = document.querySelector('.rz-menu-close');
+		const menuLinks = document.querySelectorAll('.rz-mobile-nav a');
+
+		if (!burger || !menu) return;
+
+		function openMenu() {
+			menu.classList.add('active');
+			overlay.classList.add('active');
+			document.body.style.overflow = 'hidden';
+		}
+
+		function closeMenu() {
+			menu.classList.remove('active');
+			overlay.classList.remove('active');
+			document.body.style.overflow = 'auto';
+		}
+
+		burger.addEventListener('click', openMenu);
+		closeBtn.addEventListener('click', closeMenu);
+		overlay.addEventListener('click', closeMenu);
+
+		menuLinks.forEach(link => {
+			link.addEventListener('click', closeMenu);
+		});
+
+		document.addEventListener('keydown', function(e) {
+			if (e.key === 'Escape' && menu.classList.contains('active')) {
+				closeMenu();
+			}
+		});
+	});
+</script>

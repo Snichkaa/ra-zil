@@ -1,32 +1,49 @@
+# WordPress core
 /wp-admin/
 /wp-includes/
+/index.php
+/wp-*.php
+/xmlrpc.php
+/license.txt
+/readme.html
+/.htaccess
+
+# wp-content
 /wp-content/uploads/
 /wp-content/upgrade/
+/wp-content/cache/
+/wp-content/languages/
+/wp-content/index.php
+/wp-content/*.php
+
 /wp-content/plugins/*
 !/wp-content/plugins/razil-core/
+
 /wp-content/themes/*
 !/wp-content/themes/razil/
-wp-config.php
-wp-*.php
-index.php
-xmlrpc.php
-license.txt
-readme.html
-.htaccess
-debug.log
-PROMPT-theme.md
 
-# Reports and prompts
-ARCHITECTURE_REPORT.md
-CHECK_RESULTS.txt
-inventory.txt
-*REPORT.md
-
-# Build artifacts and dependencies
+# Theme build
 /wp-content/themes/razil/node_modules/
 /wp-content/themes/razil/build/
-/wp-content/themes/razil/src/
-/wp-content/themes/razil/package.json
-/wp-content/themes/razil/package-lock.json
-/wp-content/themes/razil/assets/js/
 /wp-content/themes/razil/debug-blocks.php
+
+# Local artifacts
+debug.log
+*.log
+*.sql
+*.sql.gz
+.env
+.env.*
+
+# Docs and prompts
+PROMPT-*.md
+*REPORT.md
+CHECK_RESULTS.txt
+inventory.txt
+*.dc.html
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,54 @@
+<!-- wp:template-part {"slug":"header","theme":"razil"} /-->
+
+<!-- wp:group {"layout":{"type":"constrained"}} -->
+<div class="wp-block-group" style="background-color: var(--rz-bg); padding: 6rem 1rem; min-height: 60vh; display: flex; align-items: center; justify-content: center;">
+	<!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"padding":{"top":"0","right":"0","bottom":"0","left":"0"}}}} -->
+	<div class="wp-block-group" style="text-align: center;">
+		<!-- wp:paragraph {"fontSize":"heading-l"} -->
+		<p class="has-heading-l-font-size" style="color: var(--rz-action); font-weight: 700; margin: 0 0 1rem 0;">✓</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:heading {"level":2,"fontSize":"heading-m"} -->
+		<h2 class="has-heading-m-font-size" style="margin: 0 0 1rem 0;">Спасибо за обращение</h2>
+		<!-- /wp:heading -->
+
+		<!-- wp:paragraph {"fontSize":"body"} -->
+		<p class="has-body-font-size" style="margin: 0 0 2rem 0;">Мы получили вашу заявку и обязательно свяжемся с вами в ближайшее время</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center","flexWrap":"wrap"}} -->
+		<div class="wp-block-buttons is-layout-flex">
+			<!-- wp:button {"backgroundColor":"action","textColor":"surface"} -->
+			<div class="wp-block-button">
+				<a class="wp-block-button__link has-surface-color has-action-background-color wp-element-button" href="/">На главную</a>
+			</div>
+			<!-- /wp:button -->
+
+			<!-- wp:button {"textColor":"action","style":{"border":{"radius":"4px"}}} -->
+			<div class="wp-block-button">
+				<a class="wp-block-button__link has-action-color wp-element-button" style="border-radius: 4px; border: 1px solid var(--rz-line);" href="/">Перейти в каталог</a>
+			</div>
+			<!-- /wp:button -->
+		</div>
+		<!-- /wp:buttons -->
+	</div>
+	<!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","theme":"razil"} /-->
+
+<script>
+// NOINDEX для этой страницы
+document.addEventListener('DOMContentLoaded', function() {
+	var meta = document.querySelector('meta[name="robots"]');
+	if (meta) {
+		meta.setAttribute('content', 'noindex');
+	} else {
+		var newMeta = document.createElement('meta');
+		newMeta.name = 'robots';
+		newMeta.content = 'noindex';
+		document.head.appendChild(newMeta);
+	}
+});
+</script>

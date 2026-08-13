@@ -1,0 +1,13 @@
+.wp-block-razil-hero-call {
+	// Стили для редактора
+	.rz-hero-container {
+		background-color: var(--rz-bg);
+		padding: 2rem;
+		border: 1px solid var(--rz-line);
+		border-radius: 4px;
+	}
+
+	.rz-hero-phone-btn {
+		pointer-events: none;
+	}
+}

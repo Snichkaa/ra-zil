@@ -1,0 +1,66 @@
+/* Дизайн-система: примитивы и тёмная тема */
+
+:root {
+	/* Светлая тема */
+	--rz-ink: #2E2E2C;
+	--rz-ink-soft: #6B6660;
+	--rz-action: #234A38;
+	--rz-fact: #7A5A3E;
+	--rz-bg: #F4EFE5;
+	--rz-surface: #FCFAF5;
+	--rz-line: #DED5C4;
+
+	/* Производные для состояний */
+	--rz-action-hover: #1a3a2c;
+	--rz-action-active: #14301f;
+	--rz-action-focus: #7A5A3E;
+
+	/* CSS переменные для БЭМ */
+	--rz-transition: 160ms;
+	--rz-radius: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		/* Тёмная тема */
+		--rz-ink: #EDE6D9;
+		--rz-ink-soft: #A29B90;
+		--rz-action: #8CBFA5;
+		--rz-fact: #C79E77;
+		--rz-bg: #1B1B19;
+		--rz-surface: #252422;
+		--rz-line: #5A564E;
+
+		/* Производные для состояний */
+		--rz-action-hover: #A8D4BC;
+		--rz-action-active: #C2E2D1;
+		--rz-action-focus: #C79E77;
+	}
+}
+
+/* Глобальные состояния */
+* {
+	box-sizing: border-box;
+}
+
+html {
+	font-size: 16px;
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background-color: var(--rz-bg);
+	color: var(--rz-ink);
+	font-family: 'PT Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
+	font-size: 1rem;
+	line-height: 1.65;
+	transition: background-color var(--rz-transition), color var(--rz-transition);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body {
+		transition: none;
+	}
+}

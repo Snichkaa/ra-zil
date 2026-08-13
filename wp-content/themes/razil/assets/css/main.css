@@ -1,220 +1,142 @@
-/* Корневые CSS-переменные */
-:root {
-	/* Светлая тема (по умолчанию) */
-	--color-accent: #234A38;
-	--color-base: #F4EFE5;
-	--color-surface: #FCFAF5;
-	--color-text: #2E2E2C;
-	--color-text-muted: #6B6660;
-	--color-detail: #7A5A3E;
-	--color-border: #DED5C4;
+/* Основные стили темы (после tokens.css) */
+
+/* Запрет на синтез жирного/наклонного из светлого вес */
+* {
+	font-synthesis: none;
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		/* Тёмная тема */
-		--color-accent: #8CBFA5;
-		--color-base: #1B1B19;
-		--color-surface: #252422;
-		--color-text: #EDE6D9;
-		--color-text-muted: #A29B90;
-		--color-detail: #C79E77;
-		--color-border: #3B3934;
-	}
-}
-
-/* Базовые стили */
-html {
-	scroll-behavior: smooth;
-}
-
-body {
-	background-color: var(--color-base);
-	color: var(--color-text);
-	line-height: 1.6;
-	transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Заголовки */
-h1, h2, h3, h4, h5, h6 {
-	font-family: 'PT Serif', serif;
-	line-height: 1.3;
-	margin: 0;
-}
-
-h1 {
-	font-size: clamp(36px, 5vw, 48px);
-}
-
-h2 {
-	font-size: clamp(28px, 3.5vw, 36px);
-}
-
-h3 {
-	font-size: clamp(24px, 2.5vw, 28px);
-}
-
-h4 {
-	font-size: clamp(20px, 2vw, 24px);
-}
-
-h5, h6 {
-	font-size: clamp(18px, 1.5vw, 20px);
-}
-
-/* Текст */
+/* Устранение margin у заголовков и параграфов по умолчанию */
+h1, h2, h3, h4, h5, h6,
 p {
 	margin: 0;
-	font-size: clamp(18px, 1.5vw, 20px);
-	line-height: 1.6;
 }
 
-small {
-	font-size: clamp(14px, 1vw, 16px);
-	color: var(--color-text-muted);
+/* Кнопки: высота 56px на мобиле, 60px на десктопе */
+.wp-element-button,
+.wp-block-button__link {
+	min-height: 3.5rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-block: 0;
+	transition: color 160ms, background-color 160ms, border-color 160ms;
 }
 
-/* Ссылки */
-a {
-	color: var(--color-accent);
-	text-decoration: none;
-	transition: color 0.2s ease;
+@media (min-width: 64rem) {
+	.wp-element-button,
+	.wp-block-button__link {
+		min-height: 3.75rem;
+	}
 }
 
-a:hover {
-	color: rgba(var(--color-accent), 0.8);
-	text-decoration: underline;
-}
-
-a:focus-visible {
-	outline: 2px solid var(--color-accent);
-	outline-offset: 2px;
-	border-radius: 2px;
-}
-
-/* Уважение к prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
-	* {
-		animation-duration: 0.01ms !important;
-		animation-iteration-count: 1 !important;
-		transition-duration: 0.01ms !important;
-		scroll-behavior: auto !important;
+	.wp-element-button,
+	.wp-block-button__link {
+		transition: none;
 	}
 }
 
-/* Кнопки */
-button,
-.wp-block-button__link,
-input[type="button"],
-input[type="submit"] {
-	background-color: var(--color-accent);
-	color: white;
-	border: none;
-	padding: 12px 24px;
-	border-radius: 4px;
-	font-size: clamp(18px, 1.5vw, 20px);
-	font-weight: 600;
-	cursor: pointer;
-	transition: background-color 0.2s ease;
-}
-
-button:hover,
-.wp-block-button__link:hover,
-input[type="button"]:hover,
-input[type="submit"]:hover {
-	background-color: rgba(35, 74, 56, 0.9);
-}
-
-button:focus-visible,
-.wp-block-button__link:focus-visible,
-input[type="button"]:focus-visible,
-input[type="submit"]:focus-visible {
-	outline: 2px solid var(--color-accent);
-	outline-offset: 2px;
-}
-
-@media (prefers-color-scheme: dark) {
-	button:hover,
-	.wp-block-button__link:hover,
-	input[type="button"]:hover,
-	input[type="submit"]:hover {
-		background-color: rgba(140, 191, 165, 0.9);
-	}
-}
-
-/* Формы */
+/* Все остальные переходы тоже 160ms */
+a,
 input,
 textarea,
 select {
-	font-family: 'Golos Text', sans-serif;
-	font-size: clamp(18px, 1.5vw, 20px);
-	border: 1px solid var(--color-border);
-	padding: 12px;
-	border-radius: 4px;
-	background-color: var(--color-surface);
-	color: var(--color-text);
-	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	transition: color 160ms, background-color 160ms, border-color 160ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	a,
+	input,
+	textarea,
+	select {
+		transition: none;
+	}
+}
+
+/* Ссылки: подчёркивание только при наведении */
+a {
+	color: var(--rz-action);
+	text-decoration: none;
+}
+
+a:hover {
+	color: var(--rz-action);
+	text-decoration: underline;
+}
+
+a:visited {
+	color: var(--rz-action);
+}
+
+a:focus {
+	outline: 2px solid var(--rz-fact);
+	outline-offset: 2px;
+	border-radius: 0;
+}
+
+/* Поля ввода */
+input,
+textarea,
+select {
+	font-family: var(--rz-sans-serif, 'PT Sans', system-ui, 'Segoe UI', Roboto, sans-serif);
+	border: 1px solid var(--rz-line);
+	background-color: var(--rz-bg);
+	color: var(--rz-ink);
+}
+
+input::placeholder,
+textarea::placeholder {
+	color: var(--rz-ink-soft);
 }
 
 input:focus,
 textarea:focus,
 select:focus {
 	outline: none;
-	border-color: var(--color-accent);
-	box-shadow: 0 0 0 3px rgba(35, 74, 56, 0.1);
-}
-
-@media (prefers-color-scheme: dark) {
-	input:focus,
-	textarea:focus,
-	select:focus {
-		box-shadow: 0 0 0 3px rgba(140, 191, 165, 0.1);
-	}
+	background-color: var(--rz-surface);
+	border-color: var(--rz-action);
 }
 
 /* Таблицы */
 table {
 	width: 100%;
 	border-collapse: collapse;
-	margin: var(--wp--preset--spacing--md, 24px) 0;
 }
 
 th, td {
-	padding: var(--wp--preset--spacing--md, 24px);
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--rz-line);
 	text-align: left;
 }
 
 th {
-	background-color: var(--color-surface);
-	font-weight: 600;
+	background-color: var(--rz-surface);
+	font-weight: 700;
 }
 
 /* Списки */
 ul, ol {
 	margin: 0;
-	padding-left: 20px;
+	padding-left: 1.25rem;
 }
 
 li {
-	margin: 8px 0;
+	margin: 0.5rem 0;
 }
 
 /* Цитаты */
 blockquote {
-	border-left: 4px solid var(--color-accent);
-	padding: var(--wp--preset--spacing--md, 24px);
-	margin: var(--wp--preset--spacing--md, 24px) 0;
-	background-color: var(--color-surface);
-	color: var(--color-text-muted);
-	font-style: italic;
+	border-left: 4px solid var(--rz-action);
+	padding: 1.5rem;
+	margin: 1.5rem 0;
+	background-color: var(--rz-surface);
+	color: var(--rz-ink-soft);
 }
 
 /* Горизонтальная линия */
 hr {
 	border: none;
-	border-top: 1px solid var(--color-border);
-	margin: var(--wp--preset--spacing--lg, 32px) 0;
+	border-top: 1px solid var(--rz-line);
+	margin: 2rem 0;
 }
 
 /* Блоки WordPress */
@@ -225,12 +147,12 @@ hr {
 
 .wp-block-separator {
 	border: none;
-	border-top: 1px solid var(--color-border);
-	margin: var(--wp--preset--spacing--lg, 32px) 0;
+	border-top: 1px solid var(--rz-line);
+	margin: 2rem 0;
 }
 
 .wp-block-image {
-	margin: var(--wp--preset--spacing--md, 24px) 0;
+	margin: 1.5rem 0;
 }
 
 .wp-block-image img {
@@ -240,64 +162,447 @@ hr {
 	border-radius: 4px;
 }
 
-/* Контрастность текста на минимум AA */
-/* Основной текст на светлом фоне - 7.5:1 */
-/* Основной текст на светлом фоне - 5.8:1 */
-/* Вторичный текст - 4.5:1 */
-
-/* Адаптивность */
-@media (max-width: 768px) {
-	h1 {
-		margin: var(--wp--preset--spacing--sm, 12px) 0;
-	}
-
-	h2 {
-		margin: var(--wp--preset--spacing--sm, 12px) 0;
-	}
-
-	p {
-		margin: var(--wp--preset--spacing--sm, 12px) 0;
-	}
-}
-
-/* Контейнеры */
-.wp-block-group,
-.alignwide {
-	max-width: 100%;
-}
-
+/* Блоки с фоном */
 .wp-block-group.has-background {
-	padding: var(--wp--preset--spacing--lg, 32px);
+	padding: 2rem;
 	border-radius: 4px;
 }
 
-/* Кастомные классы для контраста текста */
-.text-on-accent {
-	color: white;
+/* === ШАПКА === */
+
+.rz-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: var(--rz-surface);
+	color: var(--rz-ink);
+	border-bottom: 1px solid var(--rz-line);
 }
 
-/* Для цен и деталей используем коричневый */
-.price,
-.detail-text {
-	color: var(--color-detail);
-	font-weight: 600;
+.rz-header h1 {
+	margin: 0;
+	font-size: clamp(20px, 4vw, 24px);
+	font-weight: 400;
 }
 
-/* Переходы и анимации - максимум 200ms */
-* {
-	transition-duration: 200ms;
+.rz-header a {
+	color: var(--rz-ink);
+	text-decoration: none;
+	transition: color 160ms, text-decoration 160ms;
 }
 
-/* Убеждаемся, что фокусные элементы видны на клавиатуре */
-:focus-visible {
-	outline: 2px solid var(--color-accent);
+.rz-header a:hover {
+	color: var(--rz-action);
+	text-decoration: underline;
+}
+
+.rz-header-desktop {
+	display: flex;
+	gap: 1.5rem;
+	align-items: center;
+}
+
+.rz-header-desktop a {
+	font-size: 1rem;
+}
+
+.rz-btn-secondary {
+	background-color: transparent !important;
+	color: var(--rz-action) !important;
+	border: 1px solid var(--rz-line) !important;
+	border-radius: 4px !important;
+	padding: 0.5rem 1.5rem !important;
+	font-weight: 700 !important;
+	min-height: auto !important;
+	transition: background-color 160ms, color 160ms, border-color 160ms;
+}
+
+.rz-btn-secondary:hover {
+	background-color: var(--rz-action) !important;
+	color: var(--rz-surface) !important;
+	border-color: var(--rz-action) !important;
+}
+
+.rz-burger-toggle {
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	cursor: pointer;
+	padding: 0;
+	color: var(--rz-ink);
+	min-width: 48px;
+	min-height: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.rz-burger-toggle:focus {
+	outline: 2px solid var(--rz-fact);
 	outline-offset: 2px;
 }
 
-/* Контрастная граница для видимости */
+@media (max-width: 1023px) {
+	.rz-header-desktop {
+		display: none;
+	}
+	.rz-header-mobile {
+		display: flex;
+	}
+}
+
+@media (min-width: 1024px) {
+	.rz-header-mobile {
+		display: none;
+	}
+}
+
+/* === МОБИЛЬНОЕ МЕНЮ === */
+
+/* Переходы для оверлея и меню */
+.rz-mobile-menu-overlay,
+.rz-mobile-menu {
+	transition: opacity 160ms, visibility 160ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.rz-mobile-menu-overlay,
+	.rz-mobile-menu {
+		transition: none;
+	}
+}
+
+/* Навигация в мобильном меню */
+.rz-mobile-menu .wp-block-navigation {
+	flex-direction: column;
+}
+
+.rz-mobile-menu .wp-block-navigation a {
+	font-size: 1.25rem;
+	font-weight: 400;
+	padding: 0.5rem 0;
+	display: block;
+	color: var(--rz-ink);
+	text-decoration: none;
+}
+
+.rz-mobile-menu .wp-block-navigation a:hover {
+	text-decoration: underline;
+}
+
+.rz-mobile-menu .wp-block-navigation a:focus {
+	outline: 2px solid var(--rz-fact);
+	outline-offset: 2px;
+}
+
+/* === СЕТКИ И АДАПТИВНОСТЬ === */
+
+/* Контейнер по центру с полями */
+@media (max-width: 767px) {
+	.wp-block-group.alignfull > * {
+		padding-left: 1.25rem;
+		padding-right: 1.25rem;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	.wp-block-group.alignfull > * {
+		padding-left: 2rem;
+		padding-right: 2rem;
+	}
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+	.wp-block-group.alignfull > * {
+		padding-left: 3rem;
+		padding-right: 3rem;
+	}
+}
+
+@media (min-width: 1280px) {
+	.wp-block-group.alignfull > * {
+		max-width: 72.5rem;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: 3rem;
+		padding-right: 3rem;
+	}
+}
+
+/* Сетка с адаптивными колонками */
+.wp-block-group[style*="grid"] {
+	display: grid;
+	gap: 1.5rem;
+}
+
+@media (max-width: 767px) {
+	.wp-block-group[style*="column"] {
+		grid-template-columns: 1fr !important;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	.wp-block-group[style*="columnCount=2"] {
+		grid-template-columns: repeat(2, 1fr) !important;
+	}
+	.wp-block-group[style*="columnCount=3"] {
+		grid-template-columns: 1fr !important;
+	}
+}
+
+@media (min-width: 1024px) {
+	.wp-block-group[style*="columnCount=3"] {
+		grid-template-columns: repeat(3, 1fr) !important;
+	}
+}
+
+/* === ЛИПКАЯ ПОЛОСА === */
+
+/* На мобиле < 1024px видна, на десктопе скрыта */
+@media (max-width: 1023px) {
+	.rz-sticky-call {
+		display: block !important;
+		position: sticky;
+		bottom: 0;
+		z-index: 100;
+	}
+	.rz-sticky-spacer {
+		display: block !important;
+	}
+}
+
+@media (min-width: 1024px) {
+	.rz-sticky-call {
+		display: none !important;
+	}
+	.rz-sticky-spacer {
+		display: none !important;
+	}
+}
+
+/* При reduceMotion липкая полоса работает как обычный блок */
+@media (prefers-reduced-motion: reduce) {
+	.rz-sticky-call {
+		position: static !important;
+	}
+}
+
+/* === ФОКУСНЫЕ ЭЛЕМЕНТЫ === */
+
+/* Видимый фокус на всех интерактивных элементах */
 button:focus-visible,
 a:focus-visible,
-input:focus-visible {
-	outline: 2px solid var(--color-accent);
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+	outline: 2px solid var(--rz-fact);
 	outline-offset: 2px;
+}
+
+/* Зона нажатия минимум 48×48px */
+button,
+a[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.wp-block-button__link {
+	min-width: 3rem;
+	min-height: 3rem;
+}
+
+/* === ВСТРОЕННЫЕ БЛОКИ === */
+
+/* Заголовки в блоках */
+.wp-block-heading {
+	margin: 1.5rem 0 1rem 0;
+	font-family: var(--wp--preset--font-family--pt-serif, 'PT Serif', Georgia, serif);
+	font-weight: 400;
+	line-height: 1.2;
+}
+
+.wp-block-heading:first-child {
+	margin-top: 0;
+}
+
+/* Параграфы */
+.wp-block-paragraph {
+	margin: 1rem 0;
+	line-height: 1.65;
+	color: var(--rz-ink);
+}
+
+/* Сетка из колонок */
+.wp-block-columns {
+	display: grid;
+	gap: 1.5rem;
+	margin: 1.5rem 0;
+}
+
+.wp-block-column {
+	min-width: 0;
+}
+
+@media (max-width: 767px) {
+	.wp-block-columns {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	.wp-block-columns {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.wp-block-columns > .wp-block-column:nth-child(3) {
+		grid-column: 1 / -1;
+	}
+}
+
+@media (min-width: 1024px) {
+	.wp-block-columns {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+/* Группы блоков */
+.wp-block-group {
+	width: 100%;
+}
+
+
+/* Кнопки */
+.wp-block-buttons {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+	margin: 1.5rem 0;
+}
+
+.wp-block-buttons.aligncenter {
+	justify-content: center;
+}
+
+.wp-block-buttons.alignleft {
+	justify-content: flex-start;
+}
+
+.wp-block-buttons.alignright {
+	justify-content: flex-end;
+}
+
+/* Кнопка с фоном */
+.wp-block-button {
+	display: inline-block;
+	margin: 0.5rem 0;
+}
+
+.wp-block-button__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.75rem 1.5rem;
+	border-radius: 4px;
+	font-weight: 600;
+	text-decoration: none;
+	cursor: pointer;
+	min-height: 3.5rem;
+	white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+	.wp-block-button__link {
+		min-height: 3.75rem;
+	}
+}
+
+/* Цвета кнопок */
+.wp-block-button.has-action-background-color .wp-block-button__link {
+	background-color: var(--rz-action);
+	color: var(--rz-surface);
+}
+
+.wp-block-button.has-action-background-color .wp-block-button__link:hover {
+	background-color: var(--rz-action-hover);
+}
+
+/* Изображения */
+.wp-block-image {
+	margin: 1.5rem 0;
+}
+
+.wp-block-image img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	border-radius: 4px;
+}
+
+.wp-block-image.aligncenter {
+	text-align: center;
+}
+
+/* Query блоки */
+.wp-block-query {
+	margin: 1.5rem 0;
+}
+
+/* === ОБЩИЕ СТИЛИ === */
+
+/* Удаление скроллбара при открытом меню */
+body.rz-menu-open {
+	overflow: hidden;
+}
+
+/* Линия между элементами */
+.wp-block-separator {
+	border: none;
+	border-top: 1px solid var(--rz-line);
+}
+
+/* === КАСТОМНЫЕ БЛОКИ === */
+
+/* Филиалы (branches-dark) */
+.wp-block-razil-branches-dark {
+	background-color: var(--rz-ink);
+	color: var(--rz-surface);
+	padding: 3rem 1rem;
+	text-align: center;
+	border: 1px solid var(--rz-line);
+}
+
+.wp-block-razil-branches-dark h2 {
+	margin: 0;
+	color: var(--rz-surface);
+	font-size: 2.125rem;
+	font-family: var(--wp--preset--font-family--pt-serif, "PT Serif", Georgia, serif);
+	font-weight: 400;
+}
+
+.wp-block-razil-branches-dark p {
+	margin: 1rem 0 0 0;
+	color: var(--rz-surface);
+}
+
+/* Документы (docs-list) */
+.wp-block-razil-docs-list {
+	background-color: var(--rz-ink);
+	color: var(--rz-surface);
+	padding: 3rem 1rem;
+	border: 1px solid var(--rz-line);
+}
+
+.rz-docs {
+	max-width: 45rem;
+	margin: 0 auto;
+}
+
+.rz-doc {
+	display: flex;
+	justify-content: space-between;
+	padding: 1rem 0;
+	border-bottom: 1px solid var(--rz-line);
+}
+
+.rz-doc-type {
+	color: var(--rz-fact);
+	font-weight: 700;
 }

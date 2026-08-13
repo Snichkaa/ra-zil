@@ -1,0 +1,1 @@
+{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"razil/reviews","title":"Отзывы","category":"razil","attributes":{"items":{"type":"array","default":[]}},"render":"file:./render.php"}
