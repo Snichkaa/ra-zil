@@ -14,3 +14,19 @@ license.txt
 readme.html
 .htaccess
 debug.log
+PROMPT-theme.md
+
+# Reports and prompts
+ARCHITECTURE_REPORT.md
+CHECK_RESULTS.txt
+inventory.txt
+*REPORT.md
+
+# Build artifacts and dependencies
+/wp-content/themes/razil/node_modules/
+/wp-content/themes/razil/build/
+/wp-content/themes/razil/src/
+/wp-content/themes/razil/package.json
+/wp-content/themes/razil/package-lock.json
+/wp-content/themes/razil/assets/js/
+/wp-content/themes/razil/debug-blocks.php
