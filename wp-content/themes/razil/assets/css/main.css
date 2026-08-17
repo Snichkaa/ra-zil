@@ -36,6 +36,91 @@ p {
 	}
 }
 
+/* «Узнать подробнее» в карточках услуг.
+   core/read-more не поддерживает фон (в supports.color только text и gradients)
+   и не получает класс .wp-element-button, поэтому кнопочный вид задаём здесь.
+   Цвет, радиус, отступы и margin-top заданы атрибутами самого блока. */
+.wp-block-read-more {
+	background-color: var(--rz-action);
+	min-height: 3.5rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	align-self: flex-start;
+	font-weight: 700;
+	text-decoration: none;
+	transition: color 160ms, background-color 160ms, border-color 160ms;
+}
+
+.wp-block-read-more:hover {
+	background-color: var(--rz-action-hover);
+	text-decoration: none;
+}
+
+.wp-block-read-more:active {
+	background-color: var(--rz-action-active);
+}
+
+@media (min-width: 64rem) {
+	.wp-block-read-more {
+		min-height: 3.75rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wp-block-read-more {
+		transition: none;
+	}
+}
+
+/* Карточка услуги в архиве: контент слева, кнопка справа, по центру.
+   До 767px — возврат к вертикальной раскладке.
+
+   Селектор двойной намеренно: ниже по файлу стоит .wp-block-group { padding: 0 },
+   и при равной специфичности побеждало бы оно. .wp-block-group.rz-service-card
+   даёт (0,2,0) и выигрывает без !important и без перестановки правил. */
+.wp-block-group.rz-service-card {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--wp--preset--spacing--40);
+	background-color: var(--rz-surface);
+	padding: var(--wp--preset--spacing--50);
+	border-radius: 8px;
+}
+
+.rz-service-card__body {
+	display: flex;
+	flex-direction: column;
+	gap: var(--wp--preset--spacing--40);
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+/* Отступы задаём через gap, поэтому вертикальные поля потомков снимаем */
+.rz-service-card > *,
+.rz-service-card__body > * {
+	margin-block-start: 0;
+	margin-block-end: 0;
+}
+
+.rz-service-card .wp-block-read-more {
+	align-self: center;
+	flex-shrink: 0;
+	margin-top: 0;
+}
+
+@media (max-width: 47.9375rem) {
+	.wp-block-group.rz-service-card {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.rz-service-card .wp-block-read-more {
+		align-self: flex-start;
+	}
+}
+
 /* Все остальные переходы тоже 160ms */
 a,
 input,
@@ -206,7 +291,8 @@ hr {
 	font-size: 1rem;
 }
 
-.rz-btn-secondary {
+.rz-btn-secondary,
+.rz-btn-back .wp-block-button__link {
 	background-color: transparent !important;
 	color: var(--rz-action) !important;
 	border: 1px solid var(--rz-line) !important;
@@ -217,10 +303,70 @@ hr {
 	transition: background-color 160ms, color 160ms, border-color 160ms;
 }
 
-.rz-btn-secondary:hover {
+.rz-btn-secondary:hover,
+.rz-btn-back .wp-block-button__link:hover {
 	background-color: var(--rz-action) !important;
 	color: var(--rz-surface) !important;
 	border-color: var(--rz-action) !important;
+}
+
+/* Кнопка «назад» стоит над заголовком — отделяем её от него */
+.rz-btn-back {
+	margin-bottom: var(--wp--preset--spacing--40);
+}
+
+/* Контакты в подвале — одной строкой, до 767px в столбик.
+
+   На десктопе намеренно обычный строчный поток, а не flex: спаны остаются
+   inline, переносятся сами и не зависят ни от gap, ни от флекс-раскладки.
+   Цвет задан явно, чтобы видимость не зависела от наследования.
+   Селектор p.rz-footer-contacts — (0,1,1), выигрывает у одноклассовых правил. */
+p.rz-footer-contacts {
+	display: block;
+	text-align: center;
+	margin: 0;
+	color: var(--wp--preset--color--surface);
+}
+
+p.rz-footer-contacts > span,
+p.rz-footer-contacts > a {
+	display: inline;
+}
+
+p.rz-footer-contacts > span {
+	color: var(--wp--preset--color--surface);
+}
+
+p.rz-footer-contacts > *:not(:last-child)::after {
+	content: " · ";
+	color: var(--wp--preset--color--surface);
+	white-space: pre;
+}
+
+@media (max-width: 47.9375rem) {
+	p.rz-footer-contacts {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--wp--preset--spacing--20);
+	}
+
+	p.rz-footer-contacts > *:not(:last-child)::after {
+		content: none;
+	}
+}
+
+/* Страница заканчивается тёмным подвалом.
+   На коротких страницах .wp-site-blocks не доходил до низа окна,
+   и под </footer> проступала светлая заливка body (--rz-bg). */
+.wp-site-blocks {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+.wp-site-blocks > footer {
+	margin-top: auto;
 }
 
 .rz-burger-toggle {
@@ -605,4 +751,184 @@ body.rz-menu-open {
 .rz-doc-type {
 	color: var(--rz-fact);
 	font-weight: 700;
+}
+
+/* === КАРУСЕЛЬ ОТЗЫВОВ (razil/reviews) === */
+
+/* Основа — scroll-snap: свайп и прокрутка работают без JS.
+   Стрелки и точки показывает view.js, до этого они скрыты атрибутом hidden. */
+
+.rz-reviews {
+	--rz-reviews-gap: var(--wp--preset--spacing--40);
+}
+
+.rz-reviews__viewport {
+	display: flex;
+	align-items: center;
+	gap: var(--wp--preset--spacing--30);
+}
+
+.rz-reviews__track {
+	display: flex;
+	flex: 1 1 auto;
+	min-width: 0;
+	gap: var(--rz-reviews-gap);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
+	/* Полосу прокрутки прячем, сама прокрутка и свайп остаются рабочими */
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.rz-reviews__track::-webkit-scrollbar {
+	display: none;
+}
+
+.rz-reviews__track:focus-visible {
+	outline: 2px solid var(--rz-fact);
+	outline-offset: 2px;
+}
+
+/* Мобильный: одна карточка. Дальше — две и три. */
+.rz-reviews__slide {
+	display: flex;
+	flex: 0 0 auto;
+	width: 100%;
+	margin: 0;
+	scroll-snap-align: start;
+}
+
+@media (min-width: 48rem) {
+	.rz-reviews__slide {
+		width: calc((100% - var(--rz-reviews-gap)) / 2);
+	}
+}
+
+@media (min-width: 64rem) {
+	.rz-reviews__slide {
+		width: calc((100% - 2 * var(--rz-reviews-gap)) / 3);
+	}
+}
+
+/* Карточка тянется на всю высоту слайда, подпись прижата к низу */
+.rz-review {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding: var(--wp--preset--spacing--50);
+	background-color: var(--rz-surface);
+	border: 1px solid var(--rz-line);
+	border-radius: 8px;
+}
+
+/* Текст занимает место по содержимому, подпись прижата к низу:
+   карточки в ряду остаются равной высоты, но без лишней пустоты внутри. */
+.rz-review__text {
+	margin: 0;
+}
+
+.rz-review__meta {
+	margin-top: auto;
+	padding-top: var(--wp--preset--spacing--40);
+}
+
+.rz-review__name {
+	margin: 0;
+	color: var(--rz-fact);
+	font-weight: 700;
+}
+
+.rz-review__date {
+	margin: 0;
+	color: var(--rz-ink-soft);
+	font-size: var(--wp--preset--font-size--label);
+}
+
+/* Стрелки */
+.rz-reviews__arrow {
+	flex: 0 0 auto;
+	width: 48px;
+	height: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: transparent;
+	color: var(--rz-action);
+	border: 1px solid var(--rz-line);
+	border-radius: 4px;
+	font-size: 1.25rem;
+	cursor: pointer;
+	transition: background-color 160ms, color 160ms, border-color 160ms;
+}
+
+.rz-reviews__arrow:hover {
+	background-color: var(--rz-action);
+	color: var(--rz-surface);
+	border-color: var(--rz-action);
+}
+
+.rz-reviews__arrow:focus-visible {
+	outline: 2px solid var(--rz-fact);
+	outline-offset: 2px;
+}
+
+/* Точки */
+.rz-reviews__dots {
+	display: flex;
+	justify-content: center;
+	gap: var(--wp--preset--spacing--20);
+	margin-top: var(--wp--preset--spacing--40);
+}
+
+/* Сама точка — 8px, но кнопка 24x24: область нажатия набирается
+   отступом вокруг точки, а не её размером. */
+.rz-reviews__dot {
+	width: 24px;
+	height: 24px;
+	padding: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: transparent;
+	border: 0;
+	cursor: pointer;
+}
+
+.rz-reviews__dot::before {
+	content: "";
+	width: 8px;
+	height: 8px;
+	border: 1px solid var(--rz-line);
+	border-radius: 50%;
+	transition: background-color 160ms, border-color 160ms;
+}
+
+.rz-reviews__dot:hover::before {
+	border-color: var(--rz-action);
+}
+
+.rz-reviews__dot.is-active::before {
+	background-color: var(--rz-action);
+	border-color: var(--rz-action);
+}
+
+.rz-reviews__dot:focus-visible {
+	outline: 2px solid var(--rz-fact);
+	outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.rz-reviews__track {
+		scroll-behavior: auto;
+	}
+
+	.rz-reviews__arrow,
+	.rz-reviews__dot::before {
+		transition: none;
+	}
 }

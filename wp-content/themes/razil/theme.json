@@ -126,8 +126,8 @@
 				},
 				{
 					"slug": "heading-l",
-					"name": "H1 32-48",
-					"size": "clamp(2rem, 1.5856rem + 1.768vw, 3rem)"
+					"name": "H1 32-40",
+					"size": "clamp(2rem, 1.7928rem + 0.884vw, 2.5rem)"
 				}
 			]
 		},

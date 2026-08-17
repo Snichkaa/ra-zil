@@ -1,0 +1,2442 @@
+{
+    "source": "CommerceML-выгрузка старого сайта ra-zil.ru (1С-Битрикс)",
+    "source_dir": "_import/old-bitrix/upload/additional",
+    "parsed_files": [
+        "5.xml",
+        "21.xml",
+        "29.xml",
+        "31.xml",
+        "1.xml",
+        "2.xml",
+        "11.xml",
+        "23.xml",
+        "8.xml"
+    ],
+    "note": "Демо-данные шаблона intec (бренды, вакансии, тарифы, статьи, проекты, галереи) не включены. Инфоблоки 23.xml и 8.xml помечены suspect_demo — принадлежность к реальному контенту под вопросом.",
+    "records_total": 64,
+    "stats_by_type": {
+        "service": {
+            "всего": 7,
+            "пустых": 3,
+            "без текста": 3,
+            "с картинкой": 4,
+            "картинка битая": 0
+        },
+        "review": {
+            "всего": 25,
+            "пустых": 19,
+            "без текста": 0,
+            "с картинкой": 6,
+            "картинка битая": 0
+        },
+        "faq": {
+            "всего": 6,
+            "пустых": 6,
+            "без текста": 0,
+            "с картинкой": 0,
+            "картинка битая": 0
+        },
+        "city": {
+            "всего": 8,
+            "пустых": 8,
+            "без текста": 8,
+            "с картинкой": 1,
+            "картинка битая": 0
+        },
+        "product": {
+            "всего": 2,
+            "пустых": 0,
+            "без текста": 0,
+            "с картинкой": 2,
+            "картинка битая": 0
+        },
+        "advantage": {
+            "всего": 4,
+            "пустых": 4,
+            "без текста": 0,
+            "с картинкой": 4,
+            "картинка битая": 0
+        },
+        "staff (suspect_demo)": {
+            "всего": 9,
+            "пустых": 9,
+            "без текста": 9,
+            "с картинкой": 9,
+            "картинка битая": 0
+        },
+        "service_review (suspect_demo)": {
+            "всего": 3,
+            "пустых": 3,
+            "без текста": 0,
+            "с картинкой": 3,
+            "картинка битая": 0
+        }
+    },
+    "images": {
+        "ссылок всего": 45,
+        "файл найден": 45,
+        "файл потерян": 0
+    },
+    "records": [
+        {
+            "type": "service",
+            "source_file": "5.xml",
+            "infoblock": "Услуги",
+            "bitrix_id": "255",
+            "name": "Благоустройство мест захоронения",
+            "slug": "blagoustroystvo_mest_zakhoroneniya",
+            "date": "2020-04-23 00:00:00",
+            "preview_text": "<p style=\"text-align: left;\">\n\t Нам важно, чтобы в дальнейшем место захоронения выглядело достойно, так же достойно, как прожил жизнь ваш близкий. Мы предлагаем различные варианты благоустройство мест захоронения, опираясь на ваши пожелания и возможности. <br>\n</p>\n<p style=\"text-align: center;\">\n</p>",
+            "detail_text": "Нам важно, чтобы в дальнейшем место захоронения выглядело достойно, так же достойно, как прожил жизнь ваш близкий. Мы предлагаем различные варианты благоустройство мест захоронения, опираясь на ваши пожелания и возможности. Ухоженные могилы будут смотреться приятнее, и тем самым вы подчеркнете свои добрые воспоминания об усопшем и вечную память. Для благоустройства могил используются различные материалы, как бюджетные, так и дорогостоящие. Выбирая вариант оформления, вы в первую очередь должны опираться на свои финансовые возможности. Благоустройство может включать в себя ограждение могилы, лавочки и столик, отделка участка, озеленение. <br>\n При выделении земельного участка может учитываться социальное положение\n умершего (участники Великой Отечественной Войны, военнослужащие и \n.т.п.), поэтому при благоустройстве могил следует учитывать специфику \nместоположения могилы и отнестись с уважением к общему оформлению \nблизлежащих могил.",
+            "image": "5_files/iblock/57d/57d34c1ff088181b2190ddaf999cfb5c.jpg",
+            "image_exists": true,
+            "empty": false,
+            "preview_len": 223,
+            "detail_len": 943,
+            "no_text": false,
+            "pictures": [
+                {
+                    "path": "5_files/iblock/822/822084c50aac484f093a291c68a00015.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "5",
+                    "label": "Описание. Заголовок",
+                    "value": "Описание"
+                },
+                {
+                    "id": "17",
+                    "label": "Отзывы. Заголовок",
+                    "value": "Отзывы"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "service",
+            "source_file": "5.xml",
+            "infoblock": "Услуги",
+            "bitrix_id": "256",
+            "name": "Кремация",
+            "slug": "krematsiya",
+            "date": "2020-04-23 00:00:00",
+            "preview_text": "<p style=\"text-align: left;\">\n\t За последние годы услуги крематория стали очень востребованы. Кремация представляет собой такой способ погребения, при котором тело сжигается, а родственникам выдается прах умершего.<br>\n</p>",
+            "detail_text": "За последние годы услуги крематория стали очень востребованы. Кремация представляет собой такой способ погребения, при котором тело сжигается, а родственникам выдается прах умершего. Кремация считается немного дешевле, чем традиционные похороны, является более эстетичным способом захоронения. Так же дополнительным преимуществом является возможность семейного захоронения праха.<br>\n <br>\n В каждом крематории есть зал прощания, где родственники могут проститься с умершим. После самой процедуры кремации прах родственникам выдается на следующий день, и родственники решают, как будет происходить дальнейшее захоронение праха. Существуют специальные колумбарии, где родственники могут арендовать ячейку на определенное количество лет, тем самым не благоустраивать место на кладбище.<br>\n <br>\n Для кремации потребуются такая же атрибутика, как и для обычного захоронения – гроб, одежда для покойного. В гроб к умершему можно класть цветы, одежду.<br>\n <br>\nТак же наша компания предлагает услуги социальной кремации. Мы проконсультируем вас, кому положена бесплатная кремация, какие документы необходимо оформить.",
+            "image": "5_files/iblock/b20/b20392781b35742a715fb73e8b5cc801.jpg",
+            "image_exists": true,
+            "empty": false,
+            "preview_len": 182,
+            "detail_len": 1090,
+            "no_text": false,
+            "pictures": [
+                {
+                    "path": "5_files/iblock/ed1/ed1293b8410df037c06228625be74709.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "service",
+            "source_file": "5.xml",
+            "infoblock": "Услуги",
+            "bitrix_id": "257",
+            "name": "Организация похорон",
+            "slug": "organizatsiya_pokhoron",
+            "date": "2020-04-23 00:00:00",
+            "preview_text": "<p style=\"text-align: left;\">\n\t В непростой ситуации в связи со смертью близкого правильным решением будет вызов ритуального агента нашей компании, который поможет вам в организации данного процесса и будет с вами на протяжении 24 часов в сутки в этот тяжелый момент. <br>\n</p>",
+            "detail_text": "В непростой ситуации в связи со смертью близкого правильным решением будет вызов ритуального агента нашей компании, который поможет вам в организации данного процесса и будет с вами на протяжении 24 часов в сутки в этот тяжелый момент. В первую очередь важной задачей ритуального агента является моральная поддержка людей, потерявших близких. Ритуальный агент подскажет порядок действий, куда обращаться для оформления всех документов для погребения, при необходимости организует вывоз на кладбище родственников для того, чтобы посмотреть место захоронения.<br>\n Ритуальный агент нашей компании поможет вам в следующих вопросах:<br>\n • Предоставление транспорта и составление маршрута похорон; <br>\n • Сбор необходимых документов для захоронения и получения льгот; <br>\n • Получение справки о смерти в максимально короткие сроки; <br>\n • Получение свидетельства о смерти и справки на получение социального пособия (форма - 11); <br>\n • Заказ и организация поминального обеда; <br>\n • Контроль выдачи тела в морге и сопровождение на кладбище;<br>\n • Организация отпевания и панихиды<br>\n Наши сотрудники учитывают все пожелания клиентов, тактично улаживая все\n вопросы. Своим присутствием и корректной работой ритуальный агент как \nбы успокаивает родственников, что похороны пройдут достойно.",
+            "image": "5_files/iblock/688/688dca7adf7f3e5ec83b2c1be908769e.jpg",
+            "image_exists": true,
+            "empty": false,
+            "preview_len": 235,
+            "detail_len": 1255,
+            "no_text": false,
+            "pictures": [
+                {
+                    "path": "5_files/iblock/a6e/a6ea2763f5f793522e871ec9d3eaaa18.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "service",
+            "source_file": "5.xml",
+            "infoblock": "Услуги",
+            "bitrix_id": "258",
+            "name": "Транспортировка умерших",
+            "slug": "transportirovka_umershikh",
+            "date": "2020-04-23 00:00:00",
+            "preview_text": "<p style=\"text-align: left;\">\n\t В непростой ситуации в связи со смертью близкого правильным решением будет вызов ритуального агента нашей компании, который поможет вам в организации данного процесса и будет с вами на протяжении 24 часов в сутки в этот тяжелый момент.\n</p>\n<p style=\"text-align: left;\">\n</p>\n<h5></h5>",
+            "detail_text": "При оформлении груза 200 есть множество подводных камней, и наши сотрудники будут рады вас качественно проконсультировать и помочь по следующим вопросам:<br>\n <br>\n - документы, необходимые для организации транспортировки груза;<br>\n - получение разрешение на вывоз от Роспотребнадзора;<br>\n - вопросы, касаемые бальзамирования тела перед транспортировкой;<br>\n - заказ цинкованного гроба;<br>\n - подбор транспорта.<br>",
+            "image": "5_files/iblock/7be/7be2700d0fa10b890f8f129ac7785786.png",
+            "image_exists": true,
+            "empty": false,
+            "preview_len": 235,
+            "detail_len": 391,
+            "no_text": false,
+            "pictures": [
+                {
+                    "path": "5_files/iblock/ae7/ae713092a6941986e6c9100544121615.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "service",
+            "source_file": "5.xml",
+            "infoblock": "Услуги",
+            "bitrix_id": "259",
+            "name": "Страхование",
+            "slug": "strakhovanie",
+            "date": "2020-04-23 00:00:00",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "pictures": [],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "service",
+            "source_file": "5.xml",
+            "infoblock": "Услуги",
+            "bitrix_id": "260",
+            "name": "Юридическая помощь",
+            "slug": "yuridicheskaya_pomoshch",
+            "date": "2020-04-23 00:00:00",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "pictures": [],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "service",
+            "source_file": "5.xml",
+            "infoblock": "Услуги",
+            "bitrix_id": "261",
+            "name": "Прижизненный договор",
+            "slug": "prizhiznennyy_dogovor",
+            "date": "2020-04-23 00:00:00",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "4",
+                    "label": "Отображать кнопку заказа",
+                    "value": "Y"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "1",
+            "name": "Сергей Игнатов",
+            "slug": "review_1",
+            "date": "",
+            "preview_text": "Скорость обработки заказа и получение товара в пункте самовывоза",
+            "detail_text": "Срочно понадобился телефон. Из критериев были получение в день заказа в удобном пункте самовывоза. Позвонил в магазин. Уточнил все вопросы по телефону. Через несколько часов забрал в пункте самовывоза. Все очень быстро и четко.",
+            "image": "21_files/iblock/dab/dabfd7c1a30f66343d5181800bcd7a43.jpg",
+            "image_exists": true,
+            "empty": false,
+            "preview_len": 64,
+            "detail_len": 227,
+            "no_text": false,
+            "pictures": [
+                {
+                    "path": "21_files/iblock/59d/59d9c76dfd4c25154273ad126cf9cd6c.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "100"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "2",
+            "name": "Евгения Салминова",
+            "slug": "review_2",
+            "date": "",
+            "preview_text": "Ребята вежливые, работают быстро.",
+            "detail_text": "С удовольствием порекомендую этот магазин. Есть очень интересные товары, отсутствующие в широкой продаже. А мелочевка - стекла, зарядки, чехлы - всегда есть в наличии без предварительного заказа.",
+            "image": "21_files/iblock/975/975d9dc26a9cf7fe5aeef5b936678b5b.jpg",
+            "image_exists": true,
+            "empty": false,
+            "preview_len": 33,
+            "detail_len": 195,
+            "no_text": false,
+            "pictures": [
+                {
+                    "path": "21_files/iblock/40f/40fc9eb8eb5d064284d071a359f368f6.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "200"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "3",
+            "name": "Егор Николайченко",
+            "slug": "review_3",
+            "date": "",
+            "preview_text": "Быстрая реакция на возникшие сложности и их устранение.",
+            "detail_text": "Заказывал MacBook Pro 15 late 2016. Тут он был дешевле всего. Положил заказ в корзину, позвонили договорились об одном, потом я передумал. переоформили доставку на тот же день, привезли через 90 минут.",
+            "image": "21_files/iblock/e54/e545321b53f026091cc83482f18e7afd.jpg",
+            "image_exists": true,
+            "empty": false,
+            "preview_len": 55,
+            "detail_len": 201,
+            "no_text": false,
+            "pictures": [
+                {
+                    "path": "21_files/iblock/118/1186bdc24d0ad099b864941b9f0f86c8.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "300"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "4",
+            "name": "Александр Старовойтов",
+            "slug": "review_4",
+            "date": "",
+            "preview_text": "Успехов,процветания и позитивных клиентов.",
+            "detail_text": "В очередной раз быстро отреагировали на мои пожелания. По телефону проконсультировали, цены очень даже демократичные и самое главное- \"чистые\". Бесплатная доставка. Сколько стоит на сайте ,столько и заплатил. Все характеристики соответствуют данным,представленным на сайте магазина. Бонусы- пустячок , а приятно!",
+            "image": "21_files/iblock/0f2/0f212cbc346408858c228cb20471cca0.jpg",
+            "image_exists": true,
+            "empty": false,
+            "preview_len": 42,
+            "detail_len": 312,
+            "no_text": false,
+            "pictures": [
+                {
+                    "path": "21_files/iblock/c11/c1136ffcaf1ae0c34d5130bee4ecf036.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "400"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "5",
+            "name": "Светлана Светикова",
+            "slug": "review_5",
+            "date": "",
+            "preview_text": "Рекомендую всем данный интернет-магазин.",
+            "detail_text": "Оперативная обработка заказа, качественное обслуживание. Товар полностью соответствует заявленным требованиям. Высокое качество. Вежливое общение сотрудников, как менеджера по телефону, так и в пункте самовывоза.",
+            "image": "21_files/iblock/c40/c4091368a677fa8b4a192664f6037dea.jpg",
+            "image_exists": true,
+            "empty": false,
+            "preview_len": 40,
+            "detail_len": 212,
+            "no_text": false,
+            "pictures": [
+                {
+                    "path": "21_files/iblock/abf/abfd881138f01845144dbdb5604ace44.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "6",
+            "name": "Райков Владимир",
+            "slug": "review_6",
+            "date": "",
+            "preview_text": "Товар полностью соответствует заявленным требованиям. Высокое качество.",
+            "detail_text": "Четкая организация, качество товара и обслуживания. На горячей линии автоответчик сказал: \"Вы выпадите в осадок от уровня нашего обслуживания.\" Он не соврал. На каждый вопрос мне давали подробный ответ, местонахождение пункта самовывоза объяснили так,что я со своим топографическим кретинизмом вышла четко на нужное здание)",
+            "image": "21_files/iblock/650/650af2e66200ee97527f4c53e9b3e552.jpg",
+            "image_exists": true,
+            "empty": false,
+            "preview_len": 71,
+            "detail_len": 323,
+            "no_text": false,
+            "pictures": [
+                {
+                    "path": "21_files/iblock/8d4/8d4b6aecbba8e9f835d4e1263f08da58.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "600"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "285",
+            "name": "Мария Викторовна",
+            "slug": "mariya_viktorovna",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "04.05.2020 г. \"Бригада очень хорошо выполнила свою работу, остались довольны\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 77,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "286",
+            "name": "Александр Александрович",
+            "slug": "aleksandr_aleksandrovich",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "01.05.2020 г. \"Все работы выполнены качественно, претензий не имею. Спасибо\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 76,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "287",
+            "name": "Оксана Александровна",
+            "slug": "oksana_aleksandrovna",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "27.04.2020 г. \"Спасибо большое за помощь. Бригада выполнила свою работу очень хорошо\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 85,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "288",
+            "name": "Геннадий Павлович",
+            "slug": "gennadiy_pavlovich",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "25.04.2020 г. \"Бригада выполнила свою работу на отлично. Благодарим вас\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 72,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "289",
+            "name": "Галина Ивановна",
+            "slug": "galina_ivanovna",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "25.04.2020 г. \"Благодарю бригаду за хорошую работу\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 51,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "290",
+            "name": "Александр Евгеньевич",
+            "slug": "aleksandr_evgenevich",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "23.04.2020 г. \"Работой бригады по захоронению очень доволен\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 60,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "291",
+            "name": "Елена Юпитеровна",
+            "slug": "elena_yupiterovna",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "17.04.2020 г. \"Спасибо всем, кто организовал похороны. Всё прошло на высоком профессиональном уровне\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 101,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "292",
+            "name": "Татьяна Ивановна",
+            "slug": "tatyana_ivanovna",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "17.04.2020 г. \"Бригада по захоронению свою работу выполнила хорошо\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 67,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "293",
+            "name": "Вероника Михайловна",
+            "slug": "veronika_mikhaylovna",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "17.04.2020 г. \"Работа выполнена в полном объёме. замечаний к бригаде не\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 72,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "294",
+            "name": "Марина Владимировна",
+            "slug": "marina_vladimirovna",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "15.04.2020 г. \"Бригада выполнила свою работу хорошо. Молодцы, быстро, слаженно, вежливо\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 88,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "295",
+            "name": "Ирина Юрьевна",
+            "slug": "irina_yurevna",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "04.04.2020 г.\"Работа выполнена хорошо. Бригада работала хорошо\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 63,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "296",
+            "name": "Наталья Александровна",
+            "slug": "natalya_aleksandrovna",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "01.04.2020 г. \"Благодарность бригаде, помогавшей проводить в последний путь мою бабулю. Спасибо вам за чёткую, слаженную работу и деликатность. Спасибо вам за труд. Отдельно благодарим распорядителя Екатерину за помощь\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 219,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "297",
+            "name": "Геннадий Викторович",
+            "slug": "gennadiy_viktorovich",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "21.03.2020 г. \"Спасибо большое, бригада отработала отлично\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 59,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "298",
+            "name": "Виктория Николаевна",
+            "slug": "viktoriya_nikolaevna",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "20.03.2020 г. \"Организованная, слаженная работа, пунктуальность, отзывчивость\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 78,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "299",
+            "name": "Наталья Александровна",
+            "slug": "natalya_aleksandrovna_1",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "18.03.2020 г. \"Бригада по захоронению выполнила свою работу отлично\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 68,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "300",
+            "name": "Галина Владимировна",
+            "slug": "galina_vladimirovna_1",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "05.03.2020 г. \"Хочется выразить благодарность бригаде по захоронению. Выполнили всё хорошо без нареканий. Большое спасибо за помощь всем сотрудникам СК \"Колымская\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 163,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "301",
+            "name": "Татьяна Михайловна",
+            "slug": "tatyana_mikhaylovna",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "03.03.2020 г. \"Бригада выполнила свою работу очень хорошо, благодарю за чуткость и внимание\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 92,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "302",
+            "name": "Алла Васильевна",
+            "slug": "alla_vasilevna",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "11.09.2019 г. \"Благодарим бригаду по захоронению за чёткую работу, за чуткость и внимание, поддержку в трудный для нашей семьи день. Спасибо Колымской.\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 152,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "review",
+            "source_file": "21.xml",
+            "infoblock": "Отзывы",
+            "bitrix_id": "303",
+            "name": "Скоков Д",
+            "slug": "skokov_d",
+            "date": "2020-05-20 00:00:00",
+            "preview_text": "22.11.2019 г. \"Спасибо! Молодцы!\"",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 33,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "140",
+                    "label": "Город",
+                    "value": "khabarovsk"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "faq",
+            "source_file": "29.xml",
+            "infoblock": "Вопрос - ответ",
+            "bitrix_id": "1",
+            "name": "Сколько стоит венок в среднем?",
+            "slug": "question_1",
+            "date": "",
+            "preview_text": "Венки и корзины на любой кошелек! Также на время самоизоляции, вы можете заказать венок онлайн или по телефону, и мы доставим его бесплатно до ритуального зала. WhatsApp 8 924 648 82 11, телефоны офисов - 44 9 44; 77 9 44",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 221,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [
+                "1"
+            ],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "100"
+            }
+        },
+        {
+            "type": "faq",
+            "source_file": "29.xml",
+            "infoblock": "Вопрос - ответ",
+            "bitrix_id": "2",
+            "name": "Вы оказываете услуги по выравниванию памятника?",
+            "slug": "question_2",
+            "date": "",
+            "preview_text": "Мы выполняем работы любой сложности. Подробности по тел.  8 924 648 82 11, 44-9-44, 77-9-44",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 91,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [
+                "1"
+            ],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "200"
+            }
+        },
+        {
+            "type": "faq",
+            "source_file": "29.xml",
+            "infoblock": "Вопрос - ответ",
+            "bitrix_id": "3",
+            "name": "Сколько стоит залить подиум?",
+            "slug": "question_3",
+            "date": "",
+            "preview_text": ".Для расчета вам нужно обратиться к нам в офис. Каждый подиум индивидуален, например, зависят от размера плитки и т.д. Мы подберем для вас оптимальный вариант исходя из ваших предпочтений.",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 188,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [
+                "1"
+            ],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "300"
+            }
+        },
+        {
+            "type": "faq",
+            "source_file": "29.xml",
+            "infoblock": "Вопрос - ответ",
+            "bitrix_id": "4",
+            "name": "Страшно, когда на тебя подписывается ритуальное агенство",
+            "slug": "question_4",
+            "date": "",
+            "preview_text": "Ничего страшного в этом нет. Мы хотим донести до вас ни страх, а полезную информацию. Ведь многие сталкиваются с разными жизненными ситуациями. И многие пользуются услугами Рит. агенства. Ведь это не только похороны, а также заказ памятника, благоустройства, уход перед родительским днем и т.д.",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 294,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [
+                "1"
+            ],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "400"
+            }
+        },
+        {
+            "type": "faq",
+            "source_file": "29.xml",
+            "infoblock": "Вопрос - ответ",
+            "bitrix_id": "5",
+            "name": "Есть ли у вас круглосуточный телефон для звонков?",
+            "slug": "question_5",
+            "date": "",
+            "preview_text": "Конечно! Ответим на все ваши вопросы и поможем в трудную минуту! 77-9-44, 8 924 648 82 11",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 89,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [
+                "1"
+            ],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "faq",
+            "source_file": "29.xml",
+            "infoblock": "Вопрос - ответ",
+            "bitrix_id": "6",
+            "name": "Можно ли заказать памятник сейчас, а установить в августе?",
+            "slug": "question_6",
+            "date": "",
+            "preview_text": "Конечно, хранение бесплатно. К тому же, если вы закажите памятник сейчас, в случае повышения цен летом, вам доплачивать ничего не нужно.",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 136,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [
+                "2"
+            ],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "600"
+            }
+        },
+        {
+            "type": "city",
+            "source_file": "31.xml",
+            "infoblock": "Контакты",
+            "bitrix_id": "1",
+            "name": "Хабаровск",
+            "slug": "khabarovsk",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "city_status": "keep",
+            "pictures": [],
+            "groups": [
+                "1"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Место на карте",
+                    "value": "48.468892073895,135.0651255"
+                },
+                {
+                    "id": "2",
+                    "label": "Город",
+                    "value": "Хабаровск"
+                },
+                {
+                    "id": "3",
+                    "label": "Адрес",
+                    "value": "ул. Комсомольская д. 43"
+                },
+                {
+                    "id": "4",
+                    "label": "Телефон",
+                    "value": "8 (4212) 21-46-64, 8 (4212) 60-52-90, 8 (4212) 68-71-71"
+                },
+                {
+                    "id": "6",
+                    "label": "Время работы",
+                    "value": "9:00-18:00"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "100"
+            }
+        },
+        {
+            "type": "city",
+            "source_file": "31.xml",
+            "infoblock": "Контакты",
+            "bitrix_id": "3",
+            "name": "Комсомольск-на-Амуре",
+            "slug": "komsomolsk",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "31_files/iblock/ce9/ce97cd988e50be58ec35e01385da5f67.jpg",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "city_status": "review",
+            "pictures": [
+                {
+                    "path": "31_files/iblock/cbe/cbe1bc4ae8ab1f32f2a64e842b870f3e.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [
+                "2"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Место на карте",
+                    "value": "50.556441572969,137.025618"
+                },
+                {
+                    "id": "2",
+                    "label": "Город",
+                    "value": "Комсомольск"
+                },
+                {
+                    "id": "3",
+                    "label": "Адрес",
+                    "value": "ул. Кирова, д. 54"
+                },
+                {
+                    "id": "4",
+                    "label": "Телефон",
+                    "value": "+7 909 804 98 63, +7 (4217) 51 73 03"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "300"
+            }
+        },
+        {
+            "type": "city",
+            "source_file": "31.xml",
+            "infoblock": "Контакты",
+            "bitrix_id": "274",
+            "name": "Амурск",
+            "slug": "amursk",
+            "date": "2020-05-07 00:00:00",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "city_status": "removed",
+            "pictures": [],
+            "groups": [
+                "74"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Место на карте",
+                    "value": "50.230323573133,136.8984255"
+                },
+                {
+                    "id": "2",
+                    "label": "Город",
+                    "value": "Амурск"
+                },
+                {
+                    "id": "3",
+                    "label": "Адрес",
+                    "value": "пр.Строителей 5а"
+                },
+                {
+                    "id": "4",
+                    "label": "Телефон",
+                    "value": "2-69-50, 8-914-169-72-91, 8-914-218-32-46"
+                },
+                {
+                    "id": "6",
+                    "label": "Время работы",
+                    "value": "8:30 – 17:00"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "city",
+            "source_file": "31.xml",
+            "infoblock": "Контакты",
+            "bitrix_id": "275",
+            "name": "Биробиджан",
+            "slug": "birobidzhan",
+            "date": "2020-05-07 00:00:00",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "city_status": "removed",
+            "pictures": [],
+            "groups": [
+                "75"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Место на карте",
+                    "value": "48.772578573781,132.9441405"
+                },
+                {
+                    "id": "2",
+                    "label": "Город",
+                    "value": "Биробиджан, ул. Советская, д.70В"
+                },
+                {
+                    "id": "3",
+                    "label": "Адрес",
+                    "value": "ул. Советская, д.70В"
+                },
+                {
+                    "id": "4",
+                    "label": "Телефон",
+                    "value": "44-9-44, 89241545400"
+                },
+                {
+                    "id": "6",
+                    "label": "Время работы",
+                    "value": "9:00-17:00"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "city",
+            "source_file": "1.xml",
+            "infoblock": "Мультигород",
+            "bitrix_id": "276",
+            "name": "Хабаровск",
+            "slug": "khabarovsk",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "city_status": "keep",
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "141",
+                    "label": "Телефон",
+                    "value": "8 (4212) 60-52-90"
+                },
+                {
+                    "id": "144",
+                    "label": "Дополнительные телефоны",
+                    "value": "8 (4212) 68-71-71"
+                },
+                {
+                    "id": "142",
+                    "label": "Адресс",
+                    "value": "680031,г. Хабаровск, ул. Комсомольская д. 43"
+                },
+                {
+                    "id": "143",
+                    "label": "E-mail",
+                    "value": "test@mail.ru"
+                },
+                {
+                    "id": "145",
+                    "label": "Время работы",
+                    "value": "9:00 - 18:00"
+                },
+                {
+                    "id": "146",
+                    "label": "Место на карте",
+                    "value": "48.468892073895,135.0651255"
+                },
+                {
+                    "id": "147",
+                    "label": "Текст на маркере",
+                    "value": "680031,г. Хабаровск, ул. Комсомольская д. 43"
+                },
+                {
+                    "id": "148",
+                    "label": "Увеличение карты",
+                    "value": "12"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "100"
+            }
+        },
+        {
+            "type": "city",
+            "source_file": "1.xml",
+            "infoblock": "Мультигород",
+            "bitrix_id": "280",
+            "name": "Биробиджан",
+            "slug": "birobidzhan",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "city_status": "removed",
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "141",
+                    "label": "Телефон",
+                    "value": "89241545400"
+                },
+                {
+                    "id": "144",
+                    "label": "Дополнительные телефоны",
+                    "value": "44-9-44"
+                },
+                {
+                    "id": "142",
+                    "label": "Адресс",
+                    "value": "г. Биробиджан, ул. Советская, д.70В"
+                },
+                {
+                    "id": "145",
+                    "label": "Время работы",
+                    "value": "с пн-пт 9:00-17:00, сб-вс – 9:00-14:00"
+                },
+                {
+                    "id": "146",
+                    "label": "Место на карте",
+                    "value": "48.772578573781,132.9441405"
+                },
+                {
+                    "id": "147",
+                    "label": "Текст на маркере",
+                    "value": "679000, г. Биробиджан, ул. Советская, д.70В"
+                },
+                {
+                    "id": "148",
+                    "label": "Увеличение карты",
+                    "value": "12"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "200"
+            }
+        },
+        {
+            "type": "city",
+            "source_file": "1.xml",
+            "infoblock": "Мультигород",
+            "bitrix_id": "281",
+            "name": "Амурск",
+            "slug": "amursk",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "city_status": "removed",
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "141",
+                    "label": "Телефон",
+                    "value": "2-69-50"
+                },
+                {
+                    "id": "144",
+                    "label": "Дополнительные телефоны",
+                    "value": "8-914-218-32-46"
+                },
+                {
+                    "id": "142",
+                    "label": "Адресс",
+                    "value": "г. Амурск,пр.Строителей 5а"
+                },
+                {
+                    "id": "145",
+                    "label": "Время работы",
+                    "value": "8:30 – 17:00 без обеда; Суббота, воскресенье 8:30-14:00"
+                },
+                {
+                    "id": "146",
+                    "label": "Место на карте",
+                    "value": "50.230323573133,136.8984255"
+                },
+                {
+                    "id": "147",
+                    "label": "Текст на маркере",
+                    "value": "г. Амурск,пр.Строителей 5а"
+                },
+                {
+                    "id": "148",
+                    "label": "Увеличение карты",
+                    "value": "12"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "300"
+            }
+        },
+        {
+            "type": "city",
+            "source_file": "1.xml",
+            "infoblock": "Мультигород",
+            "bitrix_id": "282",
+            "name": "Комсомольск",
+            "slug": "komsomolsk",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "",
+            "image_exists": false,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "city_status": "review",
+            "pictures": [],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "141",
+                    "label": "Телефон",
+                    "value": "+7 (999) 999-99-99"
+                },
+                {
+                    "id": "142",
+                    "label": "Адресс",
+                    "value": "Комсомольск, ул. Советская, д.70В"
+                },
+                {
+                    "id": "148",
+                    "label": "Увеличение карты",
+                    "value": "12"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "product",
+            "source_file": "2.xml",
+            "infoblock": "Товары",
+            "bitrix_id": "262",
+            "name": "Гроб 1",
+            "slug": "grob_1",
+            "date": "2020-04-23 00:00:00",
+            "preview_text": "Гроб является необходимым предметом для похорон человека. Гроб имеет прямоугольную форму, суженную в ногах, и имеет съемную крышку.\nГроб может быть изготовлен из различных материалов, традиционно из дерева, из дорогих или из простых пород деревьев. Гроб может быть лакированным, обитым тканью, в зависимости от ценовой категории.\nУ нас представлен широкий ассортимент гробов по разным ценовым категориям:\n- гроб ситцевый;\n- гроб бархатный;\n- гроб люкс/гофрированный;\n- гроб лакированный «Славянский»;\n- гроб деревянный;\n- гроб лакированный двухстворчатый.\nКупить гроб вы можете, обратившись в офис нашей компании.",
+            "detail_text": "Гроб является необходимым предметом для похорон человека. Гроб имеет прямоугольную форму, суженную в ногах, и имеет съемную крышку.\nГроб может быть изготовлен из различных материалов, традиционно из дерева, из дорогих или из простых пород деревьев. Гроб может быть лакированным, обитым тканью, в зависимости от ценовой категории.\nУ нас представлен широкий ассортимент гробов по разным ценовым категориям:\n- гроб ситцевый;\n- гроб бархатный;\n- гроб люкс/гофрированный;\n- гроб лакированный «Славянский»;\n- гроб деревянный;\n- гроб лакированный двухстворчатый.\nКупить гроб вы можете, обратившись в офис нашей компании.",
+            "image": "2_files/iblock/d9f/d9fdf12f59d1acc66f8c053a56cce0d8.jpg",
+            "image_exists": true,
+            "empty": false,
+            "preview_len": 613,
+            "detail_len": 613,
+            "no_text": false,
+            "pictures": [
+                {
+                    "path": "2_files/iblock/c82/c82ff2cd5d116b9b89b30c8b0f96b9c9.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [
+                "65"
+            ],
+            "fields": [
+                {
+                    "id": "28",
+                    "label": "Количество",
+                    "value": "5"
+                },
+                {
+                    "id": "29",
+                    "label": "Коэффициент количества",
+                    "value": "1"
+                },
+                {
+                    "id": "30",
+                    "label": "Валюта для \"Базовая\"",
+                    "value": "RUB"
+                },
+                {
+                    "id": "31",
+                    "label": "Базовая",
+                    "value": "1000"
+                },
+                {
+                    "id": "6",
+                    "label": "Изображения",
+                    "value": "2_files/iblock/d05/d0536c6261ef07843265368a55e1e7eb.jpg"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "product",
+            "source_file": "2.xml",
+            "infoblock": "Товары",
+            "bitrix_id": "263",
+            "name": "Венок 1",
+            "slug": "venok_1",
+            "date": "2020-04-23 00:00:00",
+            "preview_text": "",
+            "detail_text": "Траурные венки из искусственных цветов являются наиболее практичными и достаточно разнообразными. Они легко транспортируются, могут долго сохранять свой первоначальный вид, не боясь ни снега, ни дождя. Они выглядят ярко, с такими венками могила всегда будет выглядеть ухожено, даже если у родственников нет возможности часто посещать захоронение.\nЦветочные композиции могут состоять из различных цветов, и в нашем офисе вы подберете для себя именно то, что вам нужно.",
+            "image": "2_files/iblock/ab1/ab1ab17943032c43005be67130952e7e.JPG",
+            "image_exists": true,
+            "empty": false,
+            "preview_len": 0,
+            "detail_len": 467,
+            "no_text": false,
+            "pictures": [
+                {
+                    "path": "2_files/iblock/0f3/0f316420abb045104ee0788e1c53f8ba.JPG",
+                    "exists": true
+                }
+            ],
+            "groups": [
+                "66"
+            ],
+            "fields": [
+                {
+                    "id": "28",
+                    "label": "Количество",
+                    "value": "5"
+                },
+                {
+                    "id": "29",
+                    "label": "Коэффициент количества",
+                    "value": "1"
+                },
+                {
+                    "id": "30",
+                    "label": "Валюта для \"Базовая\"",
+                    "value": "RUB"
+                },
+                {
+                    "id": "31",
+                    "label": "Базовая",
+                    "value": "500"
+                },
+                {
+                    "id": "6",
+                    "label": "Изображения",
+                    "value": "2_files/iblock/a0a/a0ae42707a720c79c6bbe9d26d0b8774.JPG"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "advantage",
+            "source_file": "11.xml",
+            "infoblock": "Иконки",
+            "bitrix_id": "1",
+            "name": "Сотрудничество со Страховой компанией \"Колымская\"",
+            "slug": "icon_1",
+            "date": "",
+            "preview_text": "Описание",
+            "detail_text": "",
+            "image": "11_files/iblock/a17/a171658d07f9b2a72bc9ae6aee850cff.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 8,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "100"
+            }
+        },
+        {
+            "type": "advantage",
+            "source_file": "11.xml",
+            "infoblock": "Иконки",
+            "bitrix_id": "2",
+            "name": "Работаем в сфере ритуальных услуг более 20 лет.",
+            "slug": "icon_2",
+            "date": "",
+            "preview_text": "Описание",
+            "detail_text": "",
+            "image": "11_files/iblock/33d/33d5a4d99afde88ca2d0cebca3104df6.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 8,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "200"
+            }
+        },
+        {
+            "type": "advantage",
+            "source_file": "11.xml",
+            "infoblock": "Иконки",
+            "bitrix_id": "3",
+            "name": "Чуткое отношение к клиентам в тяжелое время.",
+            "slug": "icon_3",
+            "date": "",
+            "preview_text": "Описание",
+            "detail_text": "",
+            "image": "11_files/iblock/a30/a30a7492129bfe3d84cb30a910132003.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 8,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "300"
+            }
+        },
+        {
+            "type": "advantage",
+            "source_file": "11.xml",
+            "infoblock": "Иконки",
+            "bitrix_id": "4",
+            "name": "Широкий спектр товаров и услуг по демократичным ценам.",
+            "slug": "icon_4",
+            "date": "",
+            "preview_text": "Описание",
+            "detail_text": "",
+            "image": "11_files/iblock/f2d/f2d90c874342addf48f2b701f10de7e0.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 8,
+            "detail_len": 0,
+            "no_text": false,
+            "pictures": [],
+            "groups": [],
+            "fields": [],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "400"
+            }
+        },
+        {
+            "type": "staff",
+            "source_file": "23.xml",
+            "infoblock": "Сотрудники",
+            "bitrix_id": "1",
+            "name": "Марина Викторовна",
+            "slug": "staff_1",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "23_files/iblock/9c5/9c5e35cc3b0c35d67a6f7af9c909b36d.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "suspect_demo": true,
+            "pictures": [],
+            "groups": [
+                "3"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Должность",
+                    "value": "Старший бухгалтер"
+                },
+                {
+                    "id": "2",
+                    "label": "Телефон",
+                    "value": "8(000)-000-00-00"
+                },
+                {
+                    "id": "3",
+                    "label": "Skype",
+                    "value": "Skype"
+                },
+                {
+                    "id": "4",
+                    "label": "Эл. почта",
+                    "value": "email@mail.ru"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "100"
+            }
+        },
+        {
+            "type": "staff",
+            "source_file": "23.xml",
+            "infoblock": "Сотрудники",
+            "bitrix_id": "2",
+            "name": "Ксения Ланг",
+            "slug": "staff_2",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "23_files/iblock/696/6960fd93cd7d187e68cf32f4c6b2454a.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "suspect_demo": true,
+            "pictures": [],
+            "groups": [
+                "4"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Должность",
+                    "value": "Директор по маркетингу"
+                },
+                {
+                    "id": "2",
+                    "label": "Телефон",
+                    "value": "8 (888)-000-00-00"
+                },
+                {
+                    "id": "3",
+                    "label": "Skype",
+                    "value": "Skype"
+                },
+                {
+                    "id": "4",
+                    "label": "Эл. почта",
+                    "value": "mailus@mail.ru"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "200"
+            }
+        },
+        {
+            "type": "staff",
+            "source_file": "23.xml",
+            "infoblock": "Сотрудники",
+            "bitrix_id": "3",
+            "name": "Валерия Тищенко",
+            "slug": "staff_3",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "23_files/iblock/d67/d67674f8e432951e4669efa866a3135c.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "suspect_demo": true,
+            "pictures": [],
+            "groups": [
+                "4"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Должность",
+                    "value": "Менеджер по маркетингу"
+                },
+                {
+                    "id": "2",
+                    "label": "Телефон",
+                    "value": "8 (888)-000-00-00"
+                },
+                {
+                    "id": "3",
+                    "label": "Skype",
+                    "value": "Skype"
+                },
+                {
+                    "id": "4",
+                    "label": "Эл. почта",
+                    "value": "emailus@mail.ru"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "300"
+            }
+        },
+        {
+            "type": "staff",
+            "source_file": "23.xml",
+            "infoblock": "Сотрудники",
+            "bitrix_id": "4",
+            "name": "Алексей Алексенко",
+            "slug": "staff_4",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "23_files/iblock/5a1/5a16c8e78e351af54e008d5acd94e47c.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "suspect_demo": true,
+            "pictures": [],
+            "groups": [
+                "2"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Должность",
+                    "value": "Шеф-редактор"
+                },
+                {
+                    "id": "2",
+                    "label": "Телефон",
+                    "value": "8 (888)-000-00-00"
+                },
+                {
+                    "id": "3",
+                    "label": "Skype",
+                    "value": "Skype"
+                },
+                {
+                    "id": "4",
+                    "label": "Эл. почта",
+                    "value": "mailus@mail.ru"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "400"
+            }
+        },
+        {
+            "type": "staff",
+            "source_file": "23.xml",
+            "infoblock": "Сотрудники",
+            "bitrix_id": "5",
+            "name": "Евгений Бабушкин",
+            "slug": "staff_5",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "23_files/iblock/715/715b4ad9e24af1ce056b19719cab73ab.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "suspect_demo": true,
+            "pictures": [],
+            "groups": [
+                "2"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Должность",
+                    "value": "Руководитель интернет-проектов"
+                },
+                {
+                    "id": "2",
+                    "label": "Телефон",
+                    "value": "8 (888)-000-00-00"
+                },
+                {
+                    "id": "3",
+                    "label": "Skype",
+                    "value": "Skype"
+                },
+                {
+                    "id": "4",
+                    "label": "Эл. почта",
+                    "value": "mailus@mail.ru"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "500"
+            }
+        },
+        {
+            "type": "staff",
+            "source_file": "23.xml",
+            "infoblock": "Сотрудники",
+            "bitrix_id": "6",
+            "name": "Юлия Гусарова",
+            "slug": "staff_6",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "23_files/iblock/10c/10c0fd4e2b0e04c8275010a4668ccca8.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "suspect_demo": true,
+            "pictures": [],
+            "groups": [
+                "2"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Должность",
+                    "value": "Редактор"
+                },
+                {
+                    "id": "2",
+                    "label": "Телефон",
+                    "value": "8 (888)-000-00-00"
+                },
+                {
+                    "id": "3",
+                    "label": "Skype",
+                    "value": "Skype"
+                },
+                {
+                    "id": "4",
+                    "label": "Эл. почта",
+                    "value": "mailus@mail.ru"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "600"
+            }
+        },
+        {
+            "type": "staff",
+            "source_file": "23.xml",
+            "infoblock": "Сотрудники",
+            "bitrix_id": "7",
+            "name": "Михаил Костенков",
+            "slug": "staff_7",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "23_files/iblock/b32/b3278af175eb781114eaf42c0cfa4ffd.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "suspect_demo": true,
+            "pictures": [],
+            "groups": [
+                "1"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Должность",
+                    "value": "Руководитель Сетевого Операционного Центра"
+                },
+                {
+                    "id": "2",
+                    "label": "Телефон",
+                    "value": "8 (888)-000-00-00"
+                },
+                {
+                    "id": "3",
+                    "label": "Skype",
+                    "value": "Skype"
+                },
+                {
+                    "id": "4",
+                    "label": "Эл. почта",
+                    "value": "mailus@mail.ru"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "700"
+            }
+        },
+        {
+            "type": "staff",
+            "source_file": "23.xml",
+            "infoblock": "Сотрудники",
+            "bitrix_id": "8",
+            "name": "Алексей Маркушин",
+            "slug": "staff_8",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "23_files/iblock/d87/d87d65e2143619023d58285647510e23.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "suspect_demo": true,
+            "pictures": [],
+            "groups": [
+                "1"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Должность",
+                    "value": "Frontend-программист"
+                },
+                {
+                    "id": "2",
+                    "label": "Телефон",
+                    "value": "8 (888)-000-00-00"
+                },
+                {
+                    "id": "3",
+                    "label": "Skype",
+                    "value": "Skype"
+                },
+                {
+                    "id": "4",
+                    "label": "Эл. почта",
+                    "value": "mailus@mail.ru"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "800"
+            }
+        },
+        {
+            "type": "staff",
+            "source_file": "23.xml",
+            "infoblock": "Сотрудники",
+            "bitrix_id": "9",
+            "name": "Ольга Ячменёва",
+            "slug": "staff_9",
+            "date": "",
+            "preview_text": "",
+            "detail_text": "",
+            "image": "23_files/iblock/421/4210f7e8425c0d5b90b04f993163f510.png",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 0,
+            "detail_len": 0,
+            "no_text": true,
+            "suspect_demo": true,
+            "pictures": [],
+            "groups": [
+                "1"
+            ],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Должность",
+                    "value": "Тестировщик-аналитик"
+                },
+                {
+                    "id": "2",
+                    "label": "Телефон",
+                    "value": "8 (888)-000-00-00"
+                },
+                {
+                    "id": "3",
+                    "label": "Skype",
+                    "value": "Skype"
+                },
+                {
+                    "id": "4",
+                    "label": "Эл. почта",
+                    "value": "mailus@mail.ru"
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "900"
+            }
+        },
+        {
+            "type": "service_review",
+            "source_file": "8.xml",
+            "infoblock": "Услуги. Отзывы",
+            "bitrix_id": "1",
+            "name": "Алиса Самойлова",
+            "slug": "review_1",
+            "date": "",
+            "preview_text": "Обратилась в этот центр по рекомендации знакомых, которые хвалили мастера Андрея, как толкового мастера по моторам.\nПрошла вчера диагностику ДВС. И не пожалела нисколько. Все четко, пунктуально по времени, 50 мин авто реально диагностировали. Вынесли очень грамотный диагноз, очень доходчиво объяснили что делать дальше. Т.к. это не первый сервис в который я обратилась с этой проблемой, вижу грамотный поход и даже процесс диагностики. Вообщем \"лечиться\" вернусь сюда.",
+            "detail_text": "",
+            "image": "8_files/iblock/5d8/5d8f45f26a4c72e26c44c32cf8dda772.jpg",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 469,
+            "detail_len": 0,
+            "no_text": false,
+            "suspect_demo": true,
+            "pictures": [
+                {
+                    "path": "8_files/iblock/a4a/a4aa1c87d8f3f75af6773c070fe279a2.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Должность",
+                    "value": "Директор компании \"Рыжий ежик\""
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "100"
+            }
+        },
+        {
+            "type": "service_review",
+            "source_file": "8.xml",
+            "infoblock": "Услуги. Отзывы",
+            "bitrix_id": "2",
+            "name": "Владимир Есенин",
+            "slug": "review_2",
+            "date": "",
+            "preview_text": "Хороший сервис. Ремонтировал генератор на Ниссан. Сами заказали недостающие запчасти, попутно поменяли изношенный ремень и ролик. Управляющая все согласовывала по телефону. Цены приемлимые. Гарантия. Рекомендую.",
+            "detail_text": "",
+            "image": "8_files/iblock/88d/88d71a0541626e5a4a66827c23a12244.jpg",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 211,
+            "detail_len": 0,
+            "no_text": false,
+            "suspect_demo": true,
+            "pictures": [
+                {
+                    "path": "8_files/iblock/97a/97a6c0f025ebafc33630595c73cf477a.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Должность",
+                    "value": "Директор компании \"Черные грезы\""
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "200"
+            }
+        },
+        {
+            "type": "service_review",
+            "source_file": "8.xml",
+            "infoblock": "Услуги. Отзывы",
+            "bitrix_id": "3",
+            "name": "Наташа",
+            "slug": "review_3",
+            "date": "",
+            "preview_text": "Заказывала у них кое-какие детали, очень была приятно удивлена, что на следующий день уже пришли! Приехала, мастера быстренько все установили. Думала будет дороже, но цена порадовала. Так что теперь только сюда буду обращаться.",
+            "detail_text": "",
+            "image": "8_files/iblock/466/4663271edcdb88b610b1b2d7e31a234d.jpg",
+            "image_exists": true,
+            "empty": true,
+            "preview_len": 227,
+            "detail_len": 0,
+            "no_text": false,
+            "suspect_demo": true,
+            "pictures": [
+                {
+                    "path": "8_files/iblock/e7a/e7a9ceb031b7f9daa027923d813405d5.jpg",
+                    "exists": true
+                }
+            ],
+            "groups": [],
+            "fields": [
+                {
+                    "id": "1",
+                    "label": "Должность",
+                    "value": "Директор компании \"Новый Уренгой\""
+                }
+            ],
+            "cml_props": {
+                "CML2_ACTIVE": "true",
+                "CML2_ACTIVE_TO": "",
+                "CML2_SORT": "300"
+            }
+        }
+    ]
+}

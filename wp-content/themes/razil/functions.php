@@ -263,3 +263,27 @@ function razil_remove_core_block_styles() {
 	wp_dequeue_style( 'wp-block-library-theme' );
 }
 add_action( 'wp_enqueue_scripts', 'razil_remove_core_block_styles', 20 );
+
+/**
+ * Пустой анонс должен оставаться пустым.
+ *
+ * Если у записи не заполнен post_excerpt, WordPress генерирует анонс
+ * автоматически — берёт первые 55 слов из post_content. На странице услуги
+ * блок wp:post-excerpt стоит перед wp:post-content, поэтому вводный абзац
+ * выводился дважды подряд.
+ *
+ * Отключаем автогенерацию для типов, где анонс — осознанное поле редактора:
+ * пусто в базе значит пусто на странице.
+ */
+function razil_no_auto_excerpt( $excerpt, $post ) {
+	if ( ! $post instanceof WP_Post ) {
+		return $excerpt;
+	}
+
+	if ( ! in_array( $post->post_type, array( 'services', 'products' ), true ) ) {
+		return $excerpt;
+	}
+
+	return '' === trim( (string) $post->post_excerpt ) ? '' : $excerpt;
+}
+add_filter( 'get_the_excerpt', 'razil_no_auto_excerpt', 10, 2 );

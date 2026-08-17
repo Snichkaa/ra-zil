@@ -1,10 +1,22 @@
 <!-- wp:template-part {"slug":"header","theme":"razil"} /-->
 
 <!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-surface); padding: 2rem 1rem;">
+<div class="wp-block-group" style="background-color: var(--rz-surface); padding: 1.5rem 1rem;">
 	<!-- wp:group {"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
+		<!-- wp:buttons {"className":"rz-btn-back"} -->
+		<div class="wp-block-buttons rz-btn-back">
+			<!-- wp:button -->
+			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/">← На главную</a></div>
+			<!-- /wp:button -->
+		</div>
+		<!-- /wp:buttons -->
+
 		<!-- wp:post-title {"level":1,"fontSize":"heading-l"} /-->
+
+		<!-- wp:paragraph {"fontSize":"body","style":{"spacing":{"margin":{"top":"1rem"}}}} -->
+		<p class="has-body-font-size" style="margin-top:1rem">Что говорят семьи, которым мы помогали</p>
+		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
 </div>
@@ -14,7 +26,7 @@
 <div class="wp-block-group" style="background-color: var(--rz-bg); padding: 3rem 1rem;">
 	<!-- wp:group {"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
-		<!-- wp:post-content /-->
+		<!-- wp:razil/reviews /-->
 	</div>
 	<!-- /wp:group -->
 </div>

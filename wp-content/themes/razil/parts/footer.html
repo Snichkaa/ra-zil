@@ -1,5 +1,5 @@
-<!-- wp:group {"align":"full","layout":{"type":"constrained"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|70","right":"var:preset|spacing|40","bottom":"var:preset|spacing|70","left":"var:preset|spacing|40"}},"color":{"background":"var:preset|color|surface","text":"var:preset|color|ink"},"border":{"top":{"color":"var:preset|color|line","width":"1px"}}}} -->
-<div class="wp-block-group alignfull has-text-color has-background" style="background-color: var(--wp--preset--color--surface); color: var(--wp--preset--color--ink); border-top: 1px solid var(--wp--preset--color--line);">
+<!-- wp:group {"align":"full","layout":{"type":"constrained"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|40","bottom":"var:preset|spacing|30","left":"var:preset|spacing|40"}},"color":{"background":"var:preset|color|surface","text":"var:preset|color|ink"},"border":{"top":{"color":"var:preset|color|line","width":"1px"}}}} -->
+<div class="wp-block-group alignfull has-text-color has-background" style="background-color: var(--wp--preset--color--surface); color: var(--wp--preset--color--ink); border-top: 1px solid var(--wp--preset--color--line); padding-top: var(--wp--preset--spacing--30); padding-bottom: var(--wp--preset--spacing--30);">
 
 	<!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"center"},"style":{"spacing":{"gap":"var:preset|spacing|40"}}} -->
 	<div class="wp-block-group">
@@ -26,42 +26,18 @@
 </div>
 <!-- /wp:group -->
 
-<!-- Блок "Работаем круглосуточно" с филиалами -->
-<!-- wp:group {"align":"full","layout":{"type":"constrained"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|70","right":"var:preset|spacing|40","bottom":"var:preset|spacing|70","left":"var:preset|spacing|40"}},"color":{"background":"var:preset|color|ink","text":"var:preset|color|surface"}}} -->
-<div class="wp-block-group alignfull has-text-color has-background" style="background-color: var(--wp--preset--color--ink); color: var(--wp--preset--color--surface);">
+<!-- Тёмная полоса: режим работы и контакты одной строкой -->
+<!-- wp:group {"align":"full","layout":{"type":"constrained"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|20","right":"var:preset|spacing|40","bottom":"var:preset|spacing|20","left":"var:preset|spacing|40"}},"color":{"background":"var:preset|color|ink","text":"var:preset|color|surface"}}} -->
+<div class="wp-block-group alignfull has-text-color has-background" style="background-color: var(--wp--preset--color--ink); color: var(--wp--preset--color--surface); padding-top: var(--wp--preset--spacing--20); padding-bottom: var(--wp--preset--spacing--20);">
 
-	<!-- Заголовок -->
-	<!-- wp:heading {"style":{"typography":{"fontSize":"var:preset|font-size|h2"},"margin":{"bottom":"var:preset|spacing|60"}}} -->
-	<h2 style="font-size: var(--wp--preset--font-size--h2); margin: 0 0 var(--wp--preset--spacing--60) 0; color: var(--wp--preset--color--surface);">Работаем круглосуточно, включая праздники</h2>
-	<!-- /wp:heading -->
-
-	<!-- Филиал: одна колонка -->
-	<!-- wp:group {"layout":{"type":"grid","columnCount":1,"minimumColumnWidth":"250px"},"style":{"spacing":{"gap":"var:preset|spacing|70"}}} -->
-	<div class="wp-block-group" style="display: grid; grid-template-columns: minmax(250px, 1fr); gap: var(--wp--preset--spacing--70);">
-
-		<!-- Контакты -->
-		<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"}}} -->
-		<div class="wp-block-group">
-
-			<!-- wp:heading {"level":3,"style":{"typography":{"fontSize":"var:preset|font-size|lead"}}} -->
-			<h3 style="margin: 0; font-size: var(--wp--preset--font-size--lead); color: var(--wp--preset--color--surface);">Хабаровск</h3>
-			<!-- /wp:heading -->
-
-			<!-- wp:paragraph {"style":{"typography":{"fontSize":"var:preset|font-size|body","lineHeight":"1.65"},"margin":{"top":"0.5rem","bottom":"0.5rem"}}} -->
-			<p style="margin: 0.5rem 0; font-size: var(--wp--preset--font-size--body); line-height: 1.65; color: var(--wp--preset--color--surface);">пр. Маркса, д. 12</p>
-			<!-- /wp:paragraph -->
-
-			<!-- wp:paragraph {"style":{"typography":{"fontSize":"var:preset|font-size|body","fontWeight":"700"},"margin":{"top":"0.5rem","bottom":"0"}}} -->
-			<p style="margin: 0.5rem 0 0 0; font-size: var(--wp--preset--font-size--body); font-weight: 700;">
-				<a href="tel:+79241234567" style="color: var(--rz-fact); text-decoration: none;">+7 (924) 123-45-67</a>
-			</p>
-			<!-- /wp:paragraph -->
-
-		</div>
-		<!-- /wp:group -->
-
-	</div>
-	<!-- /wp:group -->
+	<!-- wp:paragraph {"className":"rz-footer-contacts","style":{"typography":{"fontSize":"var:preset|font-size|caption"}}} -->
+	<p class="rz-footer-contacts" style="font-size: var(--wp--preset--font-size--caption);">
+		<span>Работаем круглосуточно, включая праздники</span>
+		<span>Хабаровск</span>
+		<span>пр. Маркса, д. 12</span>
+		<a href="tel:+79241234567" style="color: var(--rz-fact); text-decoration: none; font-weight: 700;">+7 (924) 123-45-67</a>
+	</p>
+	<!-- /wp:paragraph -->
 
 </div>
 <!-- /wp:group -->

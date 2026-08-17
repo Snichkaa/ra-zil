@@ -1,15 +1,23 @@
-﻿<!-- wp:template-part {"slug":"header","theme":"razil"} /-->
+<!-- wp:template-part {"slug":"header","theme":"razil"} /-->
 
 <!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-surface); padding: 2rem 1rem;">
+<div class="wp-block-group" style="background-color: var(--rz-surface); padding: 1.5rem 1rem;">
 	<!-- wp:group {"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
+		<!-- wp:buttons {"className":"rz-btn-back"} -->
+		<div class="wp-block-buttons rz-btn-back">
+			<!-- wp:button -->
+			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/">← На главную</a></div>
+			<!-- /wp:button -->
+		</div>
+		<!-- /wp:buttons -->
+
 		<!-- wp:heading {"level":1,"fontSize":"heading-l"} -->
 		<h1 class="has-heading-l-font-size">Все услуги</h1>
 		<!-- /wp:heading -->
 
-		<!-- wp:paragraph {"fontSize":"body"} -->
-		<p class="has-body-font-size">Полный спектр услуг организации похорон и поминовения</p>
+		<!-- wp:paragraph {"fontSize":"body","style":{"spacing":{"margin":{"top":"1rem"}}}} -->
+		<p class="has-body-font-size" style="margin-top:1rem">Полный спектр услуг организации похорон и поминовения</p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
@@ -22,17 +30,18 @@
 	<div class="wp-block-group">
 		<!-- wp:query {"queryId":2,"query":{"perPage":9,"pages":0,"offset":0,"postType":"services","order":"asc","orderBy":"title","author":"","search":"","exclude":[],"sticky":"","inherit":false}} -->
 		<div class="wp-block-query">
-			<!-- wp:post-template {"layout":{"type":"grid","columnCount":3}} -->
-			<div class="wp-block-post-template is-layout-grid">
-				<!-- wp:group -->
-				<div class="wp-block-group" style="background-color: var(--rz-surface); padding: 1.5rem; border-radius: 8px; height: 100%; display: flex; flex-direction: column;">
-					<!-- wp:post-title {"isLink":true,"fontSize":"heading-s"} /-->
-					<!-- wp:post-excerpt {"moreText":"Подробнее","fontSize":"body"} /-->
-					<!-- wp:button {"backgroundColor":"action","textColor":"surface","style":{"spacing":{"margin":{"top":"auto"}}}} -->
-					<div class="wp-block-button" style="margin-top: auto;">
-						<a class="wp-block-button__link has-surface-color has-action-background-color wp-element-button" href="#!">Узнать подробнее</a>
+			<!-- wp:post-template {"layout":{"type":"default"}} -->
+			<div class="wp-block-post-template is-layout-flow">
+				<!-- wp:group {"className":"rz-service-card"} -->
+				<div class="wp-block-group rz-service-card">
+					<!-- wp:group {"className":"rz-service-card__body"} -->
+					<div class="wp-block-group rz-service-card__body">
+						<!-- wp:post-title {"isLink":true,"fontSize":"heading-s"} /-->
+						<!-- wp:post-excerpt {"fontSize":"body"} /-->
 					</div>
-					<!-- /wp:button -->
+					<!-- /wp:group -->
+
+					<!-- wp:read-more {"content":"Узнать подробнее","textColor":"surface","style":{"border":{"radius":"4px"},"spacing":{"padding":{"top":"0","right":"1.5rem","bottom":"0","left":"1.5rem"}}}} /-->
 				</div>
 				<!-- /wp:group -->
 			</div>

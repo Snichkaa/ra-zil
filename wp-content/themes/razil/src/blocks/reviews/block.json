@@ -1,1 +1,21 @@
-{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"razil/reviews","title":"Отзывы","category":"razil","attributes":{"items":{"type":"array","default":[]}},"render":"file:./render.php"}
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "razil/reviews",
+  "title": "Отзывы",
+  "description": "Карусель отзывов из записей CPT reviews",
+  "category": "razil",
+  "icon": "format-quote",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "items": {
+      "type": "array",
+      "default": []
+    }
+  },
+  "example": {},
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js"
+}
