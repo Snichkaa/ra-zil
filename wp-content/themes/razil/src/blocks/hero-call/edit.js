@@ -33,13 +33,13 @@ export default function Edit( { attributes, setAttributes } ) {
 						label={ __( 'Телефон', 'razil' ) }
 						value={ phone }
 						onChange={ ( value ) => setAttributes( { phone: value } ) }
-						placeholder="+7 (924) 123-45-67"
+						placeholder="+7 (4212) 60-52-90"
 					/>
 					<TextControl
 						label={ __( 'Подпись под кнопкой', 'razil' ) }
 						value={ phoneLabel }
 						onChange={ ( value ) => setAttributes( { phoneLabel: value } ) }
-						placeholder="Звонок бесплатный"
+						placeholder="Круглосуточно, без выходных"
 					/>
 				</PanelBody>
 			</InspectorControls>

@@ -878,11 +878,17 @@ body.rz-menu-open {
 }
 
 /* Точки */
+/* Ряд точек обязан переноситься. Каждая точка — <button>, а глобальное
+   правило доступности ниже задаёт кнопкам min-width/min-height 3rem (48px),
+   что перебивает width: 24px. При 17 отзывах ряд из 48-пиксельных кнопок
+   шире экрана, и без переноса он выдавливал горизонтальную прокрутку. */
 .rz-reviews__dots {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 	gap: var(--wp--preset--spacing--20);
 	margin-top: var(--wp--preset--spacing--40);
+	max-width: 100%;
 }
 
 /* Сама точка — 8px, но кнопка 24x24: область нажатия набирается
@@ -930,5 +936,132 @@ body.rz-menu-open {
 	.rz-reviews__arrow,
 	.rz-reviews__dot::before {
 		transition: none;
+	}
+}
+
+/* Верхняя полоса подвала: компания слева, документы справа, всегда одной строкой.
+   Раскладку задаёт WordPress через хеш-класс wp-container-core-group-is-layout-*,
+   он меняется при правке атрибутов блока, поэтому цепляемся за свой className.
+   Двойной селектор — чтобы перебить сгенерированные align-items и justify-content. */
+@media (max-width: 63.9375rem) {
+	.wp-block-group.rz-footer-legal {
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: flex-start;
+		gap: var(--wp--preset--spacing--20);
+	}
+}
+
+/* Левая строка подвала не должна разрываться: «с 2014 года» переносился по слову.
+   Только от 1024px: ниже строка не помещается и давала горизонтальную прокрутку. */
+@media (min-width: 64rem) {
+	p.rz-footer-company {
+		white-space: nowrap;
+	}
+}
+
+/* Первый экран: фотография офиса фоном.
+   От 1360px фото в absolute под текстом, текст графитовый в обеих темах.
+   768–1359px — полоса под текстом во всю ширину вьюпорта.
+   До 768px скрыто: кадр 1795x510 на мобильном нечитаем.
+
+   Селекторы намеренно длиннее необходимого. Ядро WordPress отдаёт:
+     .wp-block-image.alignfull img { height: auto; width: 100% }   (0,2,1)
+     .has-global-padding > .alignfull { margin-inline: ... }       (0,2,0)
+   Медиазапрос специфичности не добавляет, поэтому короткие
+   селекторы проигрывают. Не упрощать. */
+.rz-hero {
+	position: relative;
+	overflow: hidden;
+}
+
+.rz-hero > .wp-block-group {
+	position: relative;
+	z-index: 1;
+}
+
+/* Ширина текста героя. Убрав колонки, абзацы растянулись на весь
+   контейнер 1160px: строка уходит за правый край растяжки на кирпич
+   и даёт ~90 знаков в строке при оптимуме 45-75.
+   !important обязателен: ядро WP задаёт margin-left/right: auto
+   !important потомкам constrained-группы, иначе блок отцентрируется. */
+.rz-hero .rz-hero__text > * {
+	max-width: 41.5rem;
+	margin-left: 0 !important;
+	margin-right: auto !important;
+}
+
+.rz-hero > .rz-hero__photo.alignfull {
+	margin: 0;
+	max-width: none;
+}
+
+.rz-hero > .rz-hero__photo.alignfull img {
+	display: block;
+}
+
+.rz-hero .rz-hero__text > p:first-child {
+	color: var(--rz-fact);
+}
+
+.rz-hero .rz-hero__text > p:nth-child(3),
+.rz-hero .rz-hero__text > p:last-child {
+	color: var(--rz-ink-soft);
+}
+
+@media (min-width: 85rem) {
+	.rz-hero > .rz-hero__photo.alignfull {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	.rz-hero > .rz-hero__photo.alignfull img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 50% 35%;
+	}
+
+	.rz-hero .rz-hero__text > h1,
+	.rz-hero .rz-hero__text > p:first-child,
+	.rz-hero .rz-hero__text > p:nth-child(3),
+	.rz-hero .rz-hero__text > p:last-child {
+		color: var(--rz-hero-on-photo);
+	}
+
+	/* Растяжка между фото и текстом. Слои: фото 0, растяжка 1, текст 2. */
+	.rz-hero::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		pointer-events: none;
+		background: linear-gradient(
+			to right,
+			transparent 0%,
+			color-mix(in srgb, var(--rz-hero-scrim) 65%, transparent) 14%,
+			color-mix(in srgb, var(--rz-hero-scrim) 65%, transparent) 46%,
+			transparent 74%
+		);
+	}
+
+	.rz-hero > .wp-block-group {
+		z-index: 2;
+	}
+}
+
+@media (max-width: 84.99rem) {
+	.rz-hero > .rz-hero__photo.alignfull {
+		position: static;
+		margin: 2rem -1rem 0;
+		width: auto;
+	}
+
+	.rz-hero > .rz-hero__photo.alignfull img {
+		width: 100%;
+		height: auto;
 	}
 }

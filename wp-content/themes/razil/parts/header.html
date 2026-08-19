@@ -1,9 +1,19 @@
 <header class="rz-header-wrapper">
 	<div class="rz-header-container">
 		<div class="rz-header-left">
-			<h1 class="rz-logo">
-				<a href="/">Земля и Люди</a>
-			</h1>
+			<div class="rz-logo">
+				<a href="/" class="rz-logo-link">
+					<picture class="rz-logo-picture">
+						<source media="(prefers-color-scheme: dark)"
+							srcset="/wp-content/uploads/2026/08/logo-emblema-zoloto-73.png 1x, /wp-content/uploads/2026/08/logo-emblema-zoloto-146.png 2x">
+						<img class="rz-logo-emblem"
+							src="/wp-content/uploads/2026/08/logo-emblema-zelenyy-73.png"
+							srcset="/wp-content/uploads/2026/08/logo-emblema-zelenyy-73.png 1x, /wp-content/uploads/2026/08/logo-emblema-zelenyy-146.png 2x"
+							width="73" height="40" alt="" loading="eager" decoding="async">
+					</picture>
+					<span class="rz-logo-text">Земля и Люди</span>
+				</a>
+			</div>
 		</div>
 
 		<nav class="rz-header-nav">
@@ -14,7 +24,7 @@
 		</nav>
 
 		<div class="rz-header-right">
-			<a href="tel:+79241234567" class="rz-phone">+7 (924) 123-45-67</a>
+			<a href="tel:+74212605290" class="rz-phone">+7 (4212) 60-52-90</a>
 			<button class="rz-btn rz-btn-secondary">Вызвать агента</button>
 		</div>
 
@@ -34,7 +44,7 @@
 	</div>
 
 	<div class="rz-mobile-footer">
-		<a href="tel:+79241234567" class="rz-phone-mobile">+7 (924) 123-45-67</a>
+		<a href="tel:+74212605290" class="rz-phone-mobile">+7 (4212) 60-52-90</a>
 		<p>Работаем круглосуточно, включая праздники</p>
 	</div>
 </nav>
@@ -71,6 +81,27 @@
 	.rz-logo a {
 		color: var(--rz-ink);
 		text-decoration: none;
+	}
+
+	/* Эмблема слева от названия, обе части — одна ссылка */
+	.rz-logo-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	/* <picture> — инлайновый по умолчанию, делаем его флекс-элементом,
+	   иначе выравнивание по центру и flex-shrink применяются не к нему */
+	.rz-logo-picture {
+		display: block;
+		flex-shrink: 0;
+		line-height: 0;
+	}
+
+	.rz-logo-emblem {
+		display: block;
+		width: 73px;
+		height: 40px;
 	}
 
 	.rz-logo a:hover {

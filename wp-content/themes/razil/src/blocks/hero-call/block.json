@@ -28,11 +28,11 @@
     },
     "phoneLabel": {
       "type": "string",
-      "default": "Звонок бесплатный"
+      "default": "Круглосуточно, без выходных"
     },
     "phone": {
       "type": "string",
-      "default": "+7 (924) 123-45-67"
+      "default": "+7 (4212) 60-52-90"
     }
   },
   "example": {},

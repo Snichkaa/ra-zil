@@ -1,31 +1,38 @@
 <!-- wp:template-part {"slug":"header","theme":"razil"} /-->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-bg); padding: 3rem 1rem;">
+<!-- wp:group {"className":"rz-hero","layout":{"type":"constrained"}} -->
+<div class="wp-block-group rz-hero" style="background-color: var(--rz-bg); padding: 3rem 1rem;">
+	<!-- wp:image {"id":100,"sizeSlug":"full","align":"full","linkDestination":"none","className":"rz-hero__photo"} -->
+	<figure class="wp-block-image alignfull size-full rz-hero__photo"><img src="/wp-content/uploads/2026/08/ofis-panorama.webp" alt="Здание офиса ритуального агентства «Земля и Люди» на переулке Казарменном, 9 в Хабаровске — вид со стороны двора" class="wp-image-100" width="1280" height="720" loading="eager" fetchpriority="high" decoding="async"/></figure>
+	<!-- /wp:image -->
+
 	<!-- wp:group {"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
-		<!-- Герой -->
-		<!-- wp:paragraph {"fontSize":"label"} -->
-		<p class="has-label-font-size" style="color: var(--rz-fact);">Хабаровск · Круглосуточно</p>
-		<!-- /wp:paragraph -->
+		<!-- wp:group {"className":"rz-hero__text"} -->
+		<div class="wp-block-group rz-hero__text">
+			<!-- wp:paragraph {"fontSize":"label"} -->
+			<p class="has-label-font-size">Хабаровск · Круглосуточно</p>
+			<!-- /wp:paragraph -->
 
-		<!-- wp:heading {"level":1,"fontSize":"heading-l"} -->
-		<h1 class="has-heading-l-font-size" style="margin-bottom: 1rem;">Когда ночь, когда день</h1>
-		<!-- /wp:heading -->
+			<!-- wp:heading {"level":1,"fontSize":"heading-l"} -->
+			<h1 class="has-heading-l-font-size" style="margin-bottom: 1rem;">Когда ночь, когда день</h1>
+			<!-- /wp:heading -->
 
-		<!-- wp:paragraph {"fontSize":"body"} -->
-		<p class="has-body-font-size" style="margin-bottom: 2rem; color: var(--rz-ink-soft);">Мы на связи 24/7 для семей города. Помогаем организовать прощание с уважением и достоинством в любой момент.</p>
-		<!-- /wp:paragraph -->
+			<!-- wp:paragraph {"fontSize":"body"} -->
+			<p class="has-body-font-size" style="margin-bottom: 2rem;">Мы на связи 24/7 для семей города. Помогаем организовать прощание с уважением и достоинством в любой момент.</p>
+			<!-- /wp:paragraph -->
 
-		<!-- wp:button {"backgroundColor":"action","textColor":"surface"} -->
-		<div class="wp-block-button" style="display: block;">
-			<a class="wp-block-button__link has-surface-color has-action-background-color wp-element-button" href="tel:+79241234567" style="width: fit-content;">☎ Позвоните нам</a>
+			<!-- wp:button {"backgroundColor":"action","textColor":"surface"} -->
+			<div class="wp-block-button" style="display: block;">
+				<a class="wp-block-button__link has-surface-color has-action-background-color wp-element-button" href="tel:+74212605290" style="width: fit-content;">☎ Позвоните нам</a>
+			</div>
+			<!-- /wp:button -->
+
+			<!-- wp:paragraph {"fontSize":"label"} -->
+			<p class="has-label-font-size" style="margin-top: 1rem;">Круглосуточно, без выходных</p>
+			<!-- /wp:paragraph -->
 		</div>
-		<!-- /wp:button -->
-
-		<!-- wp:paragraph {"fontSize":"label"} -->
-		<p class="has-label-font-size" style="color: var(--rz-ink-soft); margin-top: 1rem;">Звонок бесплатный</p>
-		<!-- /wp:paragraph -->
+		<!-- /wp:group -->
 	</div>
 	<!-- /wp:group -->
 </div>
@@ -227,7 +234,7 @@
 		<!-- /wp:paragraph -->
 
 		<!-- wp:paragraph {"fontSize":"caption","textColor":"surface"} -->
-		<p class="has-caption-font-size has-surface-color" style="margin: 0; font-weight: 700;">+7 (924) 123-45-67</p>
+		<p class="has-caption-font-size has-surface-color" style="margin: 0; font-weight: 700;"><a href="tel:+74212605290" style="color: inherit; text-decoration: none;">+7 (4212) 60-52-90</a></p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->

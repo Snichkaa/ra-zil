@@ -287,3 +287,25 @@ function razil_no_auto_excerpt( $excerpt, $post ) {
 	return '' === trim( (string) $post->post_excerpt ) ? '' : $excerpt;
 }
 add_filter( 'get_the_excerpt', 'razil_no_auto_excerpt', 10, 2 );
+
+/**
+ * Предзагрузка фотографии первого экрана: это LCP-элемент главной
+ * на всех ширинах — ниже 1360px кадр показывается полосой под текстом.
+ */
+function razil_preload_hero_image() {
+	if ( ! is_front_page() ) {
+		return;
+	}
+
+	$src = wp_get_attachment_image_url( 100, 'full' );
+
+	if ( ! $src ) {
+		return;
+	}
+
+	printf(
+		'<link rel="preload" as="image" fetchpriority="high" href="%s">' . "\n",
+		esc_url( $src )
+	);
+}
+add_action( 'wp_head', 'razil_preload_hero_image', 2 );

@@ -18,6 +18,10 @@
 	/* CSS переменные для БЭМ */
 	--rz-transition: 160ms;
 	--rz-radius: 4px;
+
+	/* Текст героя поверх фотографии: графит в обеих темах */
+	--rz-hero-on-photo: #2E2E2C;
+	--rz-hero-scrim: #F4EFE5;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -35,6 +39,10 @@
 		--rz-action-hover: #A8D4BC;
 		--rz-action-active: #C2E2D1;
 		--rz-action-focus: #C79E77;
+
+		/* Фотография в тёмной теме не меняется — текст над ней остаётся графитовым */
+		--rz-hero-on-photo: #2E2E2C;
+		--rz-hero-scrim: #F4EFE5;
 	}
 }
 
