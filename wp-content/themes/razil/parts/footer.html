@@ -1,43 +1,132 @@
-<!-- wp:group {"align":"full","layout":{"type":"constrained"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|40","bottom":"var:preset|spacing|30","left":"var:preset|spacing|40"}},"color":{"background":"var:preset|color|surface","text":"var:preset|color|ink"},"border":{"top":{"color":"var:preset|color|line","width":"1px"}}}} -->
-<div class="wp-block-group alignfull has-text-color has-background" style="background-color: var(--wp--preset--color--surface); color: var(--wp--preset--color--ink); border-top: 1px solid var(--wp--preset--color--line); padding-top: var(--wp--preset--spacing--30); padding-bottom: var(--wp--preset--spacing--30);">
+<!-- Телефон резервный: фактический задаётся в Настройки → Организация. -->
 
-	<!-- wp:group {"className":"rz-footer-legal","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between","verticalAlignment":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|40"}}} -->
-	<div class="wp-block-group rz-footer-legal">
+<!-- Призыв живёт здесь, а не в шаблонах: раньше он был только
+     на главной и на страницах услуг, на остальных семи страницах
+     его не было. -->
+<!-- wp:group {"className":"rz-cta","align":"full","style":{"color":{"background":"var(\u002d\u002drz-action)","text":"var(\u002d\u002drz-surface)"},"spacing":{"padding":{"top":"2.5rem","right":"1rem","bottom":"2.5rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull rz-cta has-text-color has-background" style="background-color:var(--rz-action);color:var(--rz-surface);padding-top:2.5rem;padding-right:1rem;padding-bottom:2.5rem;padding-left:1rem">
+	<!-- wp:group {"className":"rz-cta__row"} -->
+	<div class="wp-block-group rz-cta__row">
+		<!-- wp:group {"className":"rz-cta__text"} -->
+		<div class="wp-block-group rz-cta__text">
+			<!-- wp:heading {"level":2,"fontSize":"heading-s"} -->
+			<h2 class="has-heading-s-font-size">Нужна помощь?</h2>
+			<!-- /wp:heading -->
 
-		<!-- Левая часть: Компания, город, год -->
-		<!-- wp:paragraph {"className":"rz-footer-company","style":{"typography":{"fontSize":"var:preset|font-size|caption","lineHeight":"1.5"},"margin":{"top":"0","bottom":"0"}}} -->
-		<p class="rz-footer-company" style="margin: 0; font-size: var(--wp--preset--font-size--caption); line-height: 1.5; color: var(--wp--preset--color--ink-soft);">
-			ООО «Земля и Люди» · Хабаровск · с 2014 года
-		</p>
+			<!-- wp:paragraph -->
+			<p>Звоните в любое время. Мы работаем круглосуточно, включая выходные и праздники.</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:paragraph {"className":"rz-cta__phone"} -->
+		<p class="rz-cta__phone"><a href="tel:+74212605290">+7 (4212) 60-52-90</a></p>
 		<!-- /wp:paragraph -->
+	</div>
+	<!-- /wp:group -->
+</div>
+<!-- /wp:group -->
 
-		<!-- Правая часть: Документы и политика -->
-		<!-- wp:paragraph {"style":{"typography":{"fontSize":"var:preset|font-size|label","lineHeight":"1.5"},"margin":{"top":"0","bottom":"0"}}} -->
-		<p style="margin: 0; font-size: var(--wp--preset--font-size--label); line-height: 1.5;">
-			<a href="/politika/" style="color: var(--wp--preset--color--action); text-decoration: none; margin-right: 0.5rem;">Политика конфиденциальности</a> ·
-			<a href="/soglasie/" style="color: var(--wp--preset--color--action); text-decoration: none; margin: 0 0.5rem;">Согласие на обработку данных</a> ·
-			<a href="/polzovatelskoe-soglashenie/" style="color: var(--wp--preset--color--action); text-decoration: none; margin: 0 0.5rem;">Пользовательское соглашение</a> ·
-			<a href="/rekvizity/" style="color: var(--wp--preset--color--action); text-decoration: none; margin-left: 0.5rem;">Реквизиты</a>
-		</p>
-		<!-- /wp:paragraph -->
+<!-- wp:group {"className":"rz-footer","align":"full","style":{"color":{"background":"var(\u002d\u002drz-ink)","text":"var(\u002d\u002drz-surface)"},"spacing":{"padding":{"top":"3rem","right":"1rem","bottom":"2rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull rz-footer has-text-color has-background" style="background-color:var(--rz-ink);color:var(--rz-surface);padding-top:3rem;padding-right:1rem;padding-bottom:2rem;padding-left:1rem">
+
+	<!-- wp:group {"className":"rz-footer__cols"} -->
+	<div class="wp-block-group rz-footer__cols">
+
+		<!-- wp:group {"className":"rz-footer__col rz-footer__col\u002d\u002dbrand"} -->
+		<div class="wp-block-group rz-footer__col rz-footer__col--brand">
+			<!-- wp:paragraph {"className":"rz-footer__name"} -->
+			<p class="rz-footer__name">Земля и Люди</p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph -->
+			<p>Ритуальное агентство в Хабаровске, работаем с 2014 года.</p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph -->
+			<p>переулок Казарменный, 9, офис 1</p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph -->
+			<p>Офис: пн–сб 10:00–17:00, вс 10:00–16:00</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"rz-footer__col"} -->
+		<div class="wp-block-group rz-footer__col">
+			<!-- wp:paragraph {"className":"rz-footer__title"} -->
+			<p class="rz-footer__title">Услуги</p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph -->
+			<p><a href="/uslugi/organizatsiya-pohoron/">Организация похорон</a></p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph -->
+			<p><a href="/uslugi/krematsiya/">Кремация</a></p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph -->
+			<p><a href="/uslugi/transportirovka/">Транспортировка умерших</a></p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph -->
+			<p><a href="/uslugi/blagoustroystvo/">Благоустройство мест захоронения</a></p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph -->
+			<p><a href="/uslugi/yuridicheskaya-pomoshch/">Юридическая помощь</a></p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"rz-footer__col"} -->
+		<div class="wp-block-group rz-footer__col">
+			<!-- wp:paragraph {"className":"rz-footer__title"} -->
+			<p class="rz-footer__title">Разделы</p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph -->
+			<p><a href="/uslugi/">Все услуги</a></p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph -->
+			<p><a href="/katalog/">Каталог</a></p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph -->
+			<p><a href="/otzyvy/">Отзывы</a></p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph -->
+			<p><a href="/o-kompanii/">О компании</a></p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph -->
+			<p><a href="/kontakty/">Контакты</a></p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"rz-footer__col"} -->
+		<div class="wp-block-group rz-footer__col">
+			<!-- wp:paragraph {"className":"rz-footer__title"} -->
+			<p class="rz-footer__title">Документы</p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph -->
+			<p><a href="/politika/">Политика конфиденциальности</a></p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph -->
+			<p><a href="/soglasie/">Согласие на обработку данных</a></p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph -->
+			<p><a href="/polzovatelskoe-soglashenie/">Пользовательское соглашение</a></p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph -->
+			<p><a href="/rekvizity/">Реквизиты</a></p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
 
 	</div>
 	<!-- /wp:group -->
 
-</div>
-<!-- /wp:group -->
-
-<!-- Тёмная полоса: режим работы и контакты одной строкой -->
-<!-- wp:group {"align":"full","layout":{"type":"constrained"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|20","right":"var:preset|spacing|40","bottom":"var:preset|spacing|20","left":"var:preset|spacing|40"}},"color":{"background":"var:preset|color|ink","text":"var:preset|color|surface"}}} -->
-<div class="wp-block-group alignfull has-text-color has-background" style="background-color: var(--wp--preset--color--ink); color: var(--wp--preset--color--surface); padding-top: var(--wp--preset--spacing--20); padding-bottom: var(--wp--preset--spacing--20);">
-
-	<!-- wp:paragraph {"className":"rz-footer-contacts","style":{"typography":{"fontSize":"var:preset|font-size|caption"}}} -->
-	<p class="rz-footer-contacts" style="font-size: var(--wp--preset--font-size--caption);">
-		<span>Работаем круглосуточно, включая праздники</span>
-		<span>Хабаровск</span>
-		<span>пер. Казарменный, д. 9, офис 1</span>
-		<a href="tel:+74212605290" style="color: var(--rz-fact); text-decoration: none; font-weight: 700;">+7 (4212) 60-52-90</a>
-	</p>
+	<!-- wp:paragraph {"className":"rz-footer__copyright"} -->
+	<p class="rz-footer__copyright">ООО «Земля и Люди», Хабаровск. Круглосуточный телефон <a href="tel:+74212605290">+7 (4212) 60-52-90</a>.</p>
 	<!-- /wp:paragraph -->
 
 </div>

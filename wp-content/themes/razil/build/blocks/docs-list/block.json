@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "razil/docs-list",
+  "title": "Документы",
+  "category": "razil",
+  "attributes": {},
+  "render": "file:./render.php",
+  "style": "file:./style.scss"
+}

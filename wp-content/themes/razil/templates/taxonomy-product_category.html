@@ -1,39 +1,23 @@
 <!-- wp:template-part {"slug":"header","theme":"razil"} /-->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-surface); padding: 2rem 1rem;">
+<!-- wp:group {"style":{"color":{"background":"var(\u002d\u002drz-bg)"},"spacing":{"padding":{"top":"3rem","right":"1rem","bottom":"3rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group has-background" style="background-color:var(--rz-bg);padding-top:3rem;padding-right:1rem;padding-bottom:3rem;padding-left:1rem">
 	<!-- wp:group {"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
-		<!-- wp:buttons {"className":"rz-btn-back"} -->
-		<div class="wp-block-buttons rz-btn-back">
-			<!-- wp:button -->
-			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/katalog/">← В каталог</a></div>
-			<!-- /wp:button -->
-		</div>
-		<!-- /wp:buttons -->
-
-		<!-- wp:term-title {"level":1,"fontSize":"heading-l"} /-->
+		<!-- wp:query-title {"type":"archive","level":1,"showPrefix":false} /-->
 
 		<!-- wp:term-description {"fontSize":"body"} /-->
-	</div>
-	<!-- /wp:group -->
-</div>
-<!-- /wp:group -->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-bg); padding: 3rem 1rem;">
-	<!-- wp:group {"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group">
 		<!-- wp:query {"queryId":3,"query":{"perPage":12,"pages":0,"offset":0,"postType":"products","order":"asc","orderBy":"title","author":"","search":"","exclude":[],"sticky":"","inherit":true}} -->
 		<div class="wp-block-query">
 			<!-- wp:post-template {"layout":{"type":"grid","columnCount":3}} -->
 			<div class="wp-block-post-template is-layout-grid">
-				<!-- wp:group -->
-				<div class="wp-block-group" style="background-color: var(--rz-surface); padding: 1.5rem; border-radius: 8px; height: 100%; display: flex; flex-direction: column;">
+				<!-- wp:group {"className":"rz-card-col","style":{"color":{"background":"var(\u002d\u002drz-surface)"},"border":{"radius":"8px"},"spacing":{"padding":{"top":"1.5rem","right":"1.5rem","bottom":"1.5rem","left":"1.5rem"}}}} -->
+				<div class="wp-block-group rz-card-col has-background" style="border-radius:8px;background-color:var(--rz-surface);padding-top:1.5rem;padding-right:1.5rem;padding-bottom:1.5rem;padding-left:1.5rem">
 					<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"1","style":{"spacing":{"margin":{"bottom":"1rem"}}}} /-->
 					<!-- wp:post-title {"isLink":true,"fontSize":"heading-s"} /-->
-					<!-- wp:paragraph {"fontSize":"label"} -->
-					<p class="has-label-font-size" style="color: var(--rz-fact); margin: 1rem 0; font-weight: 600;">от 45 000 ₽</p>
+					<!-- wp:paragraph {"style":{"color":{"text":"var(\u002d\u002drz-fact)"},"spacing":{"margin":{"top":"1rem","right":"0","bottom":"1rem","left":"0"}},"typography":{"fontWeight":"600"}},"fontSize":"label"} -->
+					<p class="has-text-color has-label-font-size" style="color:var(--rz-fact);margin-top:1rem;margin-right:0;margin-bottom:1rem;margin-left:0;font-weight:600">от 45 000 ₽</p>
 					<!-- /wp:paragraph -->
 					<!-- wp:button {"backgroundColor":"action","textColor":"surface","style":{"spacing":{"margin":{"top":"auto"}}}} -->
 					<div class="wp-block-button" style="margin-top: auto;">

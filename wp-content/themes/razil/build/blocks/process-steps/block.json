@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "razil/process-steps",
+  "title": "Процесс",
+  "category": "razil",
+  "attributes": {},
+  "render": "file:./render.php"
+}

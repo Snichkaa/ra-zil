@@ -1,7 +1,9 @@
+<!-- Телефон резервный: фактический задаётся в Настройки → Организация. -->
+
 <!-- wp:template-part {"slug":"header","theme":"razil"} /-->
 
-<!-- wp:group {"className":"rz-hero","layout":{"type":"constrained"}} -->
-<div class="wp-block-group rz-hero" style="background-color: var(--rz-bg); padding: 3rem 1rem;">
+<!-- wp:group {"className":"rz-hero rz-section","layout":{"type":"constrained"}} -->
+<div class="wp-block-group rz-hero rz-section">
 	<!-- wp:image {"id":100,"sizeSlug":"full","align":"full","linkDestination":"none","className":"rz-hero__photo"} -->
 	<figure class="wp-block-image alignfull size-full rz-hero__photo"><img src="/wp-content/uploads/2026/08/ofis-panorama.webp" alt="Здание офиса ритуального агентства «Земля и Люди» на переулке Казарменном, 9 в Хабаровске — вид со стороны двора" class="wp-image-100" width="1280" height="720" loading="eager" fetchpriority="high" decoding="async"/></figure>
 	<!-- /wp:image -->
@@ -14,22 +16,22 @@
 			<p class="has-label-font-size">Хабаровск · Круглосуточно</p>
 			<!-- /wp:paragraph -->
 
-			<!-- wp:heading {"level":1,"fontSize":"heading-l"} -->
-			<h1 class="has-heading-l-font-size" style="margin-bottom: 1rem;">Когда ночь, когда день</h1>
+			<!-- wp:heading {"level":1,"style":{"spacing":{"margin":{"bottom":"1rem"}}}} -->
+			<h1 style="margin-bottom:1rem">Когда ночь, когда день</h1>
 			<!-- /wp:heading -->
 
-			<!-- wp:paragraph {"fontSize":"body"} -->
-			<p class="has-body-font-size" style="margin-bottom: 2rem;">Мы на связи 24/7 для семей города. Помогаем организовать прощание с уважением и достоинством в любой момент.</p>
+			<!-- wp:paragraph {"style":{"spacing":{"margin":{"bottom":"2rem"}}},"fontSize":"body"} -->
+			<p class="has-body-font-size" style="margin-bottom:2rem">Мы на связи 24/7 для семей города. Помогаем организовать прощание с уважением и достоинством в любой момент.</p>
 			<!-- /wp:paragraph -->
 
 			<!-- wp:button {"backgroundColor":"action","textColor":"surface"} -->
-			<div class="wp-block-button" style="display: block;">
-				<a class="wp-block-button__link has-surface-color has-action-background-color wp-element-button" href="tel:+74212605290" style="width: fit-content;">☎ Позвоните нам</a>
+			<div class="wp-block-button">
+				<a class="wp-block-button__link has-surface-color has-action-background-color wp-element-button" href="tel:+74212605290">☎ Позвоните нам</a>
 			</div>
 			<!-- /wp:button -->
 
-			<!-- wp:paragraph {"fontSize":"label"} -->
-			<p class="has-label-font-size" style="margin-top: 1rem;">Круглосуточно, без выходных</p>
+			<!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"1rem"}}},"fontSize":"label"} -->
+			<p class="has-label-font-size" style="margin-top:1rem">Круглосуточно, без выходных</p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:group -->
@@ -38,29 +40,65 @@
 </div>
 <!-- /wp:group -->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-surface); padding: 3rem 1rem;">
+<!-- wp:group {"className":"rz-first-aid rz-section","layout":{"type":"constrained"}} -->
+<div class="wp-block-group rz-first-aid rz-section">
+
+	<!-- wp:heading {"level":2} -->
+	<h2>Что делать, если смерть наступила дома</h2>
+	<!-- /wp:heading -->
+
+	<!-- wp:paragraph {"className":"rz-first-aid__lead"} -->
+	<p class="rz-first-aid__lead">В первые часы важно действовать по порядку. Вот что нужно сделать.</p>
+	<!-- /wp:paragraph -->
+
+	<!-- wp:list {"ordered":true,"className":"rz-first-aid__steps"} -->
+	<ol class="wp-block-list rz-first-aid__steps">
+		<!-- wp:list-item -->
+		<li><strong>Вызовите скорую помощь.</strong> С мобильного — <a href="tel:103">103</a>, со стационарного — <a href="tel:03">03</a>. Врач констатирует смерть и выдаст документ, без которого дальнейшие действия невозможны.</li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><strong>Вызовите полицию.</strong> С мобильного — <a href="tel:102">102</a>, со стационарного — <a href="tel:02">02</a>. Сотрудник оформит протокол осмотра. Это обязательная процедура при смерти вне медицинского учреждения.</li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><strong>Позвоните нам:</strong> <a href="tel:+74212605290">+7 (4212) 60-52-90</a>. Мы организуем перевозку в морг и возьмём на себя всё остальное. Спросите фамилию агента, который к вам приедет.</li>
+		<!-- /wp:list-item -->
+	</ol>
+	<!-- /wp:list -->
+
+	<!-- wp:paragraph {"className":"rz-first-aid__note"} -->
+	<p class="rz-first-aid__note">Если растерялись или забыли номера — звоните на <a href="tel:112">112</a>. Единый номер работает всегда, даже при нулевом балансе и заблокированной сим-карте, и оператор соединит с нужной службой.</p>
+	<!-- /wp:paragraph -->
+
+	<!-- wp:paragraph {"className":"rz-first-aid__warning"} -->
+	<p class="rz-first-aid__warning"><strong>Не пускайте в дом посторонних ритуальных агентов.</strong> Иногда они приезжают сами, без вызова, и представляются сотрудниками служб. Наш агент назовёт свою фамилию, которую вы услышите от нас по телефону.</p>
+	<!-- /wp:paragraph -->
+
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"rz-services rz-section rz-section\u002d\u002dsurface","layout":{"type":"constrained"}} -->
+<div class="wp-block-group rz-services rz-section rz-section--surface">
 	<!-- wp:group {"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
 		<!-- Услуги -->
-		<!-- wp:heading {"level":2,"fontSize":"heading-m"} -->
-		<h2 class="has-heading-m-font-size" style="margin-bottom: 2rem;">Основные услуги</h2>
+		<!-- wp:heading {"level":2,"style":{"spacing":{"margin":{"bottom":"2rem"}}},"fontSize":"heading-m"} -->
+		<h2 class="has-heading-m-font-size" style="margin-bottom:2rem">Основные услуги</h2>
 		<!-- /wp:heading -->
 
 		<!-- wp:columns {"isStackableOnMobile":true} -->
 		<div class="wp-block-columns is-layout-flex">
 			<!-- wp:column -->
 			<div class="wp-block-column">
-				<!-- wp:group {"style":{"spacing":{"padding":{"top":"2rem","right":"2rem","bottom":"2rem","left":"2rem"}},"border":{"radius":"8px"},"dimensions":{"minHeight":"100%"}},"backgroundColor":"bg","layout":{"type":"flex","orientation":"vertical","justifyContent":"stretch"}} -->
-				<div class="wp-block-group has-bg-background-color has-background is-layout-flex wp-block-group-is-layout-flex is-vertical" style="border-radius:8px;min-height:100%;padding-top:2rem;padding-right:2rem;padding-bottom:2rem;padding-left:2rem">
+				<!-- wp:group {"className":"rz-card","style":{"spacing":{"padding":{"top":"2rem","right":"2rem","bottom":"2rem","left":"2rem"}},"dimensions":{"minHeight":"100%"}},"backgroundColor":"bg","layout":{"type":"flex","orientation":"vertical","justifyContent":"stretch"}} -->
+				<div class="wp-block-group rz-card has-bg-background-color has-background is-layout-flex wp-block-group-is-layout-flex is-vertical" style="min-height:100%;padding-top:2rem;padding-right:2rem;padding-bottom:2rem;padding-left:2rem">
 					<!-- wp:heading {"level":3,"fontSize":"heading-s"} -->
 					<h3 class="has-heading-s-font-size">Организация прощания</h3>
 					<!-- /wp:heading -->
 					<!-- wp:paragraph {"fontSize":"body"} -->
 					<p class="has-body-font-size">Полная организация обряда с выбором места и времени. Помощь в оформлении документов.</p>
 					<!-- /wp:paragraph -->
-					<!-- wp:paragraph {"fontSize":"label"} -->
-					<p class="has-label-font-size" style="color: var(--rz-fact); margin-top: auto; font-weight: 600;">от 15 000 ₽</p>
+					<!-- wp:paragraph {"style":{"color":{"text":"var(\u002d\u002drz-fact)"},"spacing":{"margin":{"top":"auto"}},"typography":{"fontWeight":"600"}},"fontSize":"label"} -->
+					<p class="has-text-color has-label-font-size" style="color:var(--rz-fact);margin-top:auto;font-weight:600">от 15 000 ₽</p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->
@@ -69,16 +107,16 @@
 
 			<!-- wp:column -->
 			<div class="wp-block-column">
-				<!-- wp:group {"style":{"spacing":{"padding":{"top":"2rem","right":"2rem","bottom":"2rem","left":"2rem"}},"border":{"radius":"8px"},"dimensions":{"minHeight":"100%"}},"backgroundColor":"bg","layout":{"type":"flex","orientation":"vertical","justifyContent":"stretch"}} -->
-				<div class="wp-block-group has-bg-background-color has-background is-layout-flex wp-block-group-is-layout-flex is-vertical" style="border-radius:8px;min-height:100%;padding-top:2rem;padding-right:2rem;padding-bottom:2rem;padding-left:2rem">
+				<!-- wp:group {"className":"rz-card","style":{"spacing":{"padding":{"top":"2rem","right":"2rem","bottom":"2rem","left":"2rem"}},"dimensions":{"minHeight":"100%"}},"backgroundColor":"bg","layout":{"type":"flex","orientation":"vertical","justifyContent":"stretch"}} -->
+				<div class="wp-block-group rz-card has-bg-background-color has-background is-layout-flex wp-block-group-is-layout-flex is-vertical" style="min-height:100%;padding-top:2rem;padding-right:2rem;padding-bottom:2rem;padding-left:2rem">
 					<!-- wp:heading {"level":3,"fontSize":"heading-s"} -->
 					<h3 class="has-heading-s-font-size">Кремация</h3>
 					<!-- /wp:heading -->
 					<!-- wp:paragraph {"fontSize":"body"} -->
 					<p class="has-body-font-size">Современные крематории с соблюдением всех норм. Выдача свидетельства о кремации.</p>
 					<!-- /wp:paragraph -->
-					<!-- wp:paragraph {"fontSize":"label"} -->
-					<p class="has-label-font-size" style="color: var(--rz-fact); margin-top: auto; font-weight: 600;">от 8 500 ₽</p>
+					<!-- wp:paragraph {"style":{"color":{"text":"var(\u002d\u002drz-fact)"},"spacing":{"margin":{"top":"auto"}},"typography":{"fontWeight":"600"}},"fontSize":"label"} -->
+					<p class="has-text-color has-label-font-size" style="color:var(--rz-fact);margin-top:auto;font-weight:600">от 8 500 ₽</p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->
@@ -87,16 +125,16 @@
 
 			<!-- wp:column -->
 			<div class="wp-block-column">
-				<!-- wp:group {"style":{"spacing":{"padding":{"top":"2rem","right":"2rem","bottom":"2rem","left":"2rem"}},"border":{"radius":"8px"},"dimensions":{"minHeight":"100%"}},"backgroundColor":"bg","layout":{"type":"flex","orientation":"vertical","justifyContent":"stretch"}} -->
-				<div class="wp-block-group has-bg-background-color has-background is-layout-flex wp-block-group-is-layout-flex is-vertical" style="border-radius:8px;min-height:100%;padding-top:2rem;padding-right:2rem;padding-bottom:2rem;padding-left:2rem">
+				<!-- wp:group {"className":"rz-card","style":{"spacing":{"padding":{"top":"2rem","right":"2rem","bottom":"2rem","left":"2rem"}},"dimensions":{"minHeight":"100%"}},"backgroundColor":"bg","layout":{"type":"flex","orientation":"vertical","justifyContent":"stretch"}} -->
+				<div class="wp-block-group rz-card has-bg-background-color has-background is-layout-flex wp-block-group-is-layout-flex is-vertical" style="min-height:100%;padding-top:2rem;padding-right:2rem;padding-bottom:2rem;padding-left:2rem">
 					<!-- wp:heading {"level":3,"fontSize":"heading-s"} -->
 					<h3 class="has-heading-s-font-size">Доставка и погребение</h3>
 					<!-- /wp:heading -->
 					<!-- wp:paragraph {"fontSize":"body"} -->
 					<p class="has-body-font-size">Транспортировка в любую точку. Организация похорон на кладбище по вашему выбору.</p>
 					<!-- /wp:paragraph -->
-					<!-- wp:paragraph {"fontSize":"label"} -->
-					<p class="has-label-font-size" style="color: var(--rz-fact); margin-top: auto; font-weight: 600;">от 12 000 ₽</p>
+					<!-- wp:paragraph {"style":{"color":{"text":"var(\u002d\u002drz-fact)"},"spacing":{"margin":{"top":"auto"}},"typography":{"fontWeight":"600"}},"fontSize":"label"} -->
+					<p class="has-text-color has-label-font-size" style="color:var(--rz-fact);margin-top:auto;font-weight:600">от 12 000 ₽</p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->
@@ -107,7 +145,7 @@
 
 		<!-- wp:button {"backgroundColor":"action","textColor":"surface","align":"center"} -->
 		<div class="wp-block-button aligncenter">
-			<a class="wp-block-button__link has-surface-color has-action-background-color wp-element-button" href="/services/">Смотреть все услуги</a>
+			<a class="wp-block-button__link has-surface-color has-action-background-color wp-element-button" href="/uslugi/">Смотреть все услуги</a>
 		</div>
 		<!-- /wp:button -->
 	</div>
@@ -115,52 +153,89 @@
 </div>
 <!-- /wp:group -->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-bg); padding: 3rem 1rem;">
-	<!-- wp:group {"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group">
-		<!-- Преимущества -->
-		<!-- wp:heading {"level":2,"fontSize":"heading-m"} -->
-		<h2 class="has-heading-m-font-size" style="margin-bottom: 2rem;">Почему выбирают нас</h2>
-		<!-- /wp:heading -->
+<!-- wp:group {"className":"rz-advantages rz-section","layout":{"type":"constrained"}} -->
+<div class="wp-block-group rz-advantages rz-section">
 
-		<!-- wp:paragraph {"fontSize":"body"} -->
-		<p class="has-body-font-size" style="padding-bottom: 1rem; border-bottom: 1px solid var(--rz-line);"><strong style="color: var(--rz-action);">Опыт 10 лет</strong> в организации похорон с соблюдением традиций и пожеланий семей</p>
-		<!-- /wp:paragraph -->
+	<!-- wp:heading {"level":2,"fontSize":"heading-m"} -->
+	<h2 class="has-heading-m-font-size">Почему выбирают нас</h2>
+	<!-- /wp:heading -->
 
-		<!-- wp:paragraph {"fontSize":"body"} -->
-		<p class="has-body-font-size" style="padding: 1rem 0; border-bottom: 1px solid var(--rz-line);"><strong style="color: var(--rz-action);">Работаем круглосуточно</strong> — звоните в любое время, мы готовы помочь</p>
-		<!-- /wp:paragraph -->
+	<!-- wp:group {"className":"rz-advantages__list"} -->
+	<div class="wp-block-group rz-advantages__list">
 
-		<!-- wp:paragraph {"fontSize":"body"} -->
-		<p class="has-body-font-size" style="padding: 1rem 0; border-bottom: 1px solid var(--rz-line);"><strong style="color: var(--rz-action);">Справедливые цены</strong> без скрытых платежей, готовы обсудить любой бюджет</p>
-		<!-- /wp:paragraph -->
+		<!-- wp:group {"className":"rz-advantage"} -->
+		<div class="wp-block-group rz-advantage">
+			<!-- wp:html -->
+			<span class="rz-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 5 L33 10 L33 20 C33 28 27 33 20 35 C13 33 7 28 7 20 L7 10 Z"/></svg></span>
+			<!-- /wp:html -->
+			<!-- wp:paragraph {"fontSize":"body"} -->
+			<p class="has-body-font-size"><strong>Опыт 10 лет</strong> в организации похорон с соблюдением традиций и пожеланий семей</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
 
-		<!-- wp:paragraph {"fontSize":"body"} -->
-		<p class="has-body-font-size" style="padding-top: 1rem;"><strong style="color: var(--rz-action);">Полный цикл услуг</strong> — от оформления документов до благоустройства могилы</p>
-		<!-- /wp:paragraph -->
+		<!-- wp:group {"className":"rz-advantage"} -->
+		<div class="wp-block-group rz-advantage">
+			<!-- wp:html -->
+			<span class="rz-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="15"/><path d="M20 20 L20 11"/><path d="M20 20 L27 24"/></svg></span>
+			<!-- /wp:html -->
+			<!-- wp:paragraph {"fontSize":"body"} -->
+			<p class="has-body-font-size"><strong>Работаем круглосуточно</strong> — звоните в любое время, мы готовы помочь</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"rz-advantage"} -->
+		<div class="wp-block-group rz-advantage">
+			<!-- wp:html -->
+			<span class="rz-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 12 L20 33"/><path d="M13 33 L27 33"/><path d="M6 12 L34 12"/><path d="M8 12 L8 17"/><path d="M32 12 L32 17"/><path d="M2 17 Q8 27 14 17"/><path d="M26 17 Q32 27 38 17"/></svg></span>
+			<!-- /wp:html -->
+			<!-- wp:paragraph {"fontSize":"body"} -->
+			<p class="has-body-font-size"><strong>Справедливые цены</strong> без скрытых платежей, готовы обсудить любой бюджет</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"rz-advantage"} -->
+		<div class="wp-block-group rz-advantage">
+			<!-- wp:html -->
+			<span class="rz-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="8" y="5" width="24" height="30" rx="3"/><path d="M12.5 13 l2 2 l4 -5"/><path d="M21.5 14 L27.5 14"/><path d="M12.5 21 l2 2 l4 -5"/><path d="M21.5 22 L27.5 22"/><path d="M12.5 29 l2 2 l4 -5"/><path d="M21.5 30 L27.5 30"/></svg></span>
+			<!-- /wp:html -->
+			<!-- wp:paragraph {"fontSize":"body"} -->
+			<p class="has-body-font-size"><strong>Полный цикл услуг</strong> — от оформления документов до благоустройства могилы</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
 	</div>
 	<!-- /wp:group -->
 </div>
 <!-- /wp:group -->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-surface); padding: 3rem 1rem;">
-	<!-- wp:group {"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group">
-		<!-- Процесс -->
+<!-- wp:group {"className":"rz-steps rz-section rz-section\u002d\u002dsurface","layout":{"type":"constrained"}} -->
+<div class="wp-block-group rz-steps rz-section rz-section--surface">
+
+	<!-- wp:group {"className":"rz-steps__head"} -->
+	<div class="wp-block-group rz-steps__head">
 		<!-- wp:heading {"level":2,"fontSize":"heading-m"} -->
-		<h2 class="has-heading-m-font-size" style="margin-bottom: 2rem;">Как мы работаем</h2>
+		<h2 class="has-heading-m-font-size">Как мы работаем</h2>
 		<!-- /wp:heading -->
-
-		<!-- wp:paragraph {"fontSize":"body"} -->
-		<p class="has-body-font-size" style="margin-bottom: 2rem;">Четыре простых шага от первого звонка до организации похорон</p>
+		<!-- wp:paragraph {"fontSize":"body","className":"rz-steps__lead"} -->
+		<p class="has-body-font-size rz-steps__lead">Четыре простых шага от первого звонка до организации похорон</p>
 		<!-- /wp:paragraph -->
+	</div>
+	<!-- /wp:group -->
 
-		<!-- wp:group -->
-		<div class="wp-block-group" style="padding: 1.5rem; background-color: var(--rz-bg); border-radius: 8px; margin-bottom: 1rem;">
+	<!-- wp:group {"className":"rz-steps__grid"} -->
+	<div class="wp-block-group rz-steps__grid">
+
+		<!-- wp:group {"className":"rz-step"} -->
+		<div class="wp-block-group rz-step">
+			<!-- wp:html -->
+			<span class="rz-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7.5 10 a4 4 0 0 1 6 -3 l4 4 a3 3 0 0 1 0 4 l-2 2 a15 15 0 0 0 9 9 l2 -2 a3 3 0 0 1 4 0 l4 4 a4 4 0 0 1 -3 6 c-13 1 -25 -12 -24 -24 z"/></svg></span>
+			<!-- /wp:html -->
 			<!-- wp:heading {"level":3,"fontSize":"heading-s"} -->
-			<h3 class="has-heading-s-font-size" style="color: var(--rz-action); margin-bottom: 0.5rem;">1. Звонок</h3>
+			<h3 class="has-heading-s-font-size">Звонок</h3>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"fontSize":"body"} -->
 			<p class="has-body-font-size">Позвоните нам по номеру, специалист расскажет о вариантах и ответит на вопросы</p>
@@ -168,10 +243,13 @@
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:group -->
-		<div class="wp-block-group" style="padding: 1.5rem; background-color: var(--rz-bg); border-radius: 8px; margin-bottom: 1rem;">
+		<!-- wp:group {"className":"rz-step"} -->
+		<div class="wp-block-group rz-step">
+			<!-- wp:html -->
+			<span class="rz-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="12" r="4.5"/><circle cx="29" cy="12" r="4.5"/><path d="M3 30 a8 8 0 0 1 16 0"/><path d="M21 30 a8 8 0 0 1 16 0"/></svg></span>
+			<!-- /wp:html -->
 			<!-- wp:heading {"level":3,"fontSize":"heading-s"} -->
-			<h3 class="has-heading-s-font-size" style="color: var(--rz-action); margin-bottom: 0.5rem;">2. Встреча</h3>
+			<h3 class="has-heading-s-font-size">Встреча</h3>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"fontSize":"body"} -->
 			<p class="has-body-font-size">Приезжаем к вам, обсуждаем все детали, помогаем с документами</p>
@@ -179,10 +257,13 @@
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:group -->
-		<div class="wp-block-group" style="padding: 1.5rem; background-color: var(--rz-bg); border-radius: 8px; margin-bottom: 1rem;">
+		<!-- wp:group {"className":"rz-step"} -->
+		<div class="wp-block-group rz-step">
+			<!-- wp:html -->
+			<span class="rz-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M13 12 L20 5 L27 12 L27 16 L13 16 Z"/><path d="M15 18 L10 22.5"/><path d="M20 18 L20 22.5"/><path d="M25 18 L30 22.5"/><circle cx="8" cy="28" r="2.8"/><path d="M4 36 a4 4 0 0 1 8 0"/><circle cx="20" cy="28" r="2.8"/><path d="M16 36 a4 4 0 0 1 8 0"/><circle cx="32" cy="28" r="2.8"/><path d="M28 36 a4 4 0 0 1 8 0"/></svg></span>
+			<!-- /wp:html -->
 			<!-- wp:heading {"level":3,"fontSize":"heading-s"} -->
-			<h3 class="has-heading-s-font-size" style="color: var(--rz-action); margin-bottom: 0.5rem;">3. Организация</h3>
+			<h3 class="has-heading-s-font-size">Организация</h3>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"fontSize":"body"} -->
 			<p class="has-body-font-size">Координируем все процессы, следим за сроками, информируем вас</p>
@@ -190,51 +271,58 @@
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:group -->
-		<div class="wp-block-group" style="padding: 1.5rem; background-color: var(--rz-bg); border-radius: 8px;">
+		<!-- wp:group {"className":"rz-step"} -->
+		<div class="wp-block-group rz-step">
+			<!-- wp:html -->
+			<span class="rz-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 37 C19 28 21 17 23 7"/><path d="M20 27 C17 26 13 23 11 18 C16 19 19 23 20 27 z"/><path d="M21.5 18 C18.5 17 14.5 14 12.5 9 C17.5 10 20.5 14 21.5 18 z"/><path d="M20.7 22.5 C23.7 21.5 27.7 18.5 29.7 13.5 C24.7 14.5 21.7 18.5 20.7 22.5 z"/><path d="M22.2 13.5 C25.2 12.5 29.2 9.5 31.2 4.5 C26.2 5.5 23.2 9.5 22.2 13.5 z"/></svg></span>
+			<!-- /wp:html -->
 			<!-- wp:heading {"level":3,"fontSize":"heading-s"} -->
-			<h3 class="has-heading-s-font-size" style="color: var(--rz-action); margin-bottom: 0.5rem;">4. Прощание</h3>
+			<h3 class="has-heading-s-font-size">Прощание</h3>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"fontSize":"body"} -->
 			<p class="has-body-font-size">Проводим достойное прощание в спокойной обстановке</p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:group -->
+
 	</div>
 	<!-- /wp:group -->
 </div>
 <!-- /wp:group -->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-bg); padding: 3rem 1rem;">
+<!-- wp:group {"className":"rz-reviews-section rz-section","layout":{"type":"constrained"}} -->
+<div class="wp-block-group rz-reviews-section rz-section">
 	<!-- wp:group {"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
 		<!-- Отзывы -->
-		<!-- wp:heading {"level":2,"fontSize":"heading-m"} -->
-		<h2 class="has-heading-m-font-size" style="margin-bottom: 2rem;">Отзывы клиентов</h2>
-		<!-- /wp:heading -->
+		<!-- wp:group {"className":"rz-reviews__head"} -->
+		<div class="wp-block-group rz-reviews__head">
+			<!-- wp:heading {"level":2,"fontSize":"heading-m"} -->
+			<h2 class="has-heading-m-font-size">Отзывы клиентов</h2>
+			<!-- /wp:heading -->
+			<!-- wp:html -->
+			<div class="rz-reviews__badge">
+				<iframe id="rz-2gis-badge" title="Рейтинг компании в 2ГИС" loading="lazy" frameborder="0" width="150" height="50" src="https://widget.2gis.ru/api/widget?org_id=4926348963369365&amp;branch_id=4926340373441419&amp;size=medium&amp;theme=light"></iframe>
+			</div>
+			<script>
+			(function () {
+				var el = document.getElementById('rz-2gis-badge');
+				if (!el || !window.matchMedia) { return; }
+				var base = 'https://widget.2gis.ru/api/widget?org_id=4926348963369365&branch_id=4926340373441419&size=medium&theme=';
+				var mq = window.matchMedia('(prefers-color-scheme: dark)');
+				function apply() { el.src = base + (mq.matches ? 'dark' : 'light'); }
+				if (mq.matches) { apply(); }
+				mq.addEventListener('change', apply);
+			})();
+			</script>
+			<!-- /wp:html -->
+		</div>
+		<!-- /wp:group -->
 
-		<!-- wp:razil/reviews /-->
-	</div>
-	<!-- /wp:group -->
-</div>
-<!-- /wp:group -->
+		<!-- wp:razil/reviews {"limit":3} /-->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-action); color: var(--rz-surface); padding: 1rem;">
-	<!-- wp:group {"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group">
-		<!-- CTA -->
-		<!-- wp:heading {"level":2,"fontSize":"heading-s","textColor":"surface"} -->
-		<h2 class="has-heading-s-font-size has-surface-color" style="margin-bottom: 0.5rem;">Нужна помощь?</h2>
-		<!-- /wp:heading -->
-
-		<!-- wp:paragraph {"fontSize":"caption","textColor":"surface"} -->
-		<p class="has-caption-font-size has-surface-color" style="margin-bottom: 0.5rem;">Звоните в любое время. Мы работаем 24/7, включая выходные и праздники.</p>
-		<!-- /wp:paragraph -->
-
-		<!-- wp:paragraph {"fontSize":"caption","textColor":"surface"} -->
-		<p class="has-caption-font-size has-surface-color" style="margin: 0; font-weight: 700;"><a href="tel:+74212605290" style="color: inherit; text-decoration: none;">+7 (4212) 60-52-90</a></p>
+		<!-- wp:paragraph {"className":"rz-reviews__link"} -->
+		<p class="rz-reviews__link"><a href="https://2gis.ru/khabarovsk/firm/4926340373441419" target="_blank" rel="noopener">Все 30 отзывов в 2ГИС</a></p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->

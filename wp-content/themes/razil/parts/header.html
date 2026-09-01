@@ -1,382 +1,121 @@
-<header class="rz-header-wrapper">
-	<div class="rz-header-container">
-		<div class="rz-header-left">
-			<div class="rz-logo">
-				<a href="/" class="rz-logo-link">
-					<picture class="rz-logo-picture">
-						<source media="(prefers-color-scheme: dark)"
-							srcset="/wp-content/uploads/2026/08/logo-emblema-zoloto-73.png 1x, /wp-content/uploads/2026/08/logo-emblema-zoloto-146.png 2x">
-						<img class="rz-logo-emblem"
-							src="/wp-content/uploads/2026/08/logo-emblema-zelenyy-73.png"
-							srcset="/wp-content/uploads/2026/08/logo-emblema-zelenyy-73.png 1x, /wp-content/uploads/2026/08/logo-emblema-zelenyy-146.png 2x"
-							width="73" height="40" alt="" loading="eager" decoding="async">
-					</picture>
-					<span class="rz-logo-text">Земля и Люди</span>
-				</a>
+<!-- Телефон резервный: фактический задаётся в Настройки → Организация. -->
+
+<!-- wp:group {"tagName":"header","className":"rz-header"} -->
+<header class="wp-block-group rz-header">
+	<!-- wp:group {"className":"rz-header__inner"} -->
+	<div class="wp-block-group rz-header__inner">
+
+		<!-- Ссылка на главную обёрнута двумя wp:html: открывающий тег в одном,
+		     закрывающий в другом. Так эмблема и название остаются отдельными
+		     редактируемыми блоками, а кликабельна вся группа целиком.
+		     Удалять эти два блока можно только вместе. -->
+		<!-- wp:html -->
+		<a class="rz-header__brand-link" href="/" aria-label="Земля и Люди, на главную">
+		<!-- /wp:html -->
+
+		<!-- wp:group {"className":"rz-header__brand"} -->
+		<div class="wp-block-group rz-header__brand">
+			<!-- wp:image {"id":96,"width":73,"height":40,"sizeSlug":"full","linkDestination":"none","className":"rz-header__logo"} -->
+			<figure class="wp-block-image size-full rz-header__logo"><img src="http://ra-zil.test/wp-content/uploads/2026/08/logo-emblema-zelenyy-146.png" alt="" class="wp-image-96" width="73" height="40" loading="eager" decoding="async"/></figure>
+			<!-- /wp:image -->
+
+			<!-- wp:paragraph {"className":"rz-header__title"} -->
+			<p class="rz-header__title">Земля и Люди</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:html -->
+		</a>
+		<!-- /wp:html -->
+
+		<!-- wp:group {"className":"rz-header__nav"} -->
+		<div class="wp-block-group rz-header__nav">
+			<!-- wp:paragraph -->
+			<p><a href="/uslugi/">Услуги</a></p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph -->
+			<p><a href="/otzyvy/">Отзывы</a></p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph -->
+			<p><a href="/o-kompanii/">О нас</a></p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph -->
+			<p><a href="/kontakty/">Контакты</a></p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"rz-header__actions"} -->
+		<div class="wp-block-group rz-header__actions">
+			<!-- wp:paragraph {"className":"rz-header__phone"} -->
+			<p class="rz-header__phone"><a href="tel:+74212605290">+7 (4212) 60-52-90</a></p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:buttons {"className":"rz-header__cta"} -->
+			<div class="wp-block-buttons rz-header__cta">
+				<!-- wp:button -->
+				<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="tel:+74212605290">Вызвать агента</a></div>
+				<!-- /wp:button -->
 			</div>
+			<!-- /wp:buttons -->
 		</div>
+		<!-- /wp:group -->
 
-		<nav class="rz-header-nav">
-			<a href="/uslugi/">Услуги</a>
-			<a href="/katalog/">Каталог</a>
-			<a href="/o-kompanii/">О нас</a>
-			<a href="/kontakty/">Контакты</a>
-		</nav>
+		<!-- Бургер служебный: клиенту в нём править нечего, а три span
+		     внутри кнопки редактор бы вычистил. Поэтому wp:html. -->
+		<!-- wp:html -->
+		<button class="rz-header__burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="rz-menu" data-rz-burger>
+			<span></span><span></span><span></span>
+		</button>
+		<!-- /wp:html -->
 
-		<div class="rz-header-right">
-			<a href="tel:+74212605290" class="rz-phone">+7 (4212) 60-52-90</a>
-			<button class="rz-btn rz-btn-secondary">Вызвать агента</button>
-		</div>
-
-		<button class="rz-burger" aria-label="Открыть меню">☰</button>
 	</div>
+	<!-- /wp:group -->
 </header>
+<!-- /wp:group -->
 
-<div class="rz-menu-overlay"></div>
-<nav class="rz-mobile-menu">
-	<button class="rz-menu-close" aria-label="Закрыть меню">✕</button>
+<!-- Мобильная панель открывается под шапкой, поэтому лежит рядом с ней,
+     а не внутри: шапка остаётся видимой и бургер работает переключателем. -->
+<!-- wp:group {"className":"rz-menu","anchor":"rz-menu","metadata":{"name":"Мобильное меню"}} -->
+<div class="wp-block-group rz-menu" id="rz-menu" hidden>
 
-	<div class="rz-mobile-nav">
-		<a href="/uslugi/">Услуги</a>
-		<a href="/katalog/">Каталог</a>
-		<a href="/o-kompanii/">О нас</a>
-		<a href="/kontakty/">Контакты</a>
+	<!-- Второй набор ссылок, независимый от шапки: без wp:navigation
+	     общего источника пунктов нет, править нужно оба места. -->
+	<!-- wp:group {"className":"rz-menu__nav"} -->
+	<div class="wp-block-group rz-menu__nav">
+		<!-- wp:paragraph -->
+		<p><a href="/uslugi/">Услуги</a></p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:paragraph -->
+		<p><a href="/otzyvy/">Отзывы</a></p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:paragraph -->
+		<p><a href="/o-kompanii/">О нас</a></p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:paragraph -->
+		<p><a href="/kontakty/">Контакты</a></p>
+		<!-- /wp:paragraph -->
 	</div>
+	<!-- /wp:group -->
 
-	<div class="rz-mobile-footer">
-		<a href="tel:+74212605290" class="rz-phone-mobile">+7 (4212) 60-52-90</a>
-		<p>Работаем круглосуточно, включая праздники</p>
+	<!-- wp:group {"className":"rz-menu__contacts"} -->
+	<div class="wp-block-group rz-menu__contacts">
+		<!-- wp:paragraph {"className":"rz-menu__phone"} -->
+		<p class="rz-menu__phone"><a href="tel:+74212605290">+7 (4212) 60-52-90</a></p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:paragraph {"className":"rz-menu__hours"} -->
+		<p class="rz-menu__hours">Работаем круглосуточно, включая праздники</p>
+		<!-- /wp:paragraph -->
 	</div>
-</nav>
+	<!-- /wp:group -->
 
-<style>
-	.rz-header-wrapper {
-		background-color: var(--rz-surface);
-		color: var(--rz-ink);
-		border-bottom: 1px solid var(--rz-line);
-		position: relative;
-		z-index: 100;
-	}
-
-	.rz-header-container {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 1rem;
-		max-width: 100%;
-	}
-
-	.rz-header-left {
-		flex-shrink: 0;
-	}
-
-	.rz-logo {
-		margin: 0;
-		font-size: clamp(20px, 4vw, 24px);
-		font-weight: 400;
-		line-height: 1.2;
-		font-family: var(--wp--preset--font-family--pt-serif, 'PT Serif', Georgia, serif);
-	}
-
-	.rz-logo a {
-		color: var(--rz-ink);
-		text-decoration: none;
-	}
-
-	/* Эмблема слева от названия, обе части — одна ссылка */
-	.rz-logo-link {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.75rem;
-	}
-
-	/* <picture> — инлайновый по умолчанию, делаем его флекс-элементом,
-	   иначе выравнивание по центру и flex-shrink применяются не к нему */
-	.rz-logo-picture {
-		display: block;
-		flex-shrink: 0;
-		line-height: 0;
-	}
-
-	.rz-logo-emblem {
-		display: block;
-		width: 73px;
-		height: 40px;
-	}
-
-	.rz-logo a:hover {
-		text-decoration: underline;
-	}
-
-	/* Десктоп меню */
-	.rz-header-nav {
-		display: none;
-		gap: 1.5rem;
-		flex: 1;
-		margin: 0 2rem;
-		font-size: 1rem;
-	}
-
-	.rz-header-nav a {
-		color: var(--rz-ink);
-		text-decoration: none;
-		transition: color 160ms, text-decoration 160ms;
-	}
-
-	.rz-header-nav a:hover {
-		color: var(--rz-action);
-		text-decoration: underline;
-	}
-
-	.rz-header-nav a:focus {
-		outline: 2px solid var(--rz-fact);
-		outline-offset: 2px;
-	}
-
-	/* Правая часть шапки */
-	.rz-header-right {
-		display: none;
-		gap: 1rem;
-		align-items: center;
-		flex-shrink: 0;
-	}
-
-	.rz-phone {
-		color: var(--rz-ink);
-		text-decoration: none;
-		font-weight: 700;
-		font-size: 1.125rem;
-		transition: color 160ms;
-	}
-
-	.rz-phone:hover {
-		color: var(--rz-action);
-	}
-
-	.rz-phone:focus {
-		outline: 2px solid var(--rz-fact);
-		outline-offset: 2px;
-	}
-
-	/* Вторичная кнопка */
-	.rz-btn-secondary {
-		background-color: transparent;
-		color: var(--rz-action);
-		border: 1px solid var(--rz-line);
-		padding: 0.5rem 1.5rem;
-		border-radius: 4px;
-		font-weight: 700;
-		cursor: pointer;
-		transition: background-color 160ms, color 160ms, border-color 160ms;
-	}
-
-	.rz-btn-secondary:hover {
-		background-color: var(--rz-action);
-		color: var(--rz-surface);
-		border-color: var(--rz-action);
-	}
-
-	.rz-btn-secondary:focus {
-		outline: 2px solid var(--rz-fact);
-		outline-offset: 2px;
-	}
-
-	/* Бургер */
-	.rz-burger {
-		background: none;
-		border: none;
-		font-size: 1.5rem;
-		cursor: pointer;
-		color: var(--rz-ink);
-		width: 48px;
-		height: 48px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-shrink: 0;
-	}
-
-	.rz-burger:focus {
-		outline: 2px solid var(--rz-fact);
-		outline-offset: 2px;
-	}
-
-	/* Мобильное меню */
-	.rz-menu-overlay {
-		display: none;
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background: rgba(0, 0, 0, 0.5);
-		z-index: 99;
-		transition: opacity 160ms;
-		opacity: 0;
-	}
-
-	.rz-menu-overlay.active {
-		display: block;
-		opacity: 1;
-	}
-
-	.rz-mobile-menu {
-		display: none;
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-color: var(--rz-surface);
-		color: var(--rz-ink);
-		z-index: 100;
-		overflow-y: auto;
-		padding: 1rem;
-		flex-direction: column;
-	}
-
-	.rz-mobile-menu.active {
-		display: flex;
-	}
-
-	.rz-menu-close {
-		background: none;
-		border: none;
-		font-size: 1.5rem;
-		cursor: pointer;
-		color: var(--rz-ink);
-		margin-bottom: 2rem;
-		align-self: flex-end;
-		width: 48px;
-		height: 48px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.rz-menu-close:focus {
-		outline: 2px solid var(--rz-fact);
-		outline-offset: 2px;
-	}
-
-	.rz-mobile-nav {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-	}
-
-	.rz-mobile-nav a {
-		color: var(--rz-ink);
-		text-decoration: none;
-		font-size: 1.25rem;
-		transition: color 160ms;
-	}
-
-	.rz-mobile-nav a:hover {
-		color: var(--rz-action);
-		text-decoration: underline;
-	}
-
-	.rz-mobile-nav a:focus {
-		outline: 2px solid var(--rz-fact);
-		outline-offset: 2px;
-	}
-
-	.rz-mobile-footer {
-		margin-top: auto;
-		padding-top: 2rem;
-		border-top: 1px solid var(--rz-line);
-	}
-
-	.rz-phone-mobile {
-		display: block;
-		color: var(--rz-action);
-		text-decoration: none;
-		font-weight: 700;
-		font-size: 1.125rem;
-		margin-bottom: 0.5rem;
-		transition: color 160ms;
-	}
-
-	.rz-phone-mobile:hover {
-		text-decoration: underline;
-	}
-
-	.rz-mobile-footer p {
-		margin: 0;
-		color: var(--rz-ink-soft);
-		font-size: 0.875rem;
-	}
-
-	/* Адаптивность */
-	@media (max-width: 1023px) {
-		.rz-header-nav,
-		.rz-header-right {
-			display: none !important;
-		}
-		.rz-burger {
-			display: flex;
-		}
-	}
-
-	@media (min-width: 1024px) {
-		.rz-header-nav {
-			display: flex;
-		}
-		.rz-header-right {
-			display: flex;
-		}
-		.rz-burger {
-			display: none;
-		}
-		.rz-menu-overlay,
-		.rz-mobile-menu {
-			display: none !important;
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.rz-menu-overlay,
-		.rz-mobile-menu {
-			transition: none;
-		}
-	}
-</style>
-
-<script>
-	document.addEventListener('DOMContentLoaded', function() {
-		const burger = document.querySelector('.rz-burger');
-		const menu = document.querySelector('.rz-mobile-menu');
-		const overlay = document.querySelector('.rz-menu-overlay');
-		const closeBtn = document.querySelector('.rz-menu-close');
-		const menuLinks = document.querySelectorAll('.rz-mobile-nav a');
-
-		if (!burger || !menu) return;
-
-		function openMenu() {
-			menu.classList.add('active');
-			overlay.classList.add('active');
-			document.body.style.overflow = 'hidden';
-		}
-
-		function closeMenu() {
-			menu.classList.remove('active');
-			overlay.classList.remove('active');
-			document.body.style.overflow = 'auto';
-		}
-
-		burger.addEventListener('click', openMenu);
-		closeBtn.addEventListener('click', closeMenu);
-		overlay.addEventListener('click', closeMenu);
-
-		menuLinks.forEach(link => {
-			link.addEventListener('click', closeMenu);
-		});
-
-		document.addEventListener('keydown', function(e) {
-			if (e.key === 'Escape' && menu.classList.contains('active')) {
-				closeMenu();
-			}
-		});
-	});
-</script>
+</div>
+<!-- /wp:group -->

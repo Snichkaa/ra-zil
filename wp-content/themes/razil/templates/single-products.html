@@ -1,30 +1,16 @@
+<!-- Телефон резервный: фактический задаётся в Настройки → Организация. -->
+
 <!-- wp:template-part {"slug":"header","theme":"razil"} /-->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-surface); padding: 2rem 1rem;">
+<!-- wp:group {"style":{"color":{"background":"var(\u002d\u002drz-bg)"},"spacing":{"padding":{"top":"3rem","right":"1rem","bottom":"3rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group has-background" style="background-color:var(--rz-bg);padding-top:3rem;padding-right:1rem;padding-bottom:3rem;padding-left:1rem">
 	<!-- wp:group {"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
-		<!-- wp:buttons {"className":"rz-btn-back"} -->
-		<div class="wp-block-buttons rz-btn-back">
-			<!-- wp:button -->
-			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/katalog/">← В каталог</a></div>
-			<!-- /wp:button -->
-		</div>
-		<!-- /wp:buttons -->
-
-		<!-- wp:post-title {"level":1,"fontSize":"heading-l"} /-->
-		<!-- wp:paragraph {"fontSize":"label"} -->
-		<p class="has-label-font-size" style="color: var(--rz-fact); margin-top: 1rem; font-weight: 600;">Товар в наличии</p>
+		<!-- wp:post-title {"level":1} /-->
+		<!-- wp:paragraph {"style":{"color":{"text":"var(\u002d\u002drz-fact)"},"spacing":{"margin":{"top":"1rem"}},"typography":{"fontWeight":"600"}},"fontSize":"label"} -->
+		<p class="has-text-color has-label-font-size" style="color:var(--rz-fact);margin-top:1rem;font-weight:600">Товар в наличии</p>
 		<!-- /wp:paragraph -->
-	</div>
-	<!-- /wp:group -->
-</div>
-<!-- /wp:group -->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-bg); padding: 3rem 1rem;">
-	<!-- wp:group {"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group">
 		<!-- wp:columns {"isStackableOnMobile":true} -->
 		<div class="wp-block-columns is-layout-flex">
 			<!-- wp:column -->
@@ -41,12 +27,12 @@
 
 				<!-- wp:post-content /-->
 
-				<!-- wp:heading {"level":2,"fontSize":"heading-s"} -->
-				<h2 class="has-heading-s-font-size" style="margin-top: 2rem;">Цена</h2>
+				<!-- wp:heading {"level":2,"style":{"spacing":{"margin":{"top":"2rem"}}},"fontSize":"heading-s"} -->
+				<h2 class="has-heading-s-font-size" style="margin-top:2rem">Цена</h2>
 				<!-- /wp:heading -->
 
-				<!-- wp:paragraph {"fontSize":"heading-m"} -->
-				<p class="has-heading-m-font-size" style="color: var(--rz-fact); font-weight: 700; margin: 1rem 0;">от 45 000 ₽</p>
+				<!-- wp:paragraph {"style":{"color":{"text":"var(\u002d\u002drz-fact)"},"spacing":{"margin":{"top":"1rem","right":"0","bottom":"1rem","left":"0"}},"typography":{"fontWeight":"700"}},"fontSize":"heading-m"} -->
+				<p class="has-text-color has-heading-m-font-size" style="color:var(--rz-fact);margin-top:1rem;margin-right:0;margin-bottom:1rem;margin-left:0;font-weight:700">от 45 000 ₽</p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:button {"backgroundColor":"action","textColor":"surface","style":{"spacing":{"padding":{"top":"1rem","right":"2rem","bottom":"1rem","left":"2rem"}}}} -->
@@ -55,16 +41,16 @@
 				</div>
 				<!-- /wp:button -->
 
-				<!-- wp:paragraph {"fontSize":"body"} -->
-				<p class="has-body-font-size" style="margin-top: 2rem;">Все товары сертифицированы и соответствуют ГОСТ. Доставка в пределах города — бесплатно.</p>
+				<!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"2rem"}}},"fontSize":"body"} -->
+				<p class="has-body-font-size" style="margin-top:2rem">Все товары сертифицированы и соответствуют ГОСТ. Доставка в пределах города — бесплатно.</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:column -->
 		</div>
 		<!-- /wp:columns -->
 
-		<!-- wp:heading {"level":2,"fontSize":"heading-m"} -->
-		<h2 class="has-heading-m-font-size" style="margin-top: 3rem;">Похожие товары</h2>
+		<!-- wp:heading {"level":2,"style":{"spacing":{"margin":{"top":"3rem"}}},"fontSize":"heading-m"} -->
+		<h2 class="has-heading-m-font-size" style="margin-top:3rem">Похожие товары</h2>
 		<!-- /wp:heading -->
 
 		<!-- wp:query {"queryId":1,"query":{"perPage":3,"pages":0,"offset":0,"postType":"products","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false,"taxQuery":{"product_category":[]}}} -->
@@ -73,8 +59,8 @@
 			<div class="wp-block-post-template is-layout-grid">
 				<!-- wp:post-title {"isLink":true,"fontSize":"heading-s"} /-->
 				<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"1"} /-->
-				<!-- wp:paragraph {"fontSize":"label"} -->
-				<p class="has-label-font-size" style="color: var(--rz-fact); font-weight: 600;">от 45 000 ₽</p>
+				<!-- wp:paragraph {"style":{"color":{"text":"var(\u002d\u002drz-fact)"},"typography":{"fontWeight":"600"}},"fontSize":"label"} -->
+				<p class="has-text-color has-label-font-size" style="color:var(--rz-fact);font-weight:600">от 45 000 ₽</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:post-template -->

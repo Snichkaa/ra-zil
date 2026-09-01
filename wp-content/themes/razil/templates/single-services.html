@@ -1,42 +1,18 @@
 <!-- wp:template-part {"slug":"header","theme":"razil"} /-->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-surface); padding: 1.5rem 1rem;">
+<!-- wp:group {"style":{"color":{"background":"var(\u002d\u002drz-bg)"},"spacing":{"padding":{"top":"3rem","right":"1rem","bottom":"3rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group has-background" style="background-color:var(--rz-bg);padding-top:3rem;padding-right:1rem;padding-bottom:3rem;padding-left:1rem">
 	<!-- wp:group {"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
-		<!-- wp:buttons {"className":"rz-btn-back"} -->
-		<div class="wp-block-buttons rz-btn-back">
-			<!-- wp:button -->
-			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/uslugi/">← Все услуги</a></div>
-			<!-- /wp:button -->
-		</div>
-		<!-- /wp:buttons -->
+		<!-- Размер задан в main.css: .single-services .wp-block-post-title.
+		     fontSize здесь намеренно не указан — класс пресета
+		     has-heading-l-font-size выводится с !important и перебивает
+		     любое авторское правило. Не выставляйте размер в редакторе. -->
+		<!-- wp:post-title {"level":1} /-->
 
-		<!-- wp:post-title {"level":1,"fontSize":"heading-l"} /-->
-	</div>
-	<!-- /wp:group -->
-</div>
-<!-- /wp:group -->
-
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-bg); padding: 3rem 1rem;">
-	<!-- wp:group {"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group">
 		<!-- wp:post-excerpt {"fontSize":"lead"} /-->
 
 		<!-- wp:post-content /-->
-
-		<!-- wp:heading {"level":2,"fontSize":"heading-s"} -->
-		<h2 class="has-heading-s-font-size" style="margin-top: 1rem; margin-bottom: 0.5rem;">Нужна помощь?</h2>
-		<!-- /wp:heading -->
-
-		<!-- wp:paragraph {"fontSize":"caption"} -->
-		<p class="has-caption-font-size" style="margin-bottom: 0.5rem;">Звоните в любое время. Наши специалисты помогут выбрать оптимальный вариант для вашей ситуации.</p>
-		<!-- /wp:paragraph -->
-
-		<!-- wp:paragraph {"fontSize":"caption"} -->
-		<p class="has-caption-font-size" style="margin: 0; color: var(--rz-action); font-weight: 600;"><a href="tel:+74212605290" style="color: inherit; text-decoration: none;">+7 (4212) 60-52-90</a></p>
-		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
 </div>

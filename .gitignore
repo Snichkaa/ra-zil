@@ -23,8 +23,10 @@
 !/wp-content/themes/razil/
 
 # Theme build
+# build/ намеренно НЕ игнорируется: functions.php регистрирует блоки
+# из build/blocks/*, сборки на сервере нет, и без этого каталога
+# свежий клон остаётся без всех блоков темы.
 /wp-content/themes/razil/node_modules/
-/wp-content/themes/razil/build/
 /wp-content/themes/razil/debug-blocks.php
 
 # Local artifacts
@@ -47,3 +49,32 @@ inventory.txt
 Thumbs.db
 .vscode/
 .idea/
+
+# Video: в git ему не место при любом размере.
+# _import/media/ целиком не игнорируем: там 16 нужных исходников
+# от 3 КБ до 265 КБ и один лишний видеофайл.
+*.mp4
+*.mov
+*.m4v
+*.avi
+*.mkv
+*.webm
+
+# Зависимости в любом каталоге, не только в теме
+node_modules/
+
+# Доступы к базе. Уже покрыт правилом /wp-*.php выше, но для файла
+# с паролями полагаться на маску не стоит.
+/wp-config.php
+
+# Временные и служебные
+*.bak
+*.orig
+*.rej
+*.tmp
+*~
+error_log
+
+# Артефакты проверок
+rz-tmp-*
+/_check/

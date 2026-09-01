@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "razil/reviews",
+  "title": "Отзывы",
+  "description": "Карусель отзывов из записей CPT reviews",
+  "category": "razil",
+  "icon": "format-quote",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "items": {
+      "type": "array",
+      "default": []
+    },
+    "limit": {
+      "type": "number",
+      "default": 0
+    },
+    "display": {
+      "type": "string",
+      "default": "carousel"
+    },
+    "step": {
+      "type": "number",
+      "default": 5
+    }
+  },
+  "example": {},
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js"
+}

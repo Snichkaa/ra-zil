@@ -1,19 +1,19 @@
 <!-- wp:template-part {"slug":"header","theme":"razil"} /-->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="background-color: var(--rz-bg); padding: 4rem 1rem; min-height: 60vh; display: flex; align-items: center; justify-content: center;">
+<!-- wp:group {"className":"rz-screen-center","style":{"color":{"background":"var(\u002d\u002drz-bg)"},"spacing":{"padding":{"top":"4rem","right":"1rem","bottom":"4rem","left":"1rem"}},"dimensions":{"minHeight":"60vh"}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group rz-screen-center has-background" style="background-color:var(--rz-bg);min-height:60vh;padding-top:4rem;padding-right:1rem;padding-bottom:4rem;padding-left:1rem">
 	<!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"padding":{"top":"0","right":"0","bottom":"0","left":"0"}}}} -->
 	<div class="wp-block-group" style="text-align: center;">
-		<!-- wp:paragraph {"fontSize":"heading-l"} -->
-		<p class="has-heading-l-font-size" style="color: var(--rz-action); font-weight: 700; line-height: 1; margin: 0 0 1rem 0; font-size: clamp(60px, 10vw, 120px);">404</p>
+		<!-- wp:paragraph {"className":"rz-404__code","style":{"color":{"text":"var(\u002d\u002drz-action)"},"spacing":{"margin":{"top":"0","right":"0","bottom":"1rem","left":"0"}},"typography":{"fontWeight":"700","lineHeight":"1"}},"fontSize":"heading-l"} -->
+		<p class="rz-404__code has-text-color has-heading-l-font-size" style="color:var(--rz-action);margin-top:0;margin-right:0;margin-bottom:1rem;margin-left:0;font-weight:700;line-height:1">404</p>
 		<!-- /wp:paragraph -->
 
-		<!-- wp:heading {"level":2,"fontSize":"heading-m"} -->
-		<h2 class="has-heading-m-font-size" style="margin: 0 0 1rem 0;">Страница не найдена</h2>
+		<!-- wp:heading {"level":1,"style":{"spacing":{"margin":{"top":"0","right":"0","bottom":"1rem","left":"0"}}}} -->
+		<h1 style="margin-top:0;margin-right:0;margin-bottom:1rem;margin-left:0">Страница не найдена</h1>
 		<!-- /wp:heading -->
 
-		<!-- wp:paragraph {"fontSize":"body"} -->
-		<p class="has-body-font-size" style="color: var(--rz-ink-soft); margin: 0 0 2rem 0;">К сожалению, страница, которую вы ищете, не существует или была удалена.</p>
+		<!-- wp:paragraph {"style":{"color":{"text":"var(\u002d\u002drz-ink-soft)"},"spacing":{"margin":{"top":"0","right":"0","bottom":"2rem","left":"0"}}},"fontSize":"body"} -->
+		<p class="has-text-color has-body-font-size" style="color:var(--rz-ink-soft);margin-top:0;margin-right:0;margin-bottom:2rem;margin-left:0">К сожалению, страница, которую вы ищете, не существует или была удалена.</p>
 		<!-- /wp:paragraph -->
 
 		<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center","flexWrap":"wrap"}} -->
@@ -24,9 +24,9 @@
 			</div>
 			<!-- /wp:button -->
 
-			<!-- wp:button {"textColor":"action","style":{"border":{"radius":"4px"}}} -->
-			<div class="wp-block-button">
-				<a class="wp-block-button__link has-action-color wp-element-button" style="border-radius: 4px; border: 1px solid var(--rz-line);" href="/">Перейти в каталог</a>
+			<!-- wp:button {"className":"rz-btn-outline","style":{"border":{"radius":"4px"}}} -->
+			<div class="wp-block-button rz-btn-outline">
+				<a class="wp-block-button__link wp-element-button" style="border-radius: 4px;" href="/katalog/">Перейти в каталог</a>
 			</div>
 			<!-- /wp:button -->
 		</div>

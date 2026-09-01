@@ -29,7 +29,14 @@ define( 'RAZIL_CORE_PATH', plugin_dir_path( __FILE__ ) );
 /**
  * Подключаем модули.
  */
+// Контакты организации подключаются первыми: на razil_org() опираются
+// и подстановка телефонов в готовые страницы, и адрес уведомлений
+// у формы отзывов.
+require_once RAZIL_CORE_PATH . 'inc/org-settings.php';
 require_once RAZIL_CORE_PATH . 'inc/post-types.php';
+require_once RAZIL_CORE_PATH . 'inc/review-meta.php';
+require_once RAZIL_CORE_PATH . 'inc/review-form.php';
+require_once RAZIL_CORE_PATH . 'inc/service-icon.php';
 require_once RAZIL_CORE_PATH . 'inc/taxonomies.php';
 require_once RAZIL_CORE_PATH . 'inc/rewrite.php';
 require_once RAZIL_CORE_PATH . 'inc/setup.php';

@@ -13,6 +13,18 @@
     "items": {
       "type": "array",
       "default": []
+    },
+    "limit": {
+      "type": "number",
+      "default": 0
+    },
+    "display": {
+      "type": "string",
+      "default": "carousel"
+    },
+    "step": {
+      "type": "number",
+      "default": 5
     }
   },
   "example": {},

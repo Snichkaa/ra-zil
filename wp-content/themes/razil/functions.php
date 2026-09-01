@@ -184,6 +184,26 @@ function razil_enqueue_styles() {
 add_action( 'wp_enqueue_scripts', 'razil_enqueue_styles' );
 
 /**
+ * Скрипты фронтенда.
+ *
+ * Единственный свой скрипт на фронте: шапка. В подвале, без зависимостей —
+ * он ничего не ждёт и работает с готовой разметкой.
+ *
+ * Версия через razil_asset_version, как у стилей: при WP_DEBUG это
+ * filemtime, в бою — версия темы.
+ */
+function razil_enqueue_scripts() {
+	wp_enqueue_script(
+		'razil-header',
+		get_theme_file_uri( 'assets/js/header.js' ),
+		array(),
+		razil_asset_version( 'assets/js/header.js' ),
+		true
+	);
+}
+add_action( 'wp_enqueue_scripts', 'razil_enqueue_scripts' );
+
+/**
  * Предзагрузка PT Sans 400.
  *
  * Первый экран набран им и должен появиться на медленном мобильном
