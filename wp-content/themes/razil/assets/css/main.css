@@ -576,11 +576,6 @@ input[type="reset"],
 
 /* === ОБЩИЕ СТИЛИ === */
 
-/* Удаление скроллбара при открытом меню */
-body.rz-menu-open {
-	overflow: hidden;
-}
-
 /* Линия между элементами */
 .wp-block-separator {
 	border: none;
@@ -1266,36 +1261,6 @@ h1.has-heading-l-font-size {
 	margin-top: 2rem;
 	padding-top: 0;
 	border-top: 0;
-}
-
-/* Блок помощи — зелёная карточка. На главной этот же
-   призыв идёт полосой во всю ширину; внутри текстовой
-   колонки уместнее карточка, цветовая логика та же. */
-.rz-help {
-	background-color: var(--rz-action);
-	color: var(--rz-surface);
-	border-radius: var(--rz-radius-card);
-	box-shadow: var(--rz-shadow);
-	padding: 1.5rem;
-	margin-top: 2.5rem;
-}
-
-.rz-help > * {
-	margin-block: 0;
-	color: inherit;
-}
-
-.rz-help > * + * {
-	margin-top: 0.75rem;
-}
-
-.rz-help a {
-	color: inherit;
-	text-decoration: none;
-}
-
-.rz-help a:hover {
-	text-decoration: underline;
 }
 
 /* Таблицы цен — строками-карточками. Стандартная сетка
