@@ -8,47 +8,17 @@
 		<p class="has-text-color has-heading-l-font-size" style="color:var(--rz-action);margin-top:0;margin-right:0;margin-bottom:1rem;margin-left:0;font-weight:700">✓</p>
 		<!-- /wp:paragraph -->
 
-		<!-- wp:heading {"level":2,"style":{"spacing":{"margin":{"top":"0","right":"0","bottom":"1rem","left":"0"}}},"fontSize":"heading-m"} -->
-		<h2 class="has-heading-m-font-size" style="margin-top:0;margin-right:0;margin-bottom:1rem;margin-left:0">Спасибо за обращение</h2>
-		<!-- /wp:heading -->
+		<!-- Заголовок и текст берутся из самой записи, а не задаются здесь:
+		     страницу правят в админке, а телефон в её тексте подставляется
+		     из Настройки → Организация. Прежняя версия шаблона держала
+		     свой заголовок, абзац и кнопки, а post_content не выводила
+		     вовсе — правка страницы ни на что не влияла. -->
+		<!-- wp:post-title {"level":1} /-->
 
-		<!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"0","right":"0","bottom":"2rem","left":"0"}}},"fontSize":"body"} -->
-		<p class="has-body-font-size" style="margin-top:0;margin-right:0;margin-bottom:2rem;margin-left:0">Мы получили вашу заявку и обязательно свяжемся с вами в ближайшее время</p>
-		<!-- /wp:paragraph -->
-
-		<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center","flexWrap":"wrap"}} -->
-		<div class="wp-block-buttons is-layout-flex">
-			<!-- wp:button {"backgroundColor":"action","textColor":"surface"} -->
-			<div class="wp-block-button">
-				<a class="wp-block-button__link has-surface-color has-action-background-color wp-element-button" href="/">На главную</a>
-			</div>
-			<!-- /wp:button -->
-
-			<!-- wp:button {"textColor":"action","style":{"border":{"radius":"4px"}}} -->
-			<div class="wp-block-button">
-				<a class="wp-block-button__link has-action-color wp-element-button" style="border-radius: 4px; border: 1px solid var(--rz-line);" href="/">Перейти в каталог</a>
-			</div>
-			<!-- /wp:button -->
-		</div>
-		<!-- /wp:buttons -->
+		<!-- wp:post-content /-->
 	</div>
 	<!-- /wp:group -->
 </div>
 <!-- /wp:group -->
 
 <!-- wp:template-part {"slug":"footer","theme":"razil"} /-->
-
-<script>
-// NOINDEX для этой страницы
-document.addEventListener('DOMContentLoaded', function() {
-	var meta = document.querySelector('meta[name="robots"]');
-	if (meta) {
-		meta.setAttribute('content', 'noindex');
-	} else {
-		var newMeta = document.createElement('meta');
-		newMeta.name = 'robots';
-		newMeta.content = 'noindex';
-		document.head.appendChild(newMeta);
-	}
-});
-</script>

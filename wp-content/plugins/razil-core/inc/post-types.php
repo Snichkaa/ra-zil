@@ -160,46 +160,5 @@ function razil_register_post_types(): void {
 			'supports'           => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'revisions' ),
 		)
 	);
-
-	/**
-	 * Заявки с форм.
-	 *
-	 * Входящие обращения. Создаются программой, не человеком.
-	 * Редактировать вручную нельзя — только смотреть и удалять.
-	 */
-	register_post_type(
-		'leads',
-		array(
-			'labels'             => array(
-				'name'               => 'Заявки',
-				'singular_name'      => 'Заявка',
-				'edit_item'          => 'Посмотреть заявку',
-				'view_item'          => 'Посмотреть заявку',
-				'search_items'       => 'Искать заявки',
-				'not_found'          => 'Заявки не найдены',
-				'menu_name'          => 'Заявки',
-			),
-			'public'             => false,
-			'show_ui'            => true,
-			'show_in_rest'       => true,
-			'menu_icon'          => 'dashicons-email',
-			'menu_position'      => 24,
-			'hierarchical'       => false,
-			'has_archive'        => false,
-			'publicly_queryable' => false,
-			'rewrite'            => false,
-			'supports'           => array( 'title', 'custom-fields' ),
-			'capabilities'       => array(
-				'create_posts'       => 'do_not_allow', // создавать нельзя через админку
-				'edit_posts'         => 'manage_options',
-				'edit_others_posts'  => false,
-				'delete_posts'       => 'manage_options',
-				'delete_others_posts' => false,
-				'publish_posts'      => false,
-				'read_posts'         => 'manage_options',
-			),
-			'map_meta_cap'       => true,
-		)
-	);
 }
 add_action( 'init', 'razil_register_post_types', 5 );

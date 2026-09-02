@@ -12,6 +12,19 @@
 ( function () {
 	'use strict';
 
+	/*
+	 * Отметка «скрипт работает» — первым делом, до любой другой работы.
+	 *
+	 * По ней CSS показывает то, что без JavaScript бессмысленно: кнопку
+	 * обратного звонка, которая умеет только открывать модальное окно.
+	 * Кнопка, не реагирующая на нажатие, читается как поломка сайта,
+	 * поэтому по умолчанию она скрыта, а показывается этим классом.
+	 *
+	 * Порядок именно такой, а не обратный: показать и потом спрятать
+	 * значило бы мигание при загрузке.
+	 */
+	document.documentElement.classList.add( 'rz-js' );
+
 	var burger = document.querySelector( '[data-rz-burger]' );
 	var menu = document.getElementById( 'rz-menu' );
 	var header = document.querySelector( '.rz-header' );
@@ -184,12 +197,122 @@
 			return;
 		}
 
+		// Два модальных окна одновременно не держим: они перехватывали бы
+		// фокус друг у друга, и Esc закрывал бы не то, что человек видит.
+		closeCallbackDialog();
+
 		telHref = href;
 		telReturn = link;
 		telDialog.querySelector( '.rz-tel-dialog__number' ).textContent = telText( href );
 		telDialog.showModal();
 		telDialog.querySelector( '.rz-tel-dialog__ok' ).focus();
 	} );
+
+	/* ==================================================== ОБРАТНЫЙ ЗВОНОК */
+
+	/**
+	 * Окно с формой заявки. В отличие от окна подтверждения звонка,
+	 * оно приходит с сервера готовым: внутри настоящая форма, которая
+	 * без JavaScript отправляется обычным POST. Скрипт только открывает
+	 * и закрывает окно.
+	 *
+	 * Разметку окно печатает шорткод [razil_callback_button] вместе
+	 * с кнопкой, поэтому здесь его может и не быть — на страницах,
+	 * где кнопки нет.
+	 */
+	var cbDialog = document.getElementById( 'rz-cb-dialog' );
+	var cbReturn = null;
+
+	function callbackUsable() {
+		return cbDialog && 'function' === typeof cbDialog.showModal;
+	}
+
+	function closeCallbackDialog() {
+		if ( callbackUsable() && cbDialog.open ) {
+			cbDialog.close();
+		}
+	}
+
+	/**
+	 * Открыть окно и увести в него фокус.
+	 *
+	 * @param {Element|null} opener Кнопка, которую нажали: на неё
+	 *                              возвращается фокус после закрытия.
+	 */
+	function openCallbackDialog( opener ) {
+		if ( ! callbackUsable() ) {
+			return false;
+		}
+
+		if ( telDialog && telDialog.open ) {
+			telDialog.close();
+		}
+
+		cbReturn = opener || null;
+		cbDialog.showModal();
+
+		// Сообщение об ошибке важнее поля: если окно открылось само после
+		// неудачной отправки, человеку сначала нужно прочитать, что не так.
+		var notice = cbDialog.querySelector( '[data-rz-notice]' );
+
+		if ( notice ) {
+			notice.focus();
+			return true;
+		}
+
+		// Ловушку пропускаем: она текстовая, но с tabindex="-1".
+		var first = cbDialog.querySelector( 'input:not([type="hidden"]):not([tabindex="-1"])' );
+
+		if ( first ) {
+			first.focus();
+		}
+
+		return true;
+	}
+
+	if ( cbDialog ) {
+		// Клик по фону: у самого dialog фон и есть, поэтому попадание
+		// мимо окна видно по target.
+		cbDialog.addEventListener( 'click', function ( event ) {
+			if ( event.target === cbDialog ) {
+				cbDialog.close();
+			}
+		} );
+
+		// Esc закрывает окно силами браузера, здесь только возврат фокуса.
+		cbDialog.addEventListener( 'close', function () {
+			if ( cbReturn && document.contains( cbReturn ) ) {
+				cbReturn.focus();
+			}
+
+			cbReturn = null;
+		} );
+
+		document.addEventListener( 'click', function ( event ) {
+			var target = event.target;
+
+			if ( ! target || 'function' !== typeof target.closest ) {
+				return;
+			}
+
+			if ( target.closest( '[data-rz-cb-close]' ) ) {
+				closeCallbackDialog();
+				return;
+			}
+
+			var opener = target.closest( '[data-rz-cb-open]' );
+
+			if ( opener ) {
+				openCallbackDialog( opener );
+			}
+		} );
+
+		// Заявку отправляли из окна, вернулись с ошибкой на ту же страницу:
+		// открываем окно сразу, иначе человек не поймёт, что заявка не ушла.
+		if ( cbDialog.hasAttribute( 'data-rz-cb-autoopen' ) ) {
+			openCallbackDialog( null );
+		}
+	}
 
 	/* ==================================================== ШАПКА */
 

@@ -2612,7 +2612,8 @@ html {
    диалог нечитаем — рамка, фон, отбивка и размер кнопок. Цвета взяты
    из токенов, новых не вводится: подтверждение зелёное, как остальные
    кнопки действия, отмена — контурная, как .rz-btn-outline. */
-.rz-tel-dialog {
+.rz-tel-dialog,
+.rz-cb-dialog {
 	max-width: min(22rem, calc(100vw - 2rem));
 	padding: 0;
 	border: 1px solid var(--rz-line);
@@ -2624,15 +2625,18 @@ html {
 
 /* Тот же графит, что в --rz-shadow, только плотнее: своего цвета
    у затемнения нет. */
-.rz-tel-dialog::backdrop {
+.rz-tel-dialog::backdrop,
+.rz-cb-dialog::backdrop {
 	background-color: rgba(46, 46, 44, 0.55);
 }
 
-.rz-tel-dialog__box {
+.rz-tel-dialog__box,
+.rz-cb-dialog__box {
 	padding: 1.5rem;
 }
 
-.rz-tel-dialog__title {
+.rz-tel-dialog__title,
+.rz-cb-dialog__title {
 	margin: 0;
 	font-weight: 700;
 }
@@ -2654,7 +2658,8 @@ html {
 /* 3rem по высоте — как у кнопок в липкой панели: окно открывается
    с телефона, и мимо такой кнопки промахнуться труднее. */
 .rz-tel-dialog__ok,
-.rz-tel-dialog__cancel {
+.rz-tel-dialog__cancel,
+.rz-cb-dialog__cancel {
 	flex: 1 1 8rem;
 	min-height: 3rem;
 	padding: 0.75rem 1.25rem;
@@ -2670,14 +2675,108 @@ html {
 	color: var(--rz-surface);
 }
 
-.rz-tel-dialog__cancel {
+.rz-tel-dialog__cancel,
+.rz-cb-dialog__cancel {
 	border: 1px solid var(--rz-line);
 	background-color: transparent;
 	color: var(--rz-ink);
 }
 
 .rz-tel-dialog__ok:focus-visible,
-.rz-tel-dialog__cancel:focus-visible {
+.rz-tel-dialog__cancel:focus-visible,
+.rz-cb-dialog__cancel:focus-visible {
 	outline: 2px solid var(--rz-action-focus);
 	outline-offset: 2px;
+}
+
+/* === ОКНО ОБРАТНОГО ЗВОНКА === */
+
+/* Оболочка, фон и кнопка отмены — общие с окном подтверждения звонка,
+   см. правила выше. Здесь только то, чем окно с формой отличается:
+   оно шире, и на низком экране форма должна прокручиваться внутри окна,
+   а не уезжать за край. */
+.rz-cb-dialog {
+	max-width: min(26rem, calc(100vw - 2rem));
+	max-height: calc(100vh - 2rem);
+	overflow: auto;
+}
+
+.rz-cb-dialog__title {
+	margin-bottom: 1rem;
+	font-size: 1.125rem;
+}
+
+/* Кнопка «Закрыть» под формой, во всю ширину: в окне это единственный
+   способ уйти, кроме Esc и клика по фону. */
+.rz-cb-dialog__cancel {
+	width: 100%;
+	margin-top: 1rem;
+}
+
+/* === БЛОК ЗАЯВКИ НА СТРАНИЦАХ УСЛУГ === */
+
+/* Блок стоит последним в содержимом, сразу после текста услуги или после
+   списка услуг, и без отбивки его первая строка читается как продолжение
+   предыдущего раздела.
+
+   Отбиваем тем же приёмом, что и заголовки разделов в .entry-content:
+   волосяная линия и вчетверо больше воздуха сверху, чем снизу. Своих
+   значений и токенов не вводим — 3rem и --rz-line уже в ходу. */
+.rz-callback {
+	margin-top: 3rem;
+	padding-top: 1.375rem;
+	border-top: 1px solid var(--rz-line);
+}
+
+/* На страницах услуг призыв подвала «Звоните в любое время» стоит сразу
+   под блоком заявки и спорит с ним по смыслу: один просит позвонить,
+   другой предлагает не звонить. Оставляем один — блок заявки.
+
+   Именно здесь, а не правкой parts/footer.html: призыв нужен на всех
+   остальных страницах, а часть шаблона одна на весь сайт.
+
+   Классы взяты из настоящей разметки, а не по догадке: WordPress выдаёт
+   post-type-archive-services на /uslugi/ и single-services на странице
+   отдельной услуги. На страницах, товарах и в блоге их нет. */
+body.post-type-archive-services .rz-cta,
+body.single-services .rz-cta {
+	display: none;
+}
+
+/* Над блоком может оказаться элемент, который сам заканчивается такой же
+   линией: аккордеон вопросов на странице услуги (у последнего
+   .wp-block-details есть border-bottom). Тогда две черты встают одна
+   под другой через зазор. Свою убираем, чужую оставляем — она ближе
+   к тому, что отделяет.
+
+   Условие именно «последний ребёнок содержимого», а не «есть хоть один
+   аккордеон»: у услуги вопросы могут стоять в середине, а текст
+   заканчиваться абзацем — там линия блока нужна. */
+.entry-content:has(> :last-child.wp-block-details) + .rz-callback {
+	border-top: 0;
+	padding-top: 0;
+}
+
+/* Кнопка обратного звонка умеет только открывать модальное окно,
+   поэтому без JavaScript она бессмысленна: нажатие ничего не делает,
+   и это читается как поломка. Прячем её по умолчанию, а показывает
+   класс rz-js, который скрипт ставит на корневой элемент.
+
+   Через :not(), а не через парное правило с display: класс появился —
+   и правила display не остаётся вовсе, кнопка берёт свой обычный вид
+   от .wp-element-button. Иначе пришлось бы повторять здесь чужое
+   значение display и следить, чтобы оно не разошлось.
+
+   Рядом с кнопкой в том же блоке стоит ссылка «позвонить»: без JavaScript
+   способ связаться остаётся. */
+html:not(.rz-js) .rz-cb-open {
+	display: none;
+}
+
+/* Строка «когда перезвоним» под кнопкой отправки. Текст пояснительный,
+   поэтому мельче и приглушённее основного. */
+.rz-cb-form__note {
+	margin: 0.75rem 0 0;
+	font-size: 0.875rem;
+	color: var(--rz-ink-soft);
 }

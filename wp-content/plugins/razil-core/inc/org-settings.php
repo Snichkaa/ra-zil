@@ -40,8 +40,31 @@ function razil_org_defaults(): array {
 		'phone'       => '+7 (4212) 60-52-90',
 		'phone_legal' => '+7 (962) 151-42-57',
 		'email'       => 'naumova@ra-zil.ru',
+		/*
+		 * Строка под формой обратного звонка. Обещание сдержанное
+		 * намеренно: офис работает пн–сб 10:00–17:00 и вс 10:00–16:00,
+		 * а дежурный телефон — круглосуточно. Обещать «перезвоним
+		 * через пять минут» в три ночи было бы неправдой.
+		 */
+		'callback_note' => 'Перезвоним в рабочее время офиса, обычно в течение часа. '
+			. 'Если нужно срочно — звоните, телефон работает круглосуточно.',
+		/*
+		 * Через сколько дней удалять отработанные заявки. Ноль отключает
+		 * удаление. Хранить их вечно нельзя: это персональные данные,
+		 * и каждый лишний день хранения — лишняя ответственность.
+		 */
+		'keep_days'     => 60,
 	);
 }
+
+/**
+ * Верхняя граница срока хранения, дни.
+ *
+ * Десять лет — не осмысленный срок для заявки на звонок, а защита от опечатки
+ * вроде лишнего нуля: с таким значением удаление фактически не наступит,
+ * и человек будет думать, что оно работает.
+ */
+const RAZIL_ORG_KEEP_DAYS_MAX = 3650;
 
 /**
  * Все контакты разом: сохранённое поверх значений по умолчанию.
@@ -120,6 +143,27 @@ if ( ! function_exists( 'razil_org_tel' ) ) {
 	}
 }
 
+if ( ! function_exists( 'razil_org_number' ) ) {
+	/**
+	 * Числовое значение настройки.
+	 *
+	 * Отдельно от razil_org: та возвращает только строки, потому что
+	 * в опции живут и массив исключённых страниц, и число дней.
+	 *
+	 * @param string $key     Ключ.
+	 * @param int    $default Значение, если ключа нет.
+	 */
+	function razil_org_number( string $key, int $default = 0 ): int {
+		$all = razil_org_all();
+
+		if ( ! isset( $all[ $key ] ) || ! is_scalar( $all[ $key ] ) ) {
+			return $default;
+		}
+
+		return absint( $all[ $key ] );
+	}
+}
+
 /**
  * Страницы, где контакты зафиксированы в тексте и не подставляются.
  *
@@ -174,12 +218,36 @@ function razil_org_sanitize( $input ): array {
 
 	$labels = razil_org_field_labels();
 
+	/*
+	 * Телефон и почту пустыми оставлять нельзя, а поясняющую строку — можно:
+	 * если её очистить, под формой просто не будет строки. Это оформление,
+	 * а не способ связи.
+	 */
+	$may_be_empty = array( 'callback_note' );
+
 	foreach ( $defaults as $key => $fallback ) {
 		$raw = isset( $input[ $key ] ) ? (string) $input[ $key ] : '';
+
+		/*
+		 * Срок хранения — число, и ноль здесь осмысленное значение:
+		 * им удаление отключают. Поэтому не проходит через общую
+		 * проверку на пустоту, которая вернула бы значение по умолчанию.
+		 */
+		if ( 'keep_days' === $key ) {
+			$clean[ $key ] = min( absint( $raw ), RAZIL_ORG_KEEP_DAYS_MAX );
+
+			continue;
+		}
 
 		$value = 'email' === $key
 			? sanitize_email( $raw )
 			: sanitize_text_field( $raw );
+
+		if ( '' === trim( $value ) && in_array( $key, $may_be_empty, true ) ) {
+			$clean[ $key ] = '';
+
+			continue;
+		}
 
 		if ( '' === trim( $value ) ) {
 			$clean[ $key ] = $fallback;
@@ -238,6 +306,8 @@ function razil_org_field_labels(): array {
 		'phone'       => 'Круглосуточный телефон',
 		'phone_legal' => 'Телефон по юридическим документам',
 		'email'       => 'Почта для уведомлений об отзывах',
+		'callback_note' => 'Когда перезвоним',
+		'keep_days'     => 'Хранить отработанные заявки, дней',
 	);
 }
 
@@ -257,6 +327,14 @@ function razil_org_field_notes(): array {
 			. 'не подставляется — см. список ниже.',
 		'email'       => 'Адрес, на который приходит письмо о новом отзыве, отправленном через форму на странице «Отзывы». '
 			. 'На страницах сайта не показывается.',
+		'keep_days'     => 'Через сколько дней удалять заявки, отмеченные как «Перезвонили». '
+			. 'Срок считается от момента отметки, а не от даты обращения: заявка, на которую '
+			. 'ответили сегодня, пролежит полный срок, сколько бы она ни ждала ответа. '
+			. 'Удаление окончательное, минуя корзину, раз в сутки. Заявки со статусом «Новая» '
+			. 'не удаляются никогда: пока на обращение не ответили, оно остаётся невыполненным '
+			. 'обещанием. Ноль отключает удаление совсем.',
+		'callback_note' => 'Строка под формой обратного звонка: чего ждать после отправки заявки. '
+			. 'Если очистить поле, строки под формой не будет.',
 	);
 }
 
@@ -336,20 +414,39 @@ function razil_org_field( array $args ): void {
 	$all   = razil_org_all();
 	$notes = razil_org_field_notes();
 
+	$phones = array_keys( razil_org_source_numbers() );
+
+	if ( 'keep_days' === $key ) {
+		printf(
+			'<input type="number" id="%s" name="%s[%s]" value="%s" class="small-text" min="0" max="%s" step="1" />',
+			esc_attr( 'razil-org-' . $key ),
+			esc_attr( RAZIL_ORG_OPTION ),
+			esc_attr( $key ),
+			esc_attr( (string) razil_org_number( 'keep_days' ) ),
+			esc_attr( (string) RAZIL_ORG_KEEP_DAYS_MAX )
+		);
+
+		printf( '<p class="description">%s</p>', esc_html( $notes[ $key ] ) );
+
+		return;
+	}
+
 	printf(
-		'<input type="%s" id="%s" name="%s[%s]" value="%s" class="regular-text" />',
+		'<input type="%s" id="%s" name="%s[%s]" value="%s" class="%s" />',
 		'email' === $key ? 'email' : 'text',
 		esc_attr( 'razil-org-' . $key ),
 		esc_attr( RAZIL_ORG_OPTION ),
 		esc_attr( $key ),
-		esc_attr( $all[ $key ] )
+		esc_attr( $all[ $key ] ),
+		// Поясняющая строка длиннее номера, ей нужна вся ширина.
+		'callback_note' === $key ? 'large-text' : 'regular-text'
 	);
 
 	printf( '<p class="description">%s</p>', esc_html( $notes[ $key ] ) );
 
 	// Для телефонов сразу показываем, что получится в ссылке: так видно,
 	// что номер записан разборчиво, ещё до сохранения.
-	if ( 'email' !== $key ) {
+	if ( in_array( $key, $phones, true ) ) {
 		printf(
 			'<p class="description">Ссылка «позвонить»: <code>%s</code></p>',
 			esc_html( razil_org_tel( $key ) )

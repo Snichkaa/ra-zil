@@ -35,10 +35,14 @@ define( 'RAZIL_CORE_PATH', plugin_dir_path( __FILE__ ) );
 require_once RAZIL_CORE_PATH . 'inc/org-settings.php';
 require_once RAZIL_CORE_PATH . 'inc/post-types.php';
 require_once RAZIL_CORE_PATH . 'inc/review-meta.php';
+require_once RAZIL_CORE_PATH . 'inc/form-support.php';
 require_once RAZIL_CORE_PATH . 'inc/review-form.php';
+require_once RAZIL_CORE_PATH . 'inc/callback-type.php';
+require_once RAZIL_CORE_PATH . 'inc/callback-form.php';
 require_once RAZIL_CORE_PATH . 'inc/service-icon.php';
 require_once RAZIL_CORE_PATH . 'inc/taxonomies.php';
 require_once RAZIL_CORE_PATH . 'inc/rewrite.php';
+require_once RAZIL_CORE_PATH . 'inc/robots.php';
 require_once RAZIL_CORE_PATH . 'inc/setup.php';
 
 /**
@@ -58,6 +62,10 @@ register_activation_hook( __FILE__, 'razil_core_activate' );
  * При деактивации чистим правила, чтобы не оставлять мусор.
  */
 function razil_core_deactivate(): void {
+	// Ежедневная уборка заявок: без снятия событие осталось бы
+	// в расписании и висело бы там, ссылаясь на несуществующий хук.
+	wp_clear_scheduled_hook( RAZIL_CALLBACK_CLEANUP_HOOK );
+
 	flush_rewrite_rules();
 }
 register_deactivation_hook( __FILE__, 'razil_core_deactivate' );

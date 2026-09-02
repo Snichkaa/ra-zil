@@ -5,9 +5,13 @@
  * Отзыв с формы создаётся черновиком и попадает на сайт только после
  * проверки: публикация без модерации на ритуальном сайте недопустима.
  *
- * Боты отсекаются тремя дешёвыми проверками: ловушка, скорость заполнения
- * и повтор с одного IP. Все три серверные: без JavaScript форма работает
- * полностью. Заполненное при ошибке возвращается в форму.
+ * Боты отсекаются четырьмя дешёвыми проверками: подпись формы, ловушка,
+ * скорость заполнения и повтор с одного IP. Все серверные: без JavaScript
+ * форма работает полностью. Заполненное при ошибке возвращается в форму.
+ *
+ * Сами проверки, возврат заполненного и разметка согласия — общие для форм
+ * сайта и живут в inc/form-support.php. Здесь остаётся то, чем отзыв
+ * отличается от других форм: поля, тексты и запись в базу.
  *
  * @package RazilCore
  */
@@ -70,24 +74,10 @@ add_filter( 'razil_review_notify', 'razil_review_notify_from_settings' );
 const RAZIL_REVIEW_REFILL_TTL = 1800;
 
 /**
- * Ссылка на страницу по слагу с запасным вариантом на прямой адрес.
- *
- * Опция wp_page_for_privacy_policy на этом сайте указывает на несуществующую
- * запись, поэтому get_privacy_policy_url() использовать нельзя.
- *
- * @param string $slug Слаг страницы.
- */
-function razil_review_page_url( string $slug ): string {
-	$page = get_page_by_path( $slug );
-
-	return $page ? get_permalink( $page ) : home_url( '/' . $slug . '/' );
-}
-
-/**
  * Адрес страницы отзывов — туда возвращаем после отправки.
  */
 function razil_review_return_url(): string {
-	return razil_review_page_url( 'otzyvy' );
+	return razil_form_page_url( 'otzyvy' );
 }
 
 /**
@@ -109,33 +99,7 @@ function razil_review_star_svg(): string {
 }
 
 /**
- * Ключ транзиента: 32 знака из wp_generate_uuid4 без дефисов.
- *
- * Ключ уходит в адресную строку, поэтому проверяется при чтении:
- * без строгой проверки по ключу из запроса можно было бы заглядывать
- * в произвольные транзиенты.
- */
-function razil_review_token(): string {
-	return str_replace( '-', '', wp_generate_uuid4() );
-}
-
-/**
- * Проверка ключа перед обращением к транзиенту.
- *
- * @param string $key Ключ из запроса.
- */
-function razil_review_token_valid( string $key ): bool {
-	return 1 === preg_match( '/^[a-f0-9]{32}$/', $key );
-}
-
-/**
- * Сохранение заполненного на время редиректа.
- *
- * Форма отправляется на admin-post.php и возвращается редиректом, поэтому
- * ввод переживает только то, что лежит на сервере. Куки и скрытые поля тут
- * не годятся: ключ уходит в адрес, значения — в транзиент.
- *
- * Возвращает ключ или пустую строку, если сохранять нечего.
+ * Сохранение заполненного на время редиректа. Поля свои, механика общая.
  */
 function razil_review_stash(): string {
 	// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -151,50 +115,23 @@ function razil_review_stash(): string {
 	);
 	// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-	if ( '' === $fields['name'] && '' === $fields['text'] && 0 === $fields['rating'] && 0 === $fields['consent'] ) {
-		return '';
-	}
-
-	$key = razil_review_token();
-	set_transient( 'razil_review_refill_' . $key, $fields, RAZIL_REVIEW_REFILL_TTL );
-
-	return $key;
+	return razil_form_stash( 'razil_review_refill_', $fields, RAZIL_REVIEW_REFILL_TTL );
 }
 
 /**
  * Чтение сохранённого для подстановки в форму.
- *
- * Одноразово: транзиент удаляется при первом же чтении, иначе повторное
- * открытие адреса с тем же ключом снова наполняло бы форму.
  */
 function razil_review_refill(): array {
-	static $fields = null;
-
-	if ( null !== $fields ) {
-		return $fields;
-	}
-
-	$fields = array(
-		'name'    => '',
-		'text'    => '',
-		'rating'  => 0,
-		'consent' => 0,
+	return razil_form_refill(
+		'razil_review_refill_',
+		array(
+			'name'    => '',
+			'text'    => '',
+			'rating'  => 0,
+			'consent' => 0,
+		),
+		'rzk'
 	);
-
-	$key = isset( $_GET['rzk'] ) ? sanitize_key( wp_unslash( $_GET['rzk'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-	if ( ! razil_review_token_valid( $key ) ) {
-		return $fields;
-	}
-
-	$saved = get_transient( 'razil_review_refill_' . $key );
-	delete_transient( 'razil_review_refill_' . $key );
-
-	if ( is_array( $saved ) ) {
-		$fields = array_merge( $fields, array_intersect_key( $saved, $fields ) );
-	}
-
-	return $fields;
 }
 
 /**
@@ -202,9 +139,7 @@ function razil_review_refill(): array {
  * если форма открыта обычным заходом.
  */
 function razil_review_state(): string {
-	$state = isset( $_GET['rz'] ) ? sanitize_key( wp_unslash( $_GET['rz'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-	return in_array( $state, array( 'ok', 'err' ), true ) ? $state : '';
+	return razil_form_state( 'rz', array( 'ok', 'err' ) );
 }
 
 /**
@@ -215,44 +150,15 @@ function razil_review_state(): string {
  * иначе после обновления страницы сообщение появится снова.
  */
 function razil_review_notice(): string {
-	$state = razil_review_state();
-
-	$texts = array(
-		'ok'  => 'Спасибо. Отзыв отправлен и появится на сайте после проверки.',
-		'err' => 'Не удалось отправить отзыв. Проверьте, что все поля заполнены, и попробуйте ещё раз. Написанное сохранено.',
+	return razil_form_notice(
+		razil_review_state(),
+		array(
+			'ok'  => 'Спасибо. Отзыв отправлен и появится на сайте после проверки.',
+			'err' => 'Не удалось отправить отзыв. Проверьте, что все поля заполнены, и попробуйте ещё раз. Написанное сохранено.',
+		),
+		'ok',
+		array( 'rz', 'rzk' )
 	);
-
-	if ( ! isset( $texts[ $state ] ) ) {
-		return '';
-	}
-
-	$ok   = ( 'ok' === $state );
-	$text = $texts[ $state ];
-
-	$out = '<div class="rz-form-notice ' . ( $ok ? 'rz-form-notice--ok' : 'rz-form-notice--err' ) . '"'
-		. ' role="' . ( $ok ? 'status' : 'alert' ) . '"'
-		. ' tabindex="-1" data-rz-notice>'
-		. '<p class="rz-form-notice__text">' . esc_html( $text ) . '</p>'
-		. '<button type="button" class="rz-form-notice__close" aria-label="Закрыть сообщение" data-rz-notice-close>&times;</button>'
-		. '</div>';
-
-	$out .= '<script>
-(function () {
-	var box = document.querySelector( "[data-rz-notice]" );
-	if ( ! box ) { return; }
-	box.focus();
-	var close = box.querySelector( "[data-rz-notice-close]" );
-	if ( close ) { close.addEventListener( "click", function () { box.remove(); } ); }
-	if ( window.history && window.history.replaceState ) {
-		var url = new URL( window.location.href );
-		url.searchParams.delete( "rz" );
-		url.searchParams.delete( "rzk" );
-		window.history.replaceState( {}, "", url.pathname + url.search + url.hash );
-	}
-})();
-</script>';
-
-	return $out;
 }
 
 /**
@@ -267,18 +173,8 @@ function razil_review_form(): string {
 	$out = razil_review_notice();
 
 	$out .= '<form class="rz-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
-	$out .= '<input type="hidden" name="action" value="' . esc_attr( RAZIL_REVIEW_ACTION ) . '" />';
-	$out .= wp_nonce_field( RAZIL_REVIEW_ACTION, 'rz_nonce', true, false );
-	$out .= '<input type="hidden" name="rz_time" value="' . esc_attr( (string) time() ) . '" />';
-
-	/*
-	 * Ловушка. Скрыта позиционированием и clip-path, а не display: none:
-	 * часть ботов пропускает поля с display: none, а такие заполняет.
-	 */
-	$out .= '<div class="rz-hp" aria-hidden="true">'
-		. '<label for="rz-website">Сайт</label>'
-		. '<input type="text" id="rz-website" name="rz_website" tabindex="-1" autocomplete="off" />'
-		. '</div>';
+	$out .= razil_form_hidden_fields( RAZIL_REVIEW_ACTION, 'rz_' );
+	$out .= razil_form_honeypot( 'rz-website', 'rz_website' );
 
 	// --- имя
 	$out .= '<p class="rz-form__row">'
@@ -311,15 +207,7 @@ function razil_review_form(): string {
 		. '</p>';
 
 	// --- согласие
-	$out .= '<p class="rz-form__row rz-form__consent">'
-		. '<input type="checkbox" id="rz-consent" name="rz_consent" value="1"'
-		. checked( 1, $was['consent'], false ) . ' required />'
-		. '<label for="rz-consent">Я даю '
-		. '<a href="' . esc_url( razil_review_page_url( 'soglasie' ) ) . '" target="_blank" rel="noopener">согласие на обработку персональных данных</a>'
-		. ' и ознакомлен с '
-		. '<a href="' . esc_url( razil_review_page_url( 'politika' ) ) . '" target="_blank" rel="noopener">политикой обработки</a>.'
-		. '</label>'
-		. '</p>';
+	$out .= razil_form_consent( 'rz-consent', 'rz_consent', 1 === (int) $was['consent'] );
 
 	$out .= '<p class="rz-form__row">'
 		. '<button type="submit" class="wp-element-button rz-form__submit">Отправить отзыв</button>'
@@ -338,11 +226,7 @@ add_shortcode( 'razil_review_form', 'razil_review_form' );
  * достаточно признака «этот посетитель уже писал».
  */
 function razil_review_throttle_key(): string {
-	$ip = isset( $_SERVER['REMOTE_ADDR'] )
-		? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) )
-		: 'unknown';
-
-	return 'razil_review_' . md5( $ip . wp_salt() );
+	return razil_form_throttle_key( 'razil_review_' );
 }
 
 /**
@@ -366,30 +250,21 @@ function razil_review_redirect( string $state, string $refill = '' ): void {
  * Обработчик отправки формы.
  */
 function razil_review_handle(): void {
-	// 1. Подпись формы.
-	$nonce = isset( $_POST['rz_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['rz_nonce'] ) ) : '';
-	if ( '' === $nonce || ! wp_verify_nonce( $nonce, RAZIL_REVIEW_ACTION ) ) {
-		razil_review_redirect( 'err' );
-	}
+	$key = razil_review_throttle_key();
 
 	/*
-	 * 2. Ловушка. Уходим с признаком успеха: бот не должен понять,
-	 * что его отсекли, иначе следующая попытка будет умнее.
+	 * 1–4. Подпись, ловушка, скорость, повтор с адреса — общей проверкой.
+	 *
+	 * При заполненной ловушке уходим с признаком успеха: бот не должен
+	 * понять, что его отсекли, иначе следующая попытка будет умнее.
 	 */
-	$trap = isset( $_POST['rz_website'] ) ? trim( (string) wp_unslash( $_POST['rz_website'] ) ) : '';
-	if ( '' !== $trap ) {
+	$stop = razil_form_guard( RAZIL_REVIEW_ACTION, 'rz_', RAZIL_REVIEW_MIN_SECONDS, $key );
+
+	if ( 'trap' === $stop ) {
 		razil_review_redirect( 'ok' );
 	}
 
-	// 3. Скорость заполнения.
-	$started = isset( $_POST['rz_time'] ) ? (int) $_POST['rz_time'] : 0;
-	if ( $started <= 0 || ( time() - $started ) < RAZIL_REVIEW_MIN_SECONDS ) {
-		razil_review_redirect( 'err' );
-	}
-
-	// 4. Повтор с того же адреса.
-	$key = razil_review_throttle_key();
-	if ( get_transient( $key ) ) {
+	if ( '' !== $stop ) {
 		razil_review_redirect( 'err' );
 	}
 
