@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Razil Theme Functions
  *
@@ -311,21 +311,74 @@ add_filter( 'get_the_excerpt', 'razil_no_auto_excerpt', 10, 2 );
 /**
  * Предзагрузка фотографии первого экрана: это LCP-элемент главной
  * на всех ширинах — ниже 1360px кадр показывается полосой под текстом.
+ *
+ * imagesrcset и imagesizes обязательны и повторяют то, что стоит у самого
+ * тега img. Без них предзагрузка называет один конкретный адрес — полный
+ * размер, — и браузер обязан его скачать. Вариант по srcset он потом
+ * выбирает отдельно, и на узком экране скачивались ДВА файла вместо
+ * одного: 153.5 КБ полного кадра сверх нужных 58.4 КБ.
+ *
+ * С этими атрибутами предзагрузка выбирает тот же вариант, что и srcset,
+ * и файл остаётся один.
  */
 function razil_preload_hero_image() {
 	if ( ! is_front_page() ) {
 		return;
 	}
 
-	$src = wp_get_attachment_image_url( 100, 'full' );
+	$id = 100;
+
+	/*
+	 * Номер вложения зашит, поэтому обязательна проверка, что эта картинка
+	 * и правда стоит на главной.
+	 *
+	 * Без проверки смена фотографии героя ломала бы страницу молча: у новой
+	 * картинки будет свой номер, предзагрузка продолжила бы тянуть старую,
+	 * и браузер качал бы два файла — новый по разметке и старый по
+	 * предзагрузке, причём второй нигде не показывался бы. Ни ошибки,
+	 * ни предупреждения, просто лишние полтораста килобайт.
+	 *
+	 * Проверяем по разметке шаблона, а не разбором блоков: разбор на каждый
+	 * запрос стоит дороже, чем приносит. Здесь достаточно одного поиска
+	 * по строке. Граница слова обязательна, иначе wp-image-100 совпало бы
+	 * и с wp-image-1005.
+	 *
+	 * Источник — глобальная переменная ядра с содержимым текущего шаблона.
+	 * Она заполняется при подборе шаблона, то есть до вывода head, и учитывает
+	 * копию из базы, если шаблон когда-нибудь сохранят в редакторе сайта.
+	 */
+	global $_wp_current_template_content;
+
+	$markup = (string) $_wp_current_template_content;
+
+	if ( '' === $markup || ! preg_match( '/\bwp-image-' . $id . '\b/', $markup ) ) {
+		return;
+	}
+
+	$src = wp_get_attachment_image_url( $id, 'full' );
 
 	if ( ! $src ) {
 		return;
 	}
 
+	$srcset = wp_get_attachment_image_srcset( $id, 'full' );
+	$sizes  = wp_get_attachment_image_sizes( $id, 'full' );
+
+	// Без srcset у вложения предзагружать по-старому: одним адресом.
+	if ( ! $srcset || ! $sizes ) {
+		printf(
+			'<link rel="preload" as="image" fetchpriority="high" href="%s">' . "\n",
+			esc_url( $src )
+		);
+
+		return;
+	}
+
 	printf(
-		'<link rel="preload" as="image" fetchpriority="high" href="%s">' . "\n",
-		esc_url( $src )
+		'<link rel="preload" as="image" fetchpriority="high" href="%s" imagesrcset="%s" imagesizes="%s">' . "\n",
+		esc_url( $src ),
+		esc_attr( $srcset ),
+		esc_attr( $sizes )
 	);
 }
 add_action( 'wp_head', 'razil_preload_hero_image', 2 );

@@ -1,1 +1,1 @@
-﻿<?php ?><section class="wp-block-razil-price-card"><h3><?php echo esc_html($attributes["title"] ?? ""); ?></h3><p class="rz-price"><?php echo esc_html($attributes["price"] ?? ""); ?> ₽</p><p class="rz-price-note">Точную сумму назовём после разговора</p></section>
+<?php ?><section class="wp-block-razil-price-card"><h3><?php echo esc_html($attributes["title"] ?? ""); ?></h3><p class="rz-price"><?php echo esc_html($attributes["price"] ?? ""); ?> ₽</p><p class="rz-price-note">Точную сумму назовём после разговора</p></section>

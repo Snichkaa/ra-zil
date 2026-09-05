@@ -139,7 +139,7 @@ function razil_review_refill(): array {
  * если форма открыта обычным заходом.
  */
 function razil_review_state(): string {
-	return razil_form_state( 'rz', array( 'ok', 'err' ) );
+	return razil_form_state( 'rz', array( 'ok', 'err', 'captcha', 'captcha_expired' ) );
 }
 
 /**
@@ -155,6 +155,9 @@ function razil_review_notice(): string {
 		array(
 			'ok'  => 'Спасибо. Отзыв отправлен и появится на сайте после проверки.',
 			'err' => 'Не удалось отправить отзыв. Проверьте, что все поля заполнены, и попробуйте ещё раз. Написанное сохранено.',
+			'captcha' => 'Проверка не пройдена, отзыв не отправлен. Попробуйте отправить ещё раз. Написанное сохранено.',
+			'captcha_expired' => 'Страница была открыта слишком давно, и проверка устарела. Обновите страницу '
+				. 'и отправьте отзыв ещё раз. Написанное сохранено.',
 		),
 		'ok',
 		array( 'rz', 'rzk' )
@@ -209,6 +212,9 @@ function razil_review_form(): string {
 	// --- согласие
 	$out .= razil_form_consent( 'rz-consent', 'rz_consent', 1 === (int) $was['consent'] );
 
+	// Невидимая капча: разметки не даёт и места не занимает, пока не настроена.
+	$out .= razil_captcha_widget( 'review' );
+
 	$out .= '<p class="rz-form__row">'
 		. '<button type="submit" class="wp-element-button rz-form__submit">Отправить отзыв</button>'
 		. '</p>';
@@ -232,7 +238,7 @@ function razil_review_throttle_key(): string {
 /**
  * Возврат на страницу отзывов с признаком результата.
  *
- * @param string $state  ok или err.
+ * @param string $state  ok, err, captcha или captcha_expired.
  * @param string $refill Ключ сохранённых полей, если их надо подставить.
  */
 function razil_review_redirect( string $state, string $refill = '' ): void {
@@ -262,6 +268,14 @@ function razil_review_handle(): void {
 
 	if ( 'trap' === $stop ) {
 		razil_review_redirect( 'ok' );
+	}
+
+	/*
+	 * Капча не пройдена — заполненное возвращаем в форму: терять
+	 * написанный отзыв из-за проверки нельзя.
+	 */
+	if ( 'captcha' === $stop || 'captcha_expired' === $stop ) {
+		razil_review_redirect( $stop, razil_review_stash() );
 	}
 
 	if ( '' !== $stop ) {

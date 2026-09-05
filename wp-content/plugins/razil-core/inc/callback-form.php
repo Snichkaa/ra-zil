@@ -68,7 +68,7 @@ const RAZIL_CALLBACK_PHONE_MAX = 32;
  * Состояние страницы после редиректа.
  */
 function razil_callback_state(): string {
-	return razil_form_state( 'rzcb', array( 'err' ) );
+	return razil_form_state( 'rzcb', array( 'err', 'captcha', 'captcha_expired' ) );
 }
 
 /**
@@ -110,6 +110,9 @@ function razil_callback_notice(): string {
 		array(
 			'err' => 'Не удалось отправить заявку. Проверьте имя, телефон и согласие на обработку данных, '
 				. 'и попробуйте ещё раз. Введённое сохранено.',
+			'captcha' => 'Проверка не пройдена, заявка не отправлена. Попробуйте ещё раз. Введённое сохранено.',
+			'captcha_expired' => 'Страница была открыта слишком давно, и проверка устарела. Обновите страницу '
+				. 'и отправьте заявку ещё раз. Введённое сохранено.',
 		),
 		'ok',
 		array( 'rzcb', 'rzcbk' )
@@ -177,6 +180,9 @@ function razil_callback_form_markup( string $uid ): string {
 
 	// --- согласие, разметка общая с формой отзывов
 	$out .= razil_form_consent( $id_consent, $p . 'consent', 1 === (int) $was['consent'] );
+
+	// Невидимая капча: разметки не даёт и места не занимает, пока не настроена.
+	$out .= razil_captcha_widget( $uid );
 
 	$out .= '<p class="rz-form__row">'
 		. '<button type="submit" class="wp-element-button rz-form__submit">Жду звонка</button>'
@@ -391,10 +397,10 @@ function razil_callback_back_url(): string {
 /**
  * Возврат к форме с сообщением об ошибке и сохранённым вводом.
  */
-function razil_callback_fail(): void {
+function razil_callback_fail( string $state = 'err' ): void {
 	$url = add_query_arg(
 		array(
-			'rzcb'  => 'err',
+			'rzcb'  => $state,
 			'rzcbk' => razil_callback_stash(),
 		),
 		razil_callback_back_url()
@@ -474,6 +480,15 @@ function razil_callback_handle(): void {
 	 */
 	if ( 'trap' === $guard ) {
 		razil_callback_done();
+	}
+
+	/*
+	 * Капча не пройдена. Своё состояние вместо общего «не удалось»:
+	 * человеку нужно знать, что дело не в полях, а при просрочке —
+	 * что достаточно обновить страницу.
+	 */
+	if ( 'captcha' === $guard || 'captcha_expired' === $guard ) {
+		razil_callback_fail( $guard );
 	}
 
 	if ( '' !== $guard ) {

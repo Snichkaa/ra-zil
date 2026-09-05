@@ -1,1 +1,1 @@
-﻿import { useBlockProps } from "@wordpress/block-editor"; export default function Edit( { attributes } ) { return <section { ...useBlockProps() } className="wp-block-razil-kv-list"><p>Block content</p></section>; }
+import { useBlockProps } from "@wordpress/block-editor"; export default function Edit( { attributes } ) { return <section { ...useBlockProps() } className="wp-block-razil-kv-list"><p>Block content</p></section>; }
