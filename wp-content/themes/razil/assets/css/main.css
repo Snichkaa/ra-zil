@@ -166,7 +166,7 @@ a:visited {
 }
 
 a:focus {
-	outline: 2px solid var(--rz-fact);
+	outline: 2px solid var(--rz-action-focus);
 	outline-offset: 2px;
 	border-radius: 0;
 }
@@ -418,13 +418,18 @@ hr {
 
 /* === ФОКУСНЫЕ ЭЛЕМЕНТЫ === */
 
-/* Видимый фокус на всех интерактивных элементах */
+/* Видимый фокус на всех интерактивных элементах.
+
+   Цвет берётся из --rz-action-focus, а не из --rz-fact, хотя значения
+   у них сейчас совпадают. Токен назван по роли: если палитра однажды
+   поменяется, цвет обводки можно будет подобрать под порог контраста
+   независимо от акцентного цвета цифр и подписей. */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-	outline: 2px solid var(--rz-fact);
+	outline: 2px solid var(--rz-action-focus);
 	outline-offset: 2px;
 }
 
@@ -437,6 +442,73 @@ input[type="reset"],
 .wp-block-button__link {
 	min-width: 3rem;
 	min-height: 3rem;
+}
+
+/* Зоны нажатия у ссылок внутри текста.
+
+   У кнопки высоту задаёт min-height выше, у строчной ссылки — кегль:
+   в тексте это 23 px при кегле 18, в подвале 19 при 15. Просто добавить
+   вертикальную отбивку нельзя, и это проверено, а не предположено:
+   отбивка сдвигает слово вниз на пиксель, а вниз зона всё равно
+   не растёт — её перекрывает следующая строка текста, и из 44 px
+   рамки нажимаются 37.
+
+   Поэтому зону расширяет невидимый ::after, выведенный из потока.
+   Вёрстку он не меняет: снимки главной и отзывов до и после правки
+   совпадают попиксельно. На «Контактах» хвост одной строки сдвигается
+   на полпикселя — это округление строчной раскладки, оно возникает
+   от любого изменения бокса ссылки, в том числе от одной отбивки
+   без псевдоэлемента, и на глаз неразличимо.
+
+   Высота считается от фактической, а не задаётся числом: inset-block
+   тянет по половине недостающего с каждой стороны, поэтому одно
+   правило годится и для 23 px в тексте, и для 19 px в подвале.
+   min(0px, …) страхует от обратного — цель выше нужной не сжимается.
+
+   --rz-tap       нужная высота зоны;
+   --rz-tap-side  расширение по горизонтали. По умолчанию нулевое:
+                  почти все эти ссылки и так шире 44 px, а лишнее
+                  расширение отобрало бы у соседних слов возможность
+                  выделения. Нужно оно только коротким номерам. */
+.rz-first-aid a[href^="tel:"],
+.entry-content a[href^="tel:"]:not(.wp-element-button),
+.entry-content a[href^="mailto:"]:not(.wp-element-button),
+.rz-header__nav a,
+.rz-reviews__link a,
+.rz-footer__col a,
+.rz-footer__copyright a {
+	--rz-tap: 2.75rem;
+	--rz-tap-side: 0px;
+	position: relative;
+}
+
+/* «103» — 30.6 px, «02» и «03» — 20.4 px: единственные цели,
+   которым не хватает ширины. */
+.rz-first-aid a[href^="tel:"] {
+	--rz-tap-side: 0.75rem;
+}
+
+/* Подвал — 32 px вместо 44. Ссылки там стоят столбиком с зазором
+   13.5 px: цель в 44 px налезала бы на соседнюю, и нажатие уходило
+   бы не по адресу — замер дал 33 px у зажатых между соседями вместо
+   обещанных 44. Настоящая отбивка до 44 px растянула бы подвал
+   на 324 px на узком экране. Подвал не путь к цели, а справочный
+   аппарат, и 32 px без промахов лучше 44 px с промахами. */
+.rz-footer__col a {
+	--rz-tap: 2rem;
+}
+
+.rz-first-aid a[href^="tel:"]::after,
+.entry-content a[href^="tel:"]:not(.wp-element-button)::after,
+.entry-content a[href^="mailto:"]:not(.wp-element-button)::after,
+.rz-header__nav a::after,
+.rz-reviews__link a::after,
+.rz-footer__col a::after,
+.rz-footer__copyright a::after {
+	content: "";
+	position: absolute;
+	inset-block: min(0px, calc((var(--rz-tap) - 100%) / -2));
+	inset-inline: calc(-1 * var(--rz-tap-side));
 }
 
 /* === ВСТРОЕННЫЕ БЛОКИ === */
@@ -700,7 +772,7 @@ input[type="reset"],
 }
 
 .rz-reviews__track:focus-visible {
-	outline: 2px solid var(--rz-fact);
+	outline: 2px solid var(--rz-action-focus);
 	outline-offset: 2px;
 }
 
@@ -791,7 +863,7 @@ input[type="reset"],
 }
 
 .rz-reviews__arrow:focus-visible {
-	outline: 2px solid var(--rz-fact);
+	outline: 2px solid var(--rz-action-focus);
 	outline-offset: 2px;
 }
 
@@ -1150,10 +1222,17 @@ input[type="reset"],
 
 /* Вопросы FAQ. Разделители повторяют приём из
    «Почему выбирают нас»: волосяная линия сверху,
-   последнему добавляем снизу. */
+   последнему добавляем снизу.
+
+   Отбивка 0.8rem, а не 1.25rem — ровно на столько, сколько отдано
+   summary ниже: 0.8 + 0.45 = 1.25rem. Она не убавилась, а переехала
+   из родителя в сам заголовок. Так зона нажатия у вопроса выросла
+   с 30 до 46 px, а страница не подросла: было 6355 px, стало 6355.
+   Иначе пришлось бы добавлять отбивку сверху имеющейся и платить
+   72 px высоты. */
 .entry-content .wp-block-details {
 	border-top: 1px solid var(--rz-line);
-	padding: 1.25rem 0;
+	padding: 0.8rem 0;
 	margin: 0;
 }
 
@@ -1161,11 +1240,17 @@ input[type="reset"],
 	border-bottom: 1px solid var(--rz-line);
 }
 
+/* Отбивка здесь, а не псевдоэлементом, как у ссылок в тексте:
+   у summary свой ::after уже занят галочкой. Заголовку она и уместна —
+   это настоящий орган управления, а не слово внутри фразы.
+   align-items: flex-start держит галочку у верхнего края, поэтому
+   отбивка сдвигает вопрос и галочку вместе, не рассогласовывая их. */
 .entry-content .wp-block-details > summary {
 	display: flex;
 	align-items: flex-start;
 	justify-content: space-between;
 	gap: 1rem;
+	padding-block: 0.45rem;
 	cursor: pointer;
 	list-style: none;
 	font-weight: 700;
@@ -1214,7 +1299,7 @@ input[type="reset"],
 }
 
 .entry-content .wp-block-details > summary:focus-visible {
-	outline: 2px solid var(--rz-fact);
+	outline: 2px solid var(--rz-action-focus);
 	outline-offset: 2px;
 }
 
@@ -1621,7 +1706,7 @@ h1.has-heading-l-font-size {
 .rz-form__submit:focus-visible,
 .rz-form__consent input:focus-visible,
 .rz-stars__input:focus-visible + .rz-stars__label {
-	outline: 2px solid var(--rz-fact);
+	outline: 2px solid var(--rz-action-focus);
 	outline-offset: 2px;
 }
 
@@ -1737,7 +1822,7 @@ h1.has-heading-l-font-size {
 }
 
 .rz-form-notice:focus {
-	outline: 2px solid var(--rz-fact);
+	outline: 2px solid var(--rz-action-focus);
 	outline-offset: 2px;
 }
 
@@ -1761,7 +1846,7 @@ h1.has-heading-l-font-size {
 }
 
 .rz-form-notice__close:focus-visible {
-	outline: 2px solid var(--rz-fact);
+	outline: 2px solid var(--rz-action-focus);
 	outline-offset: 2px;
 }
 
@@ -2059,7 +2144,7 @@ html {
 .rz-header__nav a:focus-visible,
 .rz-header__brand-link:focus-visible,
 .rz-header__burger:focus-visible {
-	outline: 2px solid var(--rz-fact);
+	outline: 2px solid var(--rz-action-focus);
 	outline-offset: 2px;
 }
 
@@ -2564,6 +2649,18 @@ html {
 
 .rz-hero .wp-block-button__link {
 	width: fit-content;
+}
+
+/* Обводка фокуса у кнопки героя. Общий --rz-action-focus здесь не годится:
+   он переворачивается вместе с темой, а фотография под кнопкой — нет.
+   В светлой теме коричневая обводка давала на листве 2.31:1, в тёмной
+   светло-коричневая — 1.11:1, то есть пропадала совсем.
+
+   Тот же графит, что и текст героя: он одинаков в обеих темах и держит
+   порог по всему контуру кнопки — замер 2830 пикселей вдоль обводки дал
+   худшее значение 5.03:1 при пороге 3.0. */
+.rz-hero .wp-block-button__link:focus-visible {
+	outline-color: var(--rz-hero-on-photo);
 }
 
 /* === ОБЪЯВЛЕНИЯ БЕЗ БЛОЧНЫХ АТРИБУТОВ === */
