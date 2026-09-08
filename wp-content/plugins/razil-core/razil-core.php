@@ -44,6 +44,7 @@ require_once RAZIL_CORE_PATH . 'inc/taxonomies.php';
 require_once RAZIL_CORE_PATH . 'inc/rewrite.php';
 require_once RAZIL_CORE_PATH . 'inc/robots.php';
 require_once RAZIL_CORE_PATH . 'inc/breadcrumbs.php';
+require_once RAZIL_CORE_PATH . 'inc/schema.php';
 require_once RAZIL_CORE_PATH . 'inc/hardening.php';
 require_once RAZIL_CORE_PATH . 'inc/setup.php';
 
