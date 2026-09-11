@@ -358,61 +358,108 @@ hr {
 	}
 }
 
-/* === ЛИПКАЯ ПОЛОСА === */
+/* === КНОПКА ЗВОНКА ===
 
-/* Полосы нет вообще, пока её не покажет скрипт: начальное состояние
+   Пилюля в правом нижнем углу: подпись на бежевой подложке, трубка
+   в зелёном круге справа. Круг того же диаметра, что высота пилюли,
+   и садится в её закругление заподлицо - читается как один элемент,
+   а не как кнопка с ярлыком рядом.
+
+   Показывается на всех ширинах: на десктопе телефон есть в шапке,
+   но при прокрутке вниз шапка уезжает, и быстрого способа позвонить
+   не остаётся.
+
+   Кнопки нет вообще, пока её не покажет скрипт: начальное состояние
    скрытое, поэтому без JS она не появляется и не мелькает при загрузке.
 
-   Порог 62rem — тот же, что у бургера, мобильного меню, пар .rz-side
-   и колонок подвала. У полосы раньше стоял 1023px, это наследие. */
-@media (max-width: 61.99rem) {
-	:root {
-		/* Высота полосы: 1rem padding сверху и снизу, кнопка 3.5rem,
-		   подпись со своим отступом. На неё же опирается компенсация. */
-		--rz-sticky-h: 8.25rem;
-	}
+   Подложка под текстом нужна: кнопка лежит поверх содержимого
+   страницы, и без неё подпись читалась бы поверх случайного фона.
 
-	.rz-sticky-call {
-		position: fixed;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 100;
-		transform: translateY(100%);
-		opacity: 0;
-		visibility: hidden;
-		transition: transform var(--rz-transition),
-		            opacity var(--rz-transition),
-		            visibility var(--rz-transition);
-	}
-
-	.rz-sticky-call.is-visible {
-		transform: translateY(0);
-		opacity: 1;
-		visibility: visible;
-	}
-
-	/* Полоса лежит поверх содержимого, поэтому пока она видна,
-	   низ страницы отодвигается ровно на её высоту. Отступ живёт
-	   и исчезает вместе с полосой — за счёт :has() без второго
-	   класса на body и без участия скрипта. */
-	body:has(.rz-sticky-call.is-visible) {
-		padding-bottom: var(--rz-sticky-h);
-	}
+   Компенсации padding-bottom у body нет: пилюля не перекрывает
+   содержимое на всю ширину, она висит в углу над ним. */
+.rz-sticky-call {
+	position: fixed;
+	right: 1.25rem;
+	bottom: 1.25rem;
+	z-index: 100;
+	display: flex;
+	align-items: center;
+	padding-left: 1rem;
+	border-radius: 1.75rem;
+	background-color: var(--rz-surface);
+	box-shadow: 0 2px 12px rgb(0 0 0 / 25%);
+	text-decoration: none;
+	transform: scale(0.8);
+	opacity: 0;
+	visibility: hidden;
+	transition: transform var(--rz-transition),
+	            opacity var(--rz-transition),
+	            visibility var(--rz-transition);
 }
 
-/* На десктопе полосы нет совсем: там в шапке и телефон, и кнопка. */
-@media (min-width: 62rem) {
-	.rz-sticky-call {
-		display: none;
-	}
+.rz-sticky-call__label {
+	display: flex;
+	flex-direction: column;
+	padding-right: 0.75rem;
+	line-height: 1.2;
+	text-align: right;
+	white-space: nowrap;
 }
 
-/* Меньше движения — без выезда снизу: полоса просто появляется. */
+.rz-sticky-call__title {
+	color: var(--rz-ink);
+	font-size: 0.875rem;
+	font-weight: 700;
+}
+
+.rz-sticky-call__note {
+	color: var(--rz-ink-soft);
+	font-size: 0.75rem;
+}
+
+/* flex: none - иначе круг сожмётся, когда подписи не хватит места. */
+.rz-sticky-call__circle {
+	flex: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.5rem;
+	height: 3.5rem;
+	border-radius: 50%;
+	background-color: var(--rz-action);
+	color: var(--rz-surface);
+	transition: background-color var(--rz-transition);
+}
+
+.rz-sticky-call__icon {
+	width: 1.75rem;
+	height: 1.75rem;
+	fill: currentColor;
+}
+
+.rz-sticky-call.is-visible {
+	transform: scale(1);
+	opacity: 1;
+	visibility: visible;
+}
+
+.rz-sticky-call:hover .rz-sticky-call__circle,
+.rz-sticky-call:focus-visible .rz-sticky-call__circle {
+	background-color: var(--rz-action-hover);
+}
+
+.rz-sticky-call:focus-visible {
+	outline: 2px solid var(--rz-action-focus);
+	outline-offset: 3px;
+}
+
+/* Меньше движения — кнопка появляется мгновенно, без наплыва.
+   transform здесь не сбрасываем: у видимой кнопки его задаёт
+   .rz-sticky-call.is-visible, и по специфичности он всё равно
+   победит. Достаточно снять переход. */
 @media (prefers-reduced-motion: reduce) {
 	.rz-sticky-call {
 		transition: none;
-		transform: none;
 	}
 }
 
@@ -1916,33 +1963,6 @@ h1.has-heading-l-font-size {
 	outline-offset: 2px;
 }
 
-/* Кнопка в липкой полосе. Пресетные классы цвета
-   идут с !important и перебивали инлайновые стили:
-   кнопка получалась зелёной на зелёном, контраст 1.00:1.
-   Задаём цвет своим классом, без пресетов. */
-.rz-sticky-call__btn {
-	background-color: var(--rz-surface);
-	color: var(--rz-action);
-	border: 0;
-}
-
-.rz-sticky-call__btn:hover,
-.rz-sticky-call__btn:focus-visible {
-	background-color: var(--rz-bg);
-	color: var(--rz-action);
-}
-
-.rz-sticky-call__btn:focus-visible {
-	outline: 2px solid var(--rz-surface);
-	outline-offset: 2px;
-}
-
-/* Полоса и секция «Нужна помощь?» одного цвета
-   и стыкуются без границы — читаются как одна плита. */
-.rz-sticky-call {
-	border-top: 1px solid var(--rz-surface);
-}
-
 /* Фотографии на страницах услуг. Подпись обязательна:
    без неё снимок торгового зала или машины у офиса
    читается как случайная картинка посреди текста,
@@ -2865,14 +2885,6 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
    блока зависит от версии ядра, поэтому надёжнее классом. */
 .rz-btn-gap {
 	margin-top: 2rem;
-}
-
-/* Кнопка в липкой полосе тянется на всю ширину. width
-   блочными атрибутами не задаётся ни у core/buttons,
-   ни у core/button. */
-.rz-sticky-call .wp-block-buttons,
-.rz-sticky-call .wp-block-button {
-	width: 100%;
 }
 
 /* === ДИАЛОГ ПОДТВЕРЖДЕНИЯ ЗВОНКА === */
