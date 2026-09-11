@@ -904,7 +904,7 @@ input[type="reset"],
 	display: flex;
 	gap: 0.25rem;
 	margin-bottom: 0.75rem;
-	color: var(--rz-fact);
+	color: var(--rz-star);
 }
 
 /* stroke-width: 3 намеренно: звезда рисуется при 16px из вьюбокса 40,
@@ -1690,8 +1690,13 @@ h1.has-heading-l-font-size {
 
 /* Ширина как у остального текста: 41.5rem — та же мера строки,
    что у лида и абзацев списка. */
+/* margin-inline: auto нужен для узких экранов. Пока колонок две,
+   ограничение в 41.5rem не видно - колонка сама уже. Когда грид
+   схлопывается в одну, блок оказывается уже контейнера и без
+   auto прижимается к левому краю. */
 .rz-review-form-wrap {
 	margin-top: 3rem;
+	margin-inline: auto;
 	max-width: 41.5rem;
 }
 
@@ -1708,6 +1713,7 @@ h1.has-heading-l-font-size {
 }
 
 .rz-form {
+	margin-inline: auto;
 	max-width: 41.5rem;
 }
 
@@ -1756,7 +1762,7 @@ h1.has-heading-l-font-size {
 .rz-stars__set {
 	display: flex;
 	gap: 0.25rem;
-	color: var(--rz-fact);
+	color: var(--rz-star);
 }
 
 /* Сам radio не убираем из потока display: none — иначе он выпадет
@@ -1781,11 +1787,11 @@ h1.has-heading-l-font-size {
 	height: 1.75rem;
 	stroke-width: 2.15;
 	fill: none;
-	/* Контур в --rz-fact, а не в --rz-line:
+	/* Контур в --rz-star, а не в --rz-line:
 	   при цвете линий звёзды читались как
 	   неактивные, и было неочевидно, что по ним
 	   нужно нажать. */
-	stroke: var(--rz-fact);
+	stroke: var(--rz-star);
 	transition: fill var(--rz-transition), stroke var(--rz-transition);
 }
 
@@ -1836,8 +1842,9 @@ h1.has-heading-l-font-size {
 	text-underline-offset: 0.2em;
 }
 
-/* Сообщение после отправки. Красного в палитре нет, поэтому ошибка
-   отличается не цветом фона, а рамкой --rz-fact. */
+/* Сообщение после отправки. Состояние показывает цвет рамки:
+   --rz-err для ошибки, --rz-ok для успеха. Заливка не меняется -
+   на ритуальном сайте цветной фон плашки смотрится резко. */
 .rz-form-notice {
 	display: flex;
 	align-items: flex-start;
@@ -1846,19 +1853,43 @@ h1.has-heading-l-font-size {
 	margin: 0 0 1.5rem;
 	padding: 1rem 1.25rem;
 	max-width: 41.5rem;
+	margin-inline: auto;
 	background-color: var(--rz-surface);
 	border: 1px solid var(--rz-line);
 	border-radius: var(--rz-radius-card);
 	box-shadow: var(--rz-shadow);
 }
 
-.rz-form-notice--err {
-	border-color: var(--rz-fact);
+/* Рамка, а не заливка: плашка остаётся спокойной, но перестаёт
+   сливаться с обычной карточкой.
+
+   Тень снята, ширина поднята до 2px - обе правки об одном. Рядом
+   с цветной рамкой тень читается вторым контуром, и линия выглядит
+   зажатой полоской; без тени и в два пикселя рамка видна как рамка.
+   У нейтральной плашки тень остаётся: там она единственное,
+   что отделяет её от фона. */
+.rz-form-notice--err,
+.rz-form-notice--ok {
+	border-width: 2px;
+	box-shadow: none;
 }
 
-.rz-form-notice:focus {
-	outline: 2px solid var(--rz-action-focus);
-	outline-offset: 2px;
+.rz-form-notice--err {
+	border-color: var(--rz-err);
+}
+
+.rz-form-notice--ok {
+	border-color: var(--rz-ok);
+}
+
+/* Обводки фокуса у плашки нет намеренно. Ей ставят фокус программно,
+   чтобы скринридер зачитал сообщение, и браузер рисовал обводку сразу
+   при загрузке страницы - рядом с цветной рамкой она читалась вторым
+   контуром. Tab-ом до плашки не дойти: tabindex="-1" выводит её
+   из порядка обхода, значит клавиатурному пользователю обводка здесь
+   и не нужна. Сообщение доносит текст и role, а не рамка. */
+.rz-form-notice {
+	outline: none;
 }
 
 .rz-form-notice__text {

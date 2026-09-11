@@ -140,7 +140,20 @@ function razil_review_refill(): array {
  * если форма открыта обычным заходом.
  */
 function razil_review_state(): string {
-	return razil_form_state( 'rz', array( 'ok', 'err', 'captcha', 'captcha_expired' ) );
+	return razil_form_state(
+		'rz',
+		array(
+			'ok',
+			'err',
+			'captcha',
+			'captcha_expired',
+			'no_rating',
+			'short_text',
+			'short_name',
+			'no_consent',
+			'throttle',
+		)
+	);
 }
 
 /**
@@ -154,11 +167,16 @@ function razil_review_notice(): string {
 	return razil_form_notice(
 		razil_review_state(),
 		array(
-			'ok'  => 'Спасибо. Отзыв отправлен и появится на сайте после проверки.',
-			'err' => 'Не удалось отправить отзыв. Проверьте, что все поля заполнены, и попробуйте ещё раз. Написанное сохранено.',
-			'captcha' => 'Проверка не пройдена, отзыв не отправлен. Попробуйте отправить ещё раз. Написанное сохранено.',
+			'ok'              => 'Спасибо. Отзыв отправлен и появится на сайте после проверки.',
+			'err'             => 'Не удалось отправить отзыв. Проверьте, что все поля заполнены, и попробуйте ещё раз. Написанное сохранено.',
+			'captcha'         => 'Проверка не пройдена, отзыв не отправлен. Попробуйте отправить ещё раз. Написанное сохранено.',
 			'captcha_expired' => 'Страница была открыта слишком давно, и проверка устарела. Обновите страницу '
 				. 'и отправьте отзыв ещё раз. Написанное сохранено.',
+			'no_rating'       => 'Выберите оценку от одной до пяти звёзд. Написанное сохранено.',
+			'short_text'      => 'Отзыв слишком короткий. Напишите хотя бы несколько слов. Написанное сохранено.',
+			'short_name'      => 'Укажите имя — хотя бы две буквы. Написанное сохранено.',
+			'no_consent'      => 'Отметьте согласие на обработку персональных данных. Написанное сохранено.',
+			'throttle'        => 'Вы недавно уже отправляли отзыв. Попробуйте через несколько минут.',
 		),
 		'ok',
 		array( 'rz', 'rzk' )
@@ -176,7 +194,7 @@ function razil_review_form(): string {
 
 	$out = razil_review_notice();
 
-	$out .= '<form class="rz-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+	$out .= '<form class="rz-form rz-review-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 	$out .= razil_form_hidden_fields( RAZIL_REVIEW_ACTION, 'rz_' );
 	$out .= razil_form_honeypot( 'rz-website', 'rz_website' );
 
@@ -222,8 +240,106 @@ function razil_review_form(): string {
 
 	$out .= '</form>';
 
+	$out .= razil_review_validation_js();
+
 	return $out;
 }
+/**
+ * Подсказки браузера до отправки.
+ *
+ * Дублирует серверные проверки, но не заменяет их: скрипт можно обойти,
+ * сервер - нет. Смысл в другом: человек видит, что исправить, сразу под
+ * полем и не теряет круг с перезагрузкой страницы.
+ *
+ * Пороги те же, что на сервере: имя от двух букв, отзыв от семи знаков.
+ * Разойдутся - человек получит подсказку от браузера, отправит, и всё
+ * равно упрётся в отказ сервера.
+ */
+function razil_review_validation_js(): string {
+	return <<<'JS'
+<script>
+( function () {
+	/*
+	 * Ищем от самого тега script, а не по документу: класс rz-form носит
+	 * и форма обратного звонка, и querySelector взял бы ту, что выше
+	 * в DOM. document.currentScript указывает на этот script в момент
+	 * выполнения, а форма - его непосредственный предыдущий сосед,
+	 * потому что шорткод печатает их подряд. Заодно это делает вывод
+	 * безопасным при двух формах на странице: каждый скрипт найдёт свою.
+	 */
+	var tag = document.currentScript;
+	var form = tag ? tag.previousElementSibling : null;
+
+	if ( ! form || ! form.classList.contains( 'rz-review-form' ) ) {
+		form = document.querySelector( '.rz-review-form' );
+	}
+
+	if ( ! form ) {
+		return;
+	}
+
+	var name = form.querySelector( '#rz-name' );
+	var text = form.querySelector( '#rz-text' );
+	var stars = form.querySelectorAll( '.rz-stars__input' );
+
+	var letters = function ( s ) {
+		var m = s.match( /\p{L}/gu );
+		return m ? m.length : 0;
+	};
+
+	var checkName = function () {
+		var v = name.value.trim();
+
+		if ( v.length < 2 || letters( v ) < 2 ) {
+			name.setCustomValidity( 'Укажите имя — хотя бы две буквы.' );
+		} else {
+			name.setCustomValidity( '' );
+		}
+	};
+
+	var checkText = function () {
+		var v = text.value.trim();
+
+		if ( v.length < 7 || letters( v ) < 5 ) {
+			text.setCustomValidity( 'Отзыв слишком короткий. Напишите хотя бы несколько слов.' );
+		} else {
+			text.setCustomValidity( '' );
+		}
+	};
+
+	var checkStars = function () {
+		var picked = false;
+
+		Array.prototype.forEach.call( stars, function ( s ) {
+			if ( s.checked ) {
+				picked = true;
+			}
+		} );
+
+		Array.prototype.forEach.call( stars, function ( s ) {
+			s.setCustomValidity( picked ? '' : 'Выберите оценку от одной до пяти звёзд.' );
+		} );
+	};
+
+	if ( name ) {
+		name.addEventListener( 'input', checkName );
+		name.addEventListener( 'blur', checkName );
+	}
+
+	if ( text ) {
+		text.addEventListener( 'input', checkText );
+		text.addEventListener( 'blur', checkText );
+	}
+
+	Array.prototype.forEach.call( stars, function ( s ) {
+		s.addEventListener( 'change', checkStars );
+	} );
+
+}() );
+</script>
+JS;
+}
+
 add_shortcode( 'razil_review_form', 'razil_review_form' );
 
 /**
@@ -279,12 +395,26 @@ function razil_review_handle(): void {
 		razil_review_redirect( $stop, razil_review_stash() );
 	}
 
-	if ( '' !== $stop ) {
-		razil_review_redirect( 'err' );
+	/*
+	 * Повтор с одного адреса называем своим именем: человек должен понять,
+	 * что дело во времени, а не в его заполнении. Остальные причины
+	 * (подпись не сошлась, время не пришло) человеку не объяснить -
+	 * они означают либо бота, либо сбой, и для них общее «не удалось».
+	 *
+	 * Заполненное сохраняем и здесь: при лимите отзыв написан целиком,
+	 * терять его из-за паузы нельзя.
+	 */
+	if ( 'throttle' === $stop ) {
+		razil_review_redirect( 'throttle', razil_review_stash() );
 	}
 
-	// 5. Обязательные поля. Заполненное возвращаем в форму:
-	// терять написанный отзыв из-за незакрытой галочки нельзя.
+	if ( '' !== $stop ) {
+		razil_review_redirect( 'err', razil_review_stash() );
+	}
+
+	// 5. Разбор полей. Проверки ниже раздельные, у каждой свой код
+	// состояния: человеку важно знать, что именно исправить.
+	// Заполненное возвращаем в форму при любом отказе.
 	$name    = isset( $_POST['rz_name'] ) ? sanitize_text_field( wp_unslash( $_POST['rz_name'] ) ) : '';
 	$name    = mb_substr( $name, 0, 60 );
 	$text    = isset( $_POST['rz_text'] ) ? wp_kses_post( wp_unslash( $_POST['rz_text'] ) ) : '';
@@ -292,8 +422,31 @@ function razil_review_handle(): void {
 	$rating  = isset( $_POST['rz_rating'] ) ? (int) $_POST['rz_rating'] : 0;
 	$consent = ! empty( $_POST['rz_consent'] );
 
-	if ( '' === trim( $name ) || '' === trim( $text ) || ! $consent || $rating < 1 || $rating > 5 ) {
-		razil_review_redirect( 'err', razil_review_stash() );
+	/*
+	 * Проверки раздельные: одно общее «проверьте поля» не говорит человеку,
+	 * что именно исправить. Порядок сверху вниз совпадает с порядком полей
+	 * в форме, чтобы сообщение указывало на первое непройденное сверху.
+	 *
+	 * Буквы считаем по \p{L} с флагом u: без него кириллица не совпадёт,
+	 * и «Спасибо» не пройдёт проверку на две буквы в имени.
+	 */
+	$name_letters = preg_match_all( '/\p{L}/u', $name );
+	$text_letters = preg_match_all( '/\p{L}/u', $text );
+
+	if ( mb_strlen( trim( $name ) ) < 2 || $name_letters < 2 ) {
+		razil_review_redirect( 'short_name', razil_review_stash() );
+	}
+
+	if ( $rating < 1 || $rating > 5 ) {
+		razil_review_redirect( 'no_rating', razil_review_stash() );
+	}
+
+	if ( mb_strlen( trim( $text ) ) < 7 || $text_letters < 5 ) {
+		razil_review_redirect( 'short_text', razil_review_stash() );
+	}
+
+	if ( ! $consent ) {
+		razil_review_redirect( 'no_consent', razil_review_stash() );
 	}
 
 	// --- запись
