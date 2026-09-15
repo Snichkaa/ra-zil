@@ -56,6 +56,7 @@ function razil_schema_extend( $graph, $context ) {
 		return $graph;
 	}
 
+	$graph = razil_schema_enrich_org( $graph );
 	$graph = razil_schema_add_faq( $graph, $context );
 	$graph = razil_schema_add_service( $graph, $context );
 
@@ -385,6 +386,139 @@ function razil_schema_add_service( array $graph, $context ): array {
 	$node['inLanguage']       = get_bloginfo( 'language' );
 
 	$graph[] = $node;
+
+	return $graph;
+}
+
+/**
+ * Дорабатывает узел организации, который построил Yoast.
+ *
+ * Именно дорабатывает, а не добавляет свой. У узла Yoast есть @id, и на него
+ * уже ссылаются другие узлы графа — Service через provider, WebPage через
+ * publisher. Добавь мы вторую организацию со своим @id, на странице оказались
+ * бы два описания одной компании, а ссылки вели бы на неполное.
+ *
+ * Всё, что здесь дописывается, в бесплатном Yoast закрыто подпиской: телефон,
+ * адрес, юридическое название, идентификаторы. Поэтому значения живут в коде,
+ * а не в настройках — заодно они переезжают с файлами и не требуют повторного
+ * заполнения на другом домене.
+ *
+ * Тип меняется с Organization на FuneralHome — это наследник LocalBusiness
+ * из словаря schema.org, профильный для ритуального агентства. Organization
+ * оставлен рядом вторым значением: узел по-прежнему должен находиться
+ * поиском по 'Organization', иначе razil_schema_add_service перестанет
+ * подставлять provider.
+ *
+ * График офиса и доступность телефона разведены намеренно.
+ * openingHoursSpecification отвечает на вопрос «когда можно прийти», и там
+ * стоят часы приёма. Круглосуточность — свойство телефонной линии, она
+ * в contactPoint. Написать 24/7 в графике значило бы позвать человека
+ * к закрытой двери среди ночи.
+ *
+ * @param array<int, array<string, mixed>> $graph Граф Yoast.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function razil_schema_enrich_org( array $graph ): array {
+	$key = razil_schema_find( $graph, 'Organization' );
+
+	if ( null === $key ) {
+		return $graph;
+	}
+
+	$node = $graph[ $key ];
+
+	$node['@type'] = array( 'FuneralHome', 'Organization' );
+
+	/*
+	 * priceRange не выводим. Google ожидает в этом поле доллары ($$ до $$$$),
+	 * рублёвый знак в его документации не описан, а выдумывать значение
+	 * для поля о ценах на сайте, где цены ещё не заполнены, не стоит вовсе.
+	 * Поле необязательное.
+	 */
+	$node['legalName'] = 'ООО «Земля и Люди»';
+	$node['telephone'] = '+74212605290';
+	$node['email']     = 'Zil@ra-zil.ru';
+
+	$node['description'] = 'Ритуальное агентство «Земля и Люди» в Хабаровске. '
+		. 'Организация похорон, кремация, транспортировка, благоустройство '
+		. 'мест захоронения, юридическая помощь. Приём звонков круглосуточно.';
+
+	$node['address'] = array(
+		'@type'           => 'PostalAddress',
+		'streetAddress'   => 'переулок Казарменный, дом 9, офис 1',
+		'addressLocality' => 'Хабаровск',
+		'addressRegion'   => 'Хабаровский край',
+		'postalCode'      => '680020',
+		'addressCountry'  => 'RU',
+	);
+
+	$node['geo'] = array(
+		'@type'     => 'GeoCoordinates',
+		'latitude'  => 48.468420,
+		'longitude' => 135.090853,
+	);
+
+	$node['areaServed'] = array(
+		'@type' => 'City',
+		'name'  => 'Хабаровск',
+	);
+
+	// Часы приёма в офисе. Телефон работает дольше - см. contactPoint ниже.
+	$node['openingHoursSpecification'] = array(
+		array(
+			'@type'     => 'OpeningHoursSpecification',
+			'dayOfWeek' => array(
+				'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+				'Friday', 'Saturday', 'Sunday',
+			),
+			'opens'     => '09:00',
+			'closes'    => '17:00',
+		),
+	);
+
+	$node['contactPoint'] = array(
+		array(
+			'@type'             => 'ContactPoint',
+			'contactType'       => 'customer service',
+			'telephone'         => '+74212605290',
+			'areaServed'        => 'RU',
+			'availableLanguage' => 'Russian',
+			'hoursAvailable'    => array(
+				'@type'     => 'OpeningHoursSpecification',
+				'dayOfWeek' => array(
+					'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+					'Friday', 'Saturday', 'Sunday',
+				),
+				'opens'     => '00:00',
+				'closes'    => '24:00',
+			),
+		),
+	);
+
+	/*
+	 * ИНН ложится в taxID - это штатное поле словаря.
+	 * Для ОГРН отдельного свойства нет ни в schema.org, ни у Google,
+	 * поэтому он идёт через identifier с PropertyValue: так словарь
+	 * предлагает передавать любые реестровые номера, и валидаторы
+	 * такую конструкцию принимают.
+	 */
+	$node['taxID'] = '2722119094';
+
+	$node['identifier'] = array(
+		array(
+			'@type'    => 'PropertyValue',
+			'name'     => 'ОГРН',
+			'value'    => '1132722001136',
+		),
+		array(
+			'@type'    => 'PropertyValue',
+			'name'     => 'ИНН',
+			'value'    => '2722119094',
+		),
+	);
+
+	$graph[ $key ] = $node;
 
 	return $graph;
 }
