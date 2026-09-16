@@ -1,0 +1,38 @@
+=== wp_options ===
+show_on_front    = 'page'
+page_on_front    = '34'
+page_for_posts   = '22'
+
+blogname        = 'Земля и Люди'
+template        = 'razil'
+stylesheet      = 'razil'
+permalink_struct= '/%postname%/'
+home            = 'http://ra-zil.test'
+siteurl         = 'http://ra-zil.test'
+
+=== Страница, назначенная главной ===
+ID              = 34
+post_name       = glavnaya
+post_title      = Главная
+post_status     = publish
+post_type       = page
+post_parent     = 0
+post_modified   = 2026-08-16 05:23:10
+permalink       = http://ra-zil.test/
+длина content   = 0 байт
+_wp_page_template = ''   (мета отсутствует или пуста)
+
+--- все мета-поля страницы ---
+_edit_lock                   = 1786600538:1
+
+=== Страница записей (page_for_posts) ===
+ID=22  slug=stati  title=Статьи  status=publish
+
+=== Активная тема ===
+Name        = Razil
+Version     = 1.0.0
+Каталог     = C:\laragon\www\ra-zil/wp-content/themes/razil
+Блочная тема= да
+
+=== Шаблоны из БД (wp_template в wp_posts), если тема правилась в редакторе ===
+(в БД нет переопределённых шаблонов — всё берётся из файлов темы)

@@ -464,16 +464,27 @@ function razil_schema_enrich_org( array $graph ): array {
 		'name'  => 'Хабаровск',
 	);
 
-	// Часы приёма в офисе. Телефон работает дольше - см. contactPoint ниже.
+	// Часы приёма в офисе. Спецификаций две, потому что воскресенье
+	// на час короче: закрытие в 16:00 против 17:00 в остальные дни.
+	// Одна запись на семь дней утверждала бы, что в воскресенье
+	// работают до семи, и расходилась бы с подвалом и «Контактами».
+	//
+	// Телефон работает дольше офиса - см. contactPoint ниже.
 	$node['openingHoursSpecification'] = array(
 		array(
 			'@type'     => 'OpeningHoursSpecification',
 			'dayOfWeek' => array(
 				'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-				'Friday', 'Saturday', 'Sunday',
+				'Friday', 'Saturday',
 			),
 			'opens'     => '09:00',
 			'closes'    => '17:00',
+		),
+		array(
+			'@type'     => 'OpeningHoursSpecification',
+			'dayOfWeek' => 'Sunday',
+			'opens'     => '09:00',
+			'closes'    => '16:00',
 		),
 	);
 
