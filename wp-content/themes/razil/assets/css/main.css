@@ -19,7 +19,34 @@ p {
 	align-items: center;
 	justify-content: center;
 	padding-block: 0;
-	transition: color 160ms, background-color 160ms, border-color 160ms;
+	transition: color 160ms, background-color 160ms, border-color 160ms,
+	            transform 160ms;
+}
+
+/* Отклик на указатель — масштабом. Реальный размер менять нельзя:
+   в шапке на 992-1050px запаса справа нет совсем, и телефон с меню поедут
+   влево с первого же пикселя. Замерено: при padding 24px запас справа
+   53.8px на 1280 и ровно 0 на 1024. transform раскладку не трогает вовсе.
+
+   Цвета наведения и нажатия приходят из theme.json.
+
+   text-decoration: none — потому что кнопка ядра бывает ссылкой, и общее
+   a:hover ниже по файлу подчёркивает её наравне с текстовой. В theme.json
+   это не лечится: оттуда правило выходит как :root :where(...:hover)
+   с весом (0,1,0) и проигрывает a:hover с его (0,1,1). Здесь (0,2,0) —
+   класс перевешивает тип с псевдоклассом.
+
+   Тот же приём, что у .wp-block-read-more:hover выше: состояние наведения
+   собрано в одном правиле, отдельного под подчёркивание не заводим. */
+.wp-element-button:hover,
+.wp-block-button__link:hover {
+	text-decoration: none;
+	transform: scale(1.02);
+}
+
+.wp-element-button:active,
+.wp-block-button__link:active {
+	transform: scale(0.98);
 }
 
 @media (min-width: 64rem) {
@@ -33,6 +60,15 @@ p {
 	.wp-element-button,
 	.wp-block-button__link {
 		transition: none;
+	}
+
+	/* Снимаем не переход, а само движение: с одним transition: none кнопка
+	   не уползала бы плавно, а прыгала скачком. */
+	.wp-element-button:hover,
+	.wp-block-button__link:hover,
+	.wp-element-button:active,
+	.wp-block-button__link:active {
+		transform: none;
 	}
 }
 
@@ -49,16 +85,19 @@ p {
 	align-self: flex-start;
 	font-weight: 700;
 	text-decoration: none;
-	transition: color 160ms, background-color 160ms, border-color 160ms;
+	transition: color 160ms, background-color 160ms, border-color 160ms,
+	            transform 160ms;
 }
 
 .wp-block-read-more:hover {
 	background-color: var(--rz-action-hover);
 	text-decoration: none;
+	transform: scale(1.02);
 }
 
 .wp-block-read-more:active {
 	background-color: var(--rz-action-active);
+	transform: scale(0.98);
 }
 
 @media (min-width: 64rem) {
@@ -70,6 +109,11 @@ p {
 @media (prefers-reduced-motion: reduce) {
 	.wp-block-read-more {
 		transition: none;
+	}
+
+	.wp-block-read-more:hover,
+	.wp-block-read-more:active {
+		transform: none;
 	}
 }
 
@@ -99,6 +143,78 @@ p {
 .rz-step {
 	border-radius: var(--rz-radius-card);
 	box-shadow: var(--rz-shadow);
+}
+/* Отступ между строками карточки — половина общего blockGap.
+   Ядро печатает :root :where(.is-layout-flex) { gap: 1.5rem }, это
+   (0,1,0): двух классов хватает, чтобы перебить без !important.
+
+   Тот же gap стоит и перед ценой, но она прижата margin-top: auto.
+   Там, где карточка растянута до высоты соседней, разницу добирает
+   авто-поле, а не gap, и цена остаётся на дне. */
+.wp-block-group.rz-card {
+	gap: 0.75rem;
+}
+
+/* Фото в карточке «Основные услуги»: от края до края.
+
+   Отрицательные поля -2rem гасят внутренний отступ карточки.
+   ВНИМАНИЕ: эти 2rem заданы инлайном в разметке front-page.html
+   (style.spacing.padding у wp:group). Поменяют padding в шаблоне —
+   поля здесь разъедутся, и правило об этом не узнает. Менять оба
+   места разом.
+
+   Селектор .rz-card > .rz-card__photo даёт (0,2,0) и перебивает
+   .is-layout-flex > :is(*, div) { margin: 0 } из инлайновой таблицы
+   ядра (0,1,1); без этого поля обнулялись бы.
+
+   Нижние 0.5rem складываются с gap 0.75rem — под снимком выходит
+   20px против 12px между строками: заголовку под фото нужно больше
+   воздуха, чем абзацу под заголовком. */
+.rz-card > .rz-card__photo {
+	margin: -2rem -2rem 0.5rem;
+}
+
+/* Пропорция повторяет исходники 1536x1024, поэтому cover ничего
+   не срежет — он здесь на случай замены снимка на другой.
+   Скругление только сверху: низ скругляет сама карточка, а 4px
+   из .wp-block-image img (0,1,1) перебиваются этим (0,2,1).
+
+   Ширина коробки продублирована в разметке: у снимков стоит
+   sizes="(min-width: 782px) 371px, 100vw", иначе браузер тянул бы
+   файл на 1024px в колонку 371px. Порог 782px — не из этого файла,
+   а из инлайновой таблицы ядра: именно там колонки перестают быть
+   тремя. Меняете раскладку — правьте и sizes в front-page.html. */
+.rz-card > .rz-card__photo img {
+	width: 100%;
+	height: auto;
+	aspect-ratio: 3 / 2;
+	object-fit: cover;
+	border-radius: var(--rz-radius-card) var(--rz-radius-card) 0 0;
+}
+
+/* В одноколоночной полосе снимок получает всю ширину карточки, и при
+   пропорции 3:2 растёт вместе с ней: на 768px это 736x491 против 185px
+   текста — фотография втрое выше подписи, а секция вытягивается до
+   2308px, почти три экрана на три услуги.
+
+   Ограничение по высоте, а не по пропорции, намеренно: aspect-ratio
+   связывает высоту с шириной, а здесь нужно обратное — развязать их.
+   Замерено: при aspect-ratio 5/2 снимок на 360px сжимается с 219px до
+   131px, то есть портится единственная ширина, где всё было в порядке,
+   а на 768px всё равно остаётся 294px. max-height оставляет 360px
+   нетронутым (219 < 288) и держит высоту постоянной выше по полосе.
+
+   18rem, а не 15rem: при 240px cover срезает у урны верхнюю кромку,
+   а это сюжет карточки. При 288px видно 59% кадра на 768px и предмет
+   остаётся целым.
+
+   Порог в пикселях, а не в rem: 781px взят не из этого файла,
+   а из инлайновой таблицы ядра, где колонки перестают быть тремя.
+   В rem он разъедется с ядровым при другом размере шрифта. */
+@media (max-width: 781px) {
+	.rz-card > .rz-card__photo img {
+		max-height: 18rem;
+	}
 }
 
 .rz-service-card__body {
@@ -163,12 +279,6 @@ a:hover {
 
 a:visited {
 	color: var(--rz-action);
-}
-
-a:focus {
-	outline: 2px solid var(--rz-action-focus);
-	outline-offset: 2px;
-	border-radius: 0;
 }
 
 /* Поля ввода */
@@ -448,9 +558,52 @@ hr {
 	background-color: var(--rz-action-hover);
 }
 
+.rz-sticky-call:active .rz-sticky-call__circle {
+	background-color: var(--rz-action-active);
+}
+
+/* Подчёркивание здесь лишнее: это кнопка, а не ссылка в тексте.
+
+   Даёт его a:hover, и вдобавок общее правило ссылок из theme.json: липкая
+   кнопка — это <a href="tel:">, класса .wp-element-button у неё нет,
+   поэтому :not(.wp-element-button) её не отсеивает. Оба весят не больше
+   (0,1,1), здесь (0,2,0).
+
+   В покое text-decoration: none уже стоит в самом .rz-sticky-call выше —
+   это правило нужно только на время наведения.
+
+   Отдельным правилом, а не строкой в .rz-sticky-call.is-visible:hover ниже:
+   там масштаб, который обязан цепляться за .is-visible, а подчёркивание
+   к появлению кнопки отношения не имеет. */
+.rz-sticky-call:hover {
+	text-decoration: none;
+}
+
 .rz-sticky-call:focus-visible {
 	outline: 2px solid var(--rz-action-focus);
 	outline-offset: 3px;
+}
+
+/* Отклик вешаем на .is-visible, а не на голую кнопку. Масштаб здесь уже
+   занят появлением: у скрытой кнопки scale(0.8), у видимой scale(1)
+   из .rz-sticky-call.is-visible.
+
+   .rz-sticky-call.is-visible:hover даёт (0,3,0) против (0,2,0) у правила
+   появления и перебивает его по весу. Голое .rz-sticky-call:hover весило бы
+   ровно столько же, сколько .rz-sticky-call.is-visible, и исход решал бы
+   порядок строк — то есть держался бы на том, что правило появления выше.
+
+   Скрытое состояние не задевается: класса .is-visible у него нет,
+   и scale(0.8) остаётся в силе.
+
+   transform в список transition добавлять не нужно: он там с самого
+   начала, ради появления кнопки. */
+.rz-sticky-call.is-visible:hover {
+	transform: scale(1.02);
+}
+
+.rz-sticky-call.is-visible:active {
+	transform: scale(0.98);
 }
 
 /* Меньше движения — кнопка появляется мгновенно, без наплыва.
@@ -460,6 +613,13 @@ hr {
 @media (prefers-reduced-motion: reduce) {
 	.rz-sticky-call {
 		transition: none;
+	}
+
+	/* Возвращаем масштаб видимой кнопки, а не none: у скрытой свой scale(0.8),
+	   и transform: none сбросил бы заодно и его. */
+	.rz-sticky-call.is-visible:hover,
+	.rz-sticky-call.is-visible:active {
+		transform: scale(1);
 	}
 }
 
@@ -909,13 +1069,24 @@ input[type="reset"],
 	border-radius: 4px;
 	font-size: 1.25rem;
 	cursor: pointer;
-	transition: background-color 160ms, color 160ms, border-color 160ms;
+	transition: background-color 160ms, color 160ms, border-color 160ms,
+	            transform 160ms;
 }
 
 .rz-reviews__arrow:hover {
 	background-color: var(--rz-action);
 	color: var(--rz-surface);
 	border-color: var(--rz-action);
+	transform: scale(1.02);
+}
+
+/* Строго после :hover: вес тот же (0,2,0), решает порядок. Своего :active
+   у стрелки не было вовсе — нажатие выглядело как наведение. */
+.rz-reviews__arrow:active {
+	background-color: var(--rz-action-active);
+	color: var(--rz-surface);
+	border-color: var(--rz-action-active);
+	transform: scale(0.98);
 }
 
 .rz-reviews__arrow:focus-visible {
@@ -1027,6 +1198,11 @@ input[type="reset"],
 
 	.rz-reviews__arrow {
 		transition: none;
+	}
+
+	.rz-reviews__arrow:hover,
+	.rz-reviews__arrow:active {
+		transform: none;
 	}
 
 	.rz-reviews__slide:not(.is-current) .rz-review {
@@ -2283,6 +2459,16 @@ html {
 	color: var(--rz-surface);
 }
 
+/* Нажатие приходится задавать отдельно: собственное :hover выше весит
+   (0,3,0) и перебивает :active из theme.json с его (0,1,0). Без этого
+   правила нажатие неотличимо от наведения — проверено замером мышью
+   на живой странице. Масштаб приходит от .wp-element-button:active. */
+.rz-header__cta .wp-block-button__link:active {
+	background-color: var(--rz-action-active);
+	border-color: var(--rz-action-active);
+	color: var(--rz-surface);
+}
+
 /* Бургер */
 .rz-header__burger {
 	display: flex;
@@ -2297,6 +2483,22 @@ html {
 	background: none;
 	border: 0;
 	cursor: pointer;
+	transition: transform var(--rz-transition);
+}
+
+/* Фона у бургера нет — темнеть нечему, отклик только движением.
+   Перекрашивать полоски из --rz-ink в зелёный значило бы намекать
+   на действие, которого у кнопки нет.
+
+   Масштаб на самой кнопке, а не на полосках: полоски заняты собственным
+   transform для крестика (правила с [aria-expanded="true"] ниже),
+   и второй transform на них перезаписал бы первый. */
+.rz-header__burger:hover {
+	transform: scale(1.02);
+}
+
+.rz-header__burger:active {
+	transform: scale(0.98);
 }
 
 /* Кнопка 44x44 — минимальная область нажатия для пальца,
@@ -2404,8 +2606,14 @@ html {
 
 @media (prefers-reduced-motion: reduce) {
 	.rz-header,
+	.rz-header__burger,
 	.rz-header__burger span {
 		transition: none;
+	}
+
+	.rz-header__burger:hover,
+	.rz-header__burger:active {
+		transform: none;
 	}
 }
 
@@ -2444,6 +2652,16 @@ html {
 .rz-btn-outline .wp-block-button__link:hover,
 .rz-btn-outline__link:hover {
 	background-color: var(--rz-action);
+	color: var(--rz-surface);
+}
+
+/* Та же ловушка, что у кнопки шапки: своё :hover выше весит (0,2,0)
+   и перебивает :active из theme.json с его (0,1,0). Масштаб идёт
+   от .wp-element-button:active — класс на кнопке есть. */
+.rz-btn-outline .wp-block-button__link:active,
+.rz-btn-outline__link:active {
+	background-color: var(--rz-action-active);
+	border-color: var(--rz-action-active);
 	color: var(--rz-surface);
 }
 
@@ -2962,6 +3180,9 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 	font: inherit;
 	font-weight: 700;
 	cursor: pointer;
+	transition: background-color var(--rz-transition),
+	            border-color var(--rz-transition),
+	            transform var(--rz-transition);
 }
 
 .rz-tel-dialog__ok {
@@ -2977,11 +3198,55 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 	color: var(--rz-ink);
 }
 
+/* Масштаб — всем трём, цвет — только заливной. У «Отмены» и «Закрыть»
+   фон прозрачный, темнеть нечему, а залить их в --rz-action-hover значило бы
+   сделать отказ похожим на главное действие. Тот же довод, что у бургера. */
+.rz-tel-dialog__ok:hover,
+.rz-tel-dialog__cancel:hover,
+.rz-cb-dialog__cancel:hover {
+	transform: scale(1.02);
+}
+
+.rz-tel-dialog__ok:active,
+.rz-tel-dialog__cancel:active,
+.rz-cb-dialog__cancel:active {
+	transform: scale(0.98);
+}
+
+.rz-tel-dialog__ok:hover {
+	background-color: var(--rz-action-hover);
+	border-color: var(--rz-action-hover);
+}
+
+.rz-tel-dialog__ok:active {
+	background-color: var(--rz-action-active);
+	border-color: var(--rz-action-active);
+}
+
 .rz-tel-dialog__ok:focus-visible,
 .rz-tel-dialog__cancel:focus-visible,
 .rz-cb-dialog__cancel:focus-visible {
 	outline: 2px solid var(--rz-action-focus);
 	outline-offset: 2px;
+}
+
+/* Своего блока «меньше движения» у окон не было: до этой правки им нечего
+   было отменять — transition у кнопок отсутствовал вовсе. */
+@media (prefers-reduced-motion: reduce) {
+	.rz-tel-dialog__ok,
+	.rz-tel-dialog__cancel,
+	.rz-cb-dialog__cancel {
+		transition: none;
+	}
+
+	.rz-tel-dialog__ok:hover,
+	.rz-tel-dialog__cancel:hover,
+	.rz-cb-dialog__cancel:hover,
+	.rz-tel-dialog__ok:active,
+	.rz-tel-dialog__cancel:active,
+	.rz-cb-dialog__cancel:active {
+		transform: none;
+	}
 }
 
 /* === ОКНО ОБРАТНОГО ЗВОНКА === */

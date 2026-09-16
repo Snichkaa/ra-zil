@@ -267,7 +267,7 @@
 						"text": "var(--wp--preset--color--action)"
 					}
 				},
-				":focus": {
+				":focus-visible": {
 					"outline": {
 						"color": "var(--wp--preset--color--fact)",
 						"offset": "2px",
@@ -313,7 +313,7 @@
 						"text": "var(--wp--preset--color--surface)"
 					}
 				},
-				":focus": {
+				":focus-visible": {
 					"outline": {
 						"color": "var(--wp--preset--color--fact)",
 						"offset": "2px",
