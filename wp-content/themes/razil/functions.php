@@ -310,75 +310,65 @@ add_filter( 'get_the_excerpt', 'razil_no_auto_excerpt', 10, 2 );
 
 /**
  * Предзагрузка фотографии первого экрана: это LCP-элемент главной
- * на всех ширинах — ниже 1360px кадр показывается полосой под текстом.
+ * на всех ширинах.
  *
- * imagesrcset и imagesizes обязательны и повторяют то, что стоит у самого
- * тега img. Без них предзагрузка называет один конкретный адрес — полный
- * размер, — и браузер обязан его скачать. Вариант по srcset он потом
- * выбирает отдельно, и на узком экране скачивались ДВА файла вместо
- * одного: 153.5 КБ полного кадра сверх нужных 58.4 КБ.
+ * Кадра два, и выбирает между ними <picture> в разметке — значит
+ * предзагрузок тоже две, каждая со своим media. Одна общая тянула бы
+ * десктопную панораму и на телефон, где она нигде не показывается,
+ * и браузер качал бы два файла вместо одного.
  *
- * С этими атрибутами предзагрузка выбирает тот же вариант, что и srcset,
- * и файл остаётся один.
+ * Десктопная предзагрузка несёт imagesrcset и imagesizes, повторяя то,
+ * что стоит у самого тега img: без них она называет один конкретный
+ * адрес — полный размер, — и браузер обязан скачать именно его, а вариант
+ * по srcset выбирает потом отдельно, то есть снова два файла. Мобильная
+ * идёт без них намеренно: у <source> один адрес без srcset, повторять
+ * там нечего.
+ *
+ * Номера вложений берутся из констант RAZIL_HERO_IMAGE_DESKTOP
+ * и RAZIL_HERO_IMAGE_MOBILE плагина razil-core — там же, где их читает
+ * фильтр, собирающий <picture>. Запасные значения на случай выключенного
+ * плагина зашиты здесь: без них предзагрузка молча исчезла бы.
+ *
+ * Печатается только если в разметке текущего шаблона найден класс
+ * wp-image-<номер десктопного вложения>. Без этой проверки смена
+ * фотографии героя ломала бы страницу молча: у новой картинки будет
+ * свой номер, предзагрузка продолжила бы тянуть старую, и браузер качал
+ * бы лишний файл, который нигде не показывается. Источник — глобальная
+ * переменная ядра с содержимым текущего шаблона: она заполняется при
+ * подборе шаблона, то есть до вывода head, и учитывает копию из базы,
+ * если шаблон когда-нибудь сохранят в редакторе сайта.
  */
 function razil_preload_hero_image() {
 	if ( ! is_front_page() ) {
 		return;
 	}
+	$desktop_id = defined( 'RAZIL_HERO_IMAGE_DESKTOP' ) ? RAZIL_HERO_IMAGE_DESKTOP : 241;
+	$mobile_id  = defined( 'RAZIL_HERO_IMAGE_MOBILE' ) ? RAZIL_HERO_IMAGE_MOBILE : 242;
 
-	$id = 100;
-
-	/*
-	 * Номер вложения зашит, поэтому обязательна проверка, что эта картинка
-	 * и правда стоит на главной.
-	 *
-	 * Без проверки смена фотографии героя ломала бы страницу молча: у новой
-	 * картинки будет свой номер, предзагрузка продолжила бы тянуть старую,
-	 * и браузер качал бы два файла — новый по разметке и старый по
-	 * предзагрузке, причём второй нигде не показывался бы. Ни ошибки,
-	 * ни предупреждения, просто лишние полтораста килобайт.
-	 *
-	 * Проверяем по разметке шаблона, а не разбором блоков: разбор на каждый
-	 * запрос стоит дороже, чем приносит. Здесь достаточно одного поиска
-	 * по строке. Граница слова обязательна, иначе wp-image-100 совпало бы
-	 * и с wp-image-1005.
-	 *
-	 * Источник — глобальная переменная ядра с содержимым текущего шаблона.
-	 * Она заполняется при подборе шаблона, то есть до вывода head, и учитывает
-	 * копию из базы, если шаблон когда-нибудь сохранят в редакторе сайта.
-	 */
-	global $_wp_current_template_content;
-
-	$markup = (string) $_wp_current_template_content;
-
-	if ( '' === $markup || ! preg_match( '/\bwp-image-' . $id . '\b/', $markup ) ) {
+	$tpl = isset( $GLOBALS['_wp_current_template_content'] ) ? $GLOBALS['_wp_current_template_content'] : '';
+	if ( ! preg_match( '/\bwp-image-' . $desktop_id . '\b/', $tpl ) ) {
 		return;
 	}
 
-	$src = wp_get_attachment_image_url( $id, 'full' );
-
-	if ( ! $src ) {
+	$desktop_src = wp_get_attachment_image_url( $desktop_id, 'full' );
+	$mobile_src  = wp_get_attachment_image_url( $mobile_id, 'full' );
+	if ( ! $desktop_src || ! $mobile_src ) {
 		return;
 	}
-
-	$srcset = wp_get_attachment_image_srcset( $id, 'full' );
-	$sizes  = wp_get_attachment_image_sizes( $id, 'full' );
-
-	// Без srcset у вложения предзагружать по-старому: одним адресом.
-	if ( ! $srcset || ! $sizes ) {
-		printf(
-			'<link rel="preload" as="image" fetchpriority="high" href="%s">' . "\n",
-			esc_url( $src )
-		);
-
-		return;
-	}
+	$desktop_srcset = wp_get_attachment_image_srcset( $desktop_id, 'full' );
 
 	printf(
-		'<link rel="preload" as="image" fetchpriority="high" href="%s" imagesrcset="%s" imagesizes="%s">' . "\n",
-		esc_url( $src ),
-		esc_attr( $srcset ),
-		esc_attr( $sizes )
+		'<link rel="preload" as="image" media="(max-width: 47.99rem)" href="%s" fetchpriority="high" />' . "\n",
+		esc_url( $mobile_src )
+	);
+	// Порог здесь 47.99rem, а не 48rem, хотя у <source> стоит max-width:
+	// 47.99rem: пересечение безвреднее разрыва — при 48rem вьюпорт строго
+	// между порогами не совпал бы ни с одной предзагрузкой, а при
+	// пересечении браузер просто берёт первую подошедшую.
+	printf(
+		'<link rel="preload" as="image" media="(min-width: 47.99rem)" href="%s"%s imagesizes="100vw" fetchpriority="high" />' . "\n",
+		esc_url( $desktop_src ),
+		$desktop_srcset ? ' imagesrcset="' . esc_attr( $desktop_srcset ) . '"' : ''
 	);
 }
 add_action( 'wp_head', 'razil_preload_hero_image', 2 );
