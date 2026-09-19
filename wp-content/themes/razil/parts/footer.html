@@ -27,8 +27,17 @@
 </div>
 <!-- /wp:group -->
 
-<!-- wp:group {"className":"rz-footer","align":"full","style":{"color":{"background":"var(\u002d\u002drz-ink)","text":"var(\u002d\u002drz-surface)"},"spacing":{"padding":{"top":"3rem","right":"1rem","bottom":"2rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull rz-footer has-text-color has-background" style="background-color:var(--rz-ink);color:var(--rz-surface);padding-top:3rem;padding-right:1rem;padding-bottom:2rem;padding-left:1rem">
+<!-- Запас снизу 5.5rem — под висящую кнопку звонка (§25:
+     «фиксированная кнопка не должна перекрывать последний пункт FAQ
+     или элементы подвала»). Замерено: при прежних 2rem пилюля
+     накрывала строку копирайта на всех ширинах. Высота кнопки
+     3.5rem плюс её отступ от края 1.25rem плюс просвет 0.75rem.
+
+     Значение стоит здесь, а не в CSS: отступ приходит атрибутом
+     блока и печатается инлайновым стилем, а инлайн правилом
+     из таблицы не перебить. -->
+<!-- wp:group {"className":"rz-footer","align":"full","style":{"color":{"background":"var(\u002d\u002drz-ink)","text":"var(\u002d\u002drz-surface)"},"spacing":{"padding":{"top":"3rem","right":"1rem","bottom":"5.5rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull rz-footer has-text-color has-background" style="background-color:var(--rz-ink);color:var(--rz-surface);padding-top:3rem;padding-right:1rem;padding-bottom:5.5rem;padding-left:1rem">
 
 	<!-- wp:group {"className":"rz-footer__cols"} -->
 	<div class="wp-block-group rz-footer__cols">
