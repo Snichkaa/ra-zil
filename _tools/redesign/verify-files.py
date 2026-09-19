@@ -94,6 +94,34 @@ def baseline_bytes(path):
     return None
 
 
+def dir_style(path):
+    """Преобладающий стиль переводов строк в каталоге файла.
+
+    Новый файл заводится в том же стиле, что его соседи: в репозитории
+    нет единого правила, и модули плагина идут с LF, а шаблоны темы —
+    с CRLF. Требовать от нового файла CRLF там, где вокруг LF, значило
+    бы плодить третий вариант вместо того, чтобы вписаться в имеющийся.
+
+    Каталог без соседей — CRLF: он преобладает в проекте.
+    """
+    folder = os.path.dirname(os.path.abspath(path))
+    counts = {}
+    for name in os.listdir(folder):
+        other = os.path.join(folder, name)
+        if other == os.path.abspath(path) or not os.path.isfile(other):
+            continue
+        if os.path.splitext(name)[1].lower() not in TEXT_EXT:
+            continue
+        with open(other, "rb") as fh:
+            st = eol_style(fh.read())
+        if st in ("CRLF", "LF"):
+            counts[st] = counts.get(st, 0) + 1
+
+    if not counts:
+        return "CRLF"
+    return max(counts.items(), key=lambda kv: kv[1])[0]
+
+
 def eol_style(data):
     """Стиль переводов строк: CRLF, LF, CR, СМЕШАННЫЙ или «нет строк»."""
     crlf = data.count(b"\r\n")
@@ -129,8 +157,9 @@ def check(path):
     else:
         was = baseline_bytes(path)
         if was is None:
-            if style not in ("CRLF", "нет строк"):
-                problems.append("новый файл должен быть CRLF, а он %s" % style)
+            want = dir_style(path)
+            if style not in (want, "нет строк"):
+                problems.append("новый файл: у соседей по каталогу %s, а у него %s" % (want, style))
         else:
             before = eol_style(was)
             if before != style and "нет строк" not in (before, style):
