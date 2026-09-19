@@ -14,18 +14,38 @@
 
 		<!-- wp:query {"queryId":2,"query":{"perPage":9,"pages":0,"offset":0,"postType":"services","order":"asc","orderBy":"menu_order","author":"","search":"","exclude":[],"sticky":"","inherit":false}} -->
 		<div class="wp-block-query">
-			<!-- wp:post-template {"layout":{"type":"default"}} -->
+			<!-- Сетка карточек (§23.1): каталог помогает выбрать направление,
+			     поэтому услуги стоят рядом и сравниваются взглядом, а не
+			     тянутся полосами в одну колонку.
+
+			     Карточка та же, что на главной: колонка, ссылка «Узнать
+			     подробнее» прижата к низу авто-полем, поэтому у карточек
+			     с описаниями разной длины кнопки стоят на одной линии.
+
+			     Цены здесь нет намеренно. §23.1 разрешает её показывать,
+			     «только если она действительно помогает сравнению
+			     и поддерживается в актуальном состоянии», а на страницах
+			     услуг во всех ячейках стоимости стоит заглушка «…» —
+			     сравнивать нечего.
+
+			     Иконку слева от заголовка добавляет фильтр
+			     razil_service_card_icon() в плагине. -->
+			<!-- wp:post-template {"className":"rz-services-grid","layout":{"type":"default"}} -->
+			<!-- Класс сетки стоит ТОЛЬКО в атрибутах блока: его WordPress вешает
+			     на свой <ul>, который и становится сеткой. В сохранённой
+			     обёртке ниже класса быть не должно — она повторяется внутри
+			     каждого <li>, и сетка получилась бы вложенной сама в себя:
+			     карточка сжималась до трети колонки, то есть до 111 px. -->
 			<div class="wp-block-post-template is-layout-flow">
-				<!-- wp:group {"className":"rz-service-card"} -->
-				<div class="wp-block-group rz-service-card">
+				<!-- wp:group {"className":"rz-service-card rz-service-card\u002d\u002dflat"} -->
+				<div class="wp-block-group rz-service-card rz-service-card--flat">
 					<!-- wp:group {"className":"rz-service-card__body"} -->
 					<div class="wp-block-group rz-service-card__body">
 						<!-- wp:post-title {"isLink":true,"fontSize":"heading-s"} /-->
 						<!-- wp:post-excerpt {"fontSize":"body"} /-->
+						<!-- wp:read-more {"content":"Узнать подробнее","textColor":"surface","className":"rz-service-card__more","style":{"spacing":{"padding":{"top":"0","right":"1.5rem","bottom":"0","left":"1.5rem"}}}} /-->
 					</div>
 					<!-- /wp:group -->
-
-					<!-- wp:read-more {"content":"Узнать подробнее","textColor":"surface","style":{"border":{"radius":"4px"},"spacing":{"padding":{"top":"0","right":"1.5rem","bottom":"0","left":"1.5rem"}}}} /-->
 				</div>
 				<!-- /wp:group -->
 			</div>

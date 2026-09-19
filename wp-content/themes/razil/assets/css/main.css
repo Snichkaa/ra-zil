@@ -519,6 +519,10 @@ h1.has-heading-l-font-size {
    Цвет, радиус, отступы и margin-top заданы атрибутами самого блока. */
 .wp-block-read-more {
 	background-color: var(--rz-action);
+	/* Форма как у остальных кнопок (§28): раньше радиус приходил
+	   инлайновым атрибутом блока в разметке архива, и когда кнопка
+	   переехала внутрь карточки, он потерялся вместе с атрибутом. */
+	border-radius: var(--rz-radius-button);
 	min-height: 3.5rem;
 	display: inline-flex;
 	align-items: center;
@@ -558,29 +562,58 @@ h1.has-heading-l-font-size {
 	}
 }
 
-/* Карточка услуги в архиве: контент слева, кнопка справа, по центру.
-   До 767px — возврат к вертикальной раскладке.
+/* Каталог услуг: сетка карточек (§23.1).
 
-   Селектор привязан к странице архива намеренно. Раньше он был
-   .wp-block-group.rz-service-card и ловил любую карточку услуги;
-   с появлением такой же карточки на главной (фаза 3) он поймал и её,
-   и главная получила строчную раскладку с фотографией сбоку — текст
-   сжался в колонку по букве. Классы у карточек общие по замыслу §24,
-   значит различать их должно место, а не класс.
+   До фазы 6 здесь лежала строчная раскладка — содержимое слева,
+   кнопка справа. Она ушла вместе с разметкой: карточка каталога
+   теперь та же, что на главной, и отличается только тем, что
+   фотографии у неё нет, а вместо неё иконка услуги.
 
-   Вес (0,2,1) — по-прежнему больше, чем у .wp-block-group { padding: 0 }
-   ниже по файлу, так что !important и перестановка правил не нужны.
+   Три колонки на широком экране, две на среднем, одна на узком.
+   Пять услуг ложатся как 3+2: последняя строка неполная, и это
+   нормально — растягивать её значило бы делать карточки разной
+   ширины. */
+.rz-services-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1.25rem;
+	margin-top: 2rem;
+}
 
-   В фазе 6 архив переходит на ту же колоночную карточку, и это
-   правило уходит целиком. */
-body.post-type-archive-services .rz-service-card {
+.rz-services-grid > * {
+	margin-block: 0;
+}
+
+@media (min-width: 48rem) {
+	.rz-services-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (min-width: 62rem) {
+	.rz-services-grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+/* Карточка растягивается на всю высоту строки сетки.
+
+   Ячейкой сетки становится не карточка, а <li>, который печатает блок
+   запроса, и внутри него ещё одна обёртка от того же блока. Обе они
+   тянутся по высоте сами, а карточка внутри них — нет, и цепочку
+   приходится продлевать вручную. Без этого у карточек с описаниями
+   разной длины кнопки «Узнать подробнее» вставали на разной высоте:
+   замер дал 657, 559 и 562 px в одной строке. */
+.rz-services-grid > li,
+.rz-services-grid > li > .wp-block-post-template {
 	display: flex;
-	flex-direction: row;
-	align-items: center;
-	gap: var(--wp--preset--spacing--40);
-	background-color: var(--rz-surface);
-	padding: var(--wp--preset--spacing--50);
-	border-radius: var(--rz-radius-card);
+	flex-direction: column;
+	min-width: 0;
+}
+
+.rz-services-grid > li > .wp-block-post-template,
+.rz-services-grid .rz-service-card {
+	flex: 1 1 auto;
 }
 
 /* Радиус и тень карточек отзыва и шага. Раньше правило покрывало
@@ -602,27 +635,24 @@ body.post-type-archive-services .rz-service-card {
 }
 
 /* Отступы задаём через gap, поэтому вертикальные поля потомков снимаем */
-body.post-type-archive-services .rz-service-card > *,
-body.post-type-archive-services .rz-service-card__body > * {
+.rz-service-card > *,
+.rz-service-card__body > * {
 	margin-block-start: 0;
 	margin-block-end: 0;
 }
 
-body.post-type-archive-services .rz-service-card .wp-block-read-more {
-	align-self: center;
-	flex-shrink: 0;
-	margin-top: 0;
+/* Карточка без фотографии: поле задаёт она сама. У карточки со
+   снимком поле висит на теле, потому что снимок идёт от края
+   до края и полей иметь не должен. */
+.rz-service-card--flat > .rz-service-card__body {
+	padding: 1.5rem;
 }
 
-@media (max-width: 47.9375rem) {
-	body.post-type-archive-services .rz-service-card {
-		flex-direction: column;
-		align-items: stretch;
-	}
-
-	body.post-type-archive-services .rz-service-card .wp-block-read-more {
-		align-self: flex-start;
-	}
+/* Ссылка «Узнать подробнее» прижата к низу: описания у услуг разной
+   длины, и без авто-поля кнопки встали бы на разной высоте. */
+.rz-service-card__more {
+	margin-top: auto;
+	align-self: flex-start;
 }
 
 /* === КНОПКА ЗВОНКА ===
@@ -1549,10 +1579,21 @@ input[type="reset"],
    Внутри __body, а не первым элементом карточки:
    карточка на мобильном становится колонкой,
    и иконка ушла бы над заголовком. */
+/* Иконка равняется по первой строке названия, а не по центру блока.
+   Названия услуг занимают до трёх строк, и при выравнивании по центру
+   иконка уезжала к середине заголовка. Тот же приём и по той же
+   причине, что у пунктов «Почему выбирают нас». */
 .rz-service-card__head {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	gap: 1rem;
+}
+
+/* Круг 56 px против строки заголовка: центр круга на 28 px от верха,
+   середина первой строки — примерно на 16 px. Разницу выбирает
+   отбивка заголовка. */
+.rz-service-card__head .wp-block-post-title {
+	margin-top: 0.75rem;
 }
 
 .rz-service-card__head > * {
