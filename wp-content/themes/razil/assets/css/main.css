@@ -561,10 +561,19 @@ h1.has-heading-l-font-size {
 /* Карточка услуги в архиве: контент слева, кнопка справа, по центру.
    До 767px — возврат к вертикальной раскладке.
 
-   Селектор двойной намеренно: ниже по файлу стоит .wp-block-group { padding: 0 },
-   и при равной специфичности побеждало бы оно. .wp-block-group.rz-service-card
-   даёт (0,2,0) и выигрывает без !important и без перестановки правил. */
-.wp-block-group.rz-service-card {
+   Селектор привязан к странице архива намеренно. Раньше он был
+   .wp-block-group.rz-service-card и ловил любую карточку услуги;
+   с появлением такой же карточки на главной (фаза 3) он поймал и её,
+   и главная получила строчную раскладку с фотографией сбоку — текст
+   сжался в колонку по букве. Классы у карточек общие по замыслу §24,
+   значит различать их должно место, а не класс.
+
+   Вес (0,2,1) — по-прежнему больше, чем у .wp-block-group { padding: 0 }
+   ниже по файлу, так что !important и перестановка правил не нужны.
+
+   В фазе 6 архив переходит на ту же колоночную карточку, и это
+   правило уходит целиком. */
+body.post-type-archive-services .rz-service-card {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -574,88 +583,14 @@ h1.has-heading-l-font-size {
 	border-radius: var(--rz-radius-card);
 }
 
-/* Единая геометрия карточек. Радиус и тень заданы здесь, а не
-   инлайном: раньше углы у услуг, отзывов и шагов расходились.
-   Класс rz-card навешен в шаблоне только карточкам «Основные услуги»
-   (своих классов у блока не было); отзывы и шаги подключены селектором,
-   потому что их разметку печатает render.php и wp:group. */
-.wp-block-group.rz-card.has-background,
+/* Радиус и тень карточек отзыва и шага. Раньше правило покрывало
+   и карточки «Основные услуги» через класс rz-card; тот класс
+   в разметке больше не встречается — карточки главной переведены
+   на компонент .rz-service-card, у которого своя геометрия. */
 .rz-review,
 .rz-step {
 	border-radius: var(--rz-radius-card);
 	box-shadow: var(--rz-shadow);
-}
-/* Отступ между строками карточки — половина общего blockGap.
-   Ядро печатает :root :where(.is-layout-flex) { gap: 1.5rem }, это
-   (0,1,0): двух классов хватает, чтобы перебить без !important.
-
-   Тот же gap стоит и перед ценой, но она прижата margin-top: auto.
-   Там, где карточка растянута до высоты соседней, разницу добирает
-   авто-поле, а не gap, и цена остаётся на дне. */
-.wp-block-group.rz-card {
-	gap: 0.75rem;
-}
-
-/* Фото в карточке «Основные услуги»: от края до края.
-
-   Отрицательные поля -2rem гасят внутренний отступ карточки.
-   ВНИМАНИЕ: эти 2rem заданы инлайном в разметке front-page.html
-   (style.spacing.padding у wp:group). Поменяют padding в шаблоне —
-   поля здесь разъедутся, и правило об этом не узнает. Менять оба
-   места разом.
-
-   Селектор .rz-card > .rz-card__photo даёт (0,2,0) и перебивает
-   .is-layout-flex > :is(*, div) { margin: 0 } из инлайновой таблицы
-   ядра (0,1,1); без этого поля обнулялись бы.
-
-   Нижние 0.5rem складываются с gap 0.75rem — под снимком выходит
-   20px против 12px между строками: заголовку под фото нужно больше
-   воздуха, чем абзацу под заголовком. */
-.rz-card > .rz-card__photo {
-	margin: -2rem -2rem 0.5rem;
-}
-
-/* Пропорция повторяет исходники 1536x1024, поэтому cover ничего
-   не срежет — он здесь на случай замены снимка на другой.
-   Скругление только сверху: низ скругляет сама карточка, а 4px
-   из .wp-block-image img (0,1,1) перебиваются этим (0,2,1).
-
-   Ширина коробки продублирована в разметке: у снимков стоит
-   sizes="(min-width: 782px) 371px, 100vw", иначе браузер тянул бы
-   файл на 1024px в колонку 371px. Порог 782px — не из этого файла,
-   а из инлайновой таблицы ядра: именно там колонки перестают быть
-   тремя. Меняете раскладку — правьте и sizes в front-page.html. */
-.rz-card > .rz-card__photo img {
-	width: 100%;
-	height: auto;
-	aspect-ratio: 3 / 2;
-	object-fit: cover;
-	border-radius: var(--rz-radius-card) var(--rz-radius-card) 0 0;
-}
-
-/* В одноколоночной полосе снимок получает всю ширину карточки, и при
-   пропорции 3:2 растёт вместе с ней: на 768px это 736x491 против 185px
-   текста — фотография втрое выше подписи, а секция вытягивается до
-   2308px, почти три экрана на три услуги.
-
-   Ограничение по высоте, а не по пропорции, намеренно: aspect-ratio
-   связывает высоту с шириной, а здесь нужно обратное — развязать их.
-   Замерено: при aspect-ratio 5/2 снимок на 360px сжимается с 219px до
-   131px, то есть портится единственная ширина, где всё было в порядке,
-   а на 768px всё равно остаётся 294px. max-height оставляет 360px
-   нетронутым (219 < 288) и держит высоту постоянной выше по полосе.
-
-   18rem, а не 15rem: при 240px cover срезает у урны верхнюю кромку,
-   а это сюжет карточки. При 288px видно 59% кадра на 768px и предмет
-   остаётся целым.
-
-   Порог в пикселях, а не в rem: 781px взят не из этого файла,
-   а из инлайновой таблицы ядра, где колонки перестают быть тремя.
-   В rem он разъедется с ядровым при другом размере шрифта. */
-@media (max-width: 781px) {
-	.rz-card > .rz-card__photo img {
-		max-height: 18rem;
-	}
 }
 
 .rz-service-card__body {
@@ -667,25 +602,25 @@ h1.has-heading-l-font-size {
 }
 
 /* Отступы задаём через gap, поэтому вертикальные поля потомков снимаем */
-.rz-service-card > *,
-.rz-service-card__body > * {
+body.post-type-archive-services .rz-service-card > *,
+body.post-type-archive-services .rz-service-card__body > * {
 	margin-block-start: 0;
 	margin-block-end: 0;
 }
 
-.rz-service-card .wp-block-read-more {
+body.post-type-archive-services .rz-service-card .wp-block-read-more {
 	align-self: center;
 	flex-shrink: 0;
 	margin-top: 0;
 }
 
 @media (max-width: 47.9375rem) {
-	.wp-block-group.rz-service-card {
+	body.post-type-archive-services .rz-service-card {
 		flex-direction: column;
 		align-items: stretch;
 	}
 
-	.rz-service-card .wp-block-read-more {
+	body.post-type-archive-services .rz-service-card .wp-block-read-more {
 		align-self: flex-start;
 	}
 }
@@ -3524,8 +3459,11 @@ html {
 	color: var(--rz-ink-soft);
 }
 
+/* Отбивки сверху у списка больше нет: её держит обёртка
+   .rz-first-aid__body, внутри которой список теперь лежит.
+   Оставленная здесь, она сдвигала бы шаги на 32 px ниже
+   примечания в соседней колонке — замерено. */
 .rz-first-aid__steps {
-	margin-top: 2rem !important;
 	padding-left: 0;
 	list-style: none;
 	counter-reset: rz-step;
@@ -3987,6 +3925,359 @@ html:not(.rz-js) .rz-cb-open {
 	        mask-position: right bottom;
 	-webkit-mask-size: contain;
 	        mask-size: contain;
+}
+
+
+/* === ГЛАВНАЯ: ПРАВКИ ФАЗЫ 3 ===
+
+   Композиции главной описаны выше по разделу 5; здесь собрано то,
+   что редизайн изменил или добавил, чтобы правку было видно одним
+   куском, а не выискивая её по файлу. */
+
+/* Иконка звонка в кнопке первого экрана (§6.2). Кегль кнопки 18 px,
+   иконка 1.25em — ровно настолько крупнее строчной буквы, чтобы
+   читаться знаком, а не точкой. */
+.rz-button--icon {
+	gap: 0.625rem;
+}
+
+.rz-button__icon {
+	flex: none;
+	width: 1.25em;
+	height: 1.25em;
+	/* Рисунок сделан из вьюбокса 40 при толщине 1.5; при отрисовке
+	   в 22 px она сжалась бы до 0.8 px и стала бы волоском. Тот же
+	   приём и по той же причине, что у .rz-icon svg. */
+	stroke-width: 2.4;
+}
+
+/* Первый экран: заголовок крупнее (§4.2, §6.2).
+
+   Нижняя граница 52 px — из §4.2, верхняя 84 px — из §17.4, где
+   для любого H1 задан потолок 84. Верхнюю границу §4.2 (100 px)
+   не берём: §17 — позднейший и общесайтовый раздел, он и решает.
+
+   Отдельным правилом, а не пресетом: у остальных H1 сайта своя
+   вилка 44-84, и общий пресет пришлось бы задирать ради одного
+   экрана. */
+.rz-hero .rz-hero__text > h1 {
+	font-size: clamp(3.25rem, 2.7217rem + 2.2524vw, 5.25rem);
+}
+
+/* Блок первых действий: шаги и примечание рядом (§6.3). */
+.rz-first-aid__body {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1.5rem;
+	align-items: start;
+	margin-top: 2rem !important;
+}
+
+.rz-first-aid__body > * {
+	margin-block: 0;
+}
+
+@media (min-width: 62rem) {
+	.rz-first-aid__body {
+		grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+		gap: 2.5rem;
+	}
+}
+
+/* Примечание про 112 — отдельная врезка сбоку, а не строка в потоке.
+   Тёплый вертикальный акцент тот же, что у предупреждения ниже:
+   оба блока по смыслу «обрати внимание», и разделять их двумя
+   разными приёмами значило бы заводить второй словарь. */
+.rz-first-aid__aside {
+	padding: 1.25rem 1.5rem;
+	background-color: var(--rz-surface);
+	border-left: 3px solid var(--rz-fact);
+	border-radius: 0 var(--rz-radius-card) var(--rz-radius-card) 0;
+}
+
+.rz-first-aid__aside > * {
+	margin-block: 0;
+}
+
+/* Внутри врезки отбивка сверху не нужна: её задаёт сама врезка.
+   Правило перебивает .rz-first-aid__note { margin-top: 1.5rem !important }
+   выше по файлу, поэтому тоже с !important — иначе не достать. */
+.rz-first-aid__aside .rz-first-aid__note {
+	margin-top: 0 !important;
+}
+
+/* Крупные номера 01-03 вместо кружков со счётчиком (§6.3, §8.4).
+
+   Между шагами волосяная линия, у первого её нет: раздел начинается
+   лидом, и лишняя черта читалась бы как подчёркивание под ним.
+
+   Номер набран антиквой и крупно — это из §8.4, где он выведен
+   псевдоэлементом через счётчик. Цвет --rz-fact: кегль 1.5rem,
+   то есть крупный текст, порог контраста 3.0 пройден. */
+.rz-first-aid__steps {
+	counter-reset: rz-step;
+}
+
+/* Пункт остаётся обычным блоком с полем слева, а номер стоит
+   в этом поле абсолютно. Гридом тут нельзя, и это проверено, а не
+   предположено: у пункта нет обёртки вокруг текста, поэтому каждый
+   инлайновый узел — «С мобильного», ссылка «103», запятая — стал бы
+   отдельной ячейкой грида, и строка рассыпалась бы в столбик. */
+.rz-first-aid__steps li {
+	position: relative;
+	padding: 1.25rem 0 1.25rem 3.25rem;
+	margin-top: 0;
+	border-top: 1px solid var(--rz-line);
+}
+
+.rz-first-aid__steps li:first-child {
+	border-top: 0;
+	padding-top: 0;
+}
+
+/* Номер в левом поле пункта. Правило перекрывает прежний кружок
+   со счётчиком: заливку, рамку и размеры приходится снимать явно,
+   потому что базовое правило выше по файлу их задаёт. */
+.rz-first-aid__steps li::before {
+	content: "0" counter(rz-step);
+	position: absolute;
+	left: 0;
+	top: 1.25rem;
+	display: block;
+	width: auto;
+	height: auto;
+	border-radius: 0;
+	background: none;
+	color: var(--rz-fact);
+	font-family: var(--wp--preset--font-family--pt-serif);
+	font-size: 1.5rem;
+	font-weight: 400;
+	line-height: 1.35;
+}
+
+/* У первого пункта верхнего поля нет, значит и номер поднимается. */
+.rz-first-aid__steps li:first-child::before {
+	top: 0;
+}
+
+/* Предупреждение о посторонних агентах: вертикальный тёплый акцент
+   (§6.3) вместо рамки по периметру.
+
+   Заливка и цвет текста остаются прежними, из токенов --rz-warn-*:
+   плашка предупреждения на сайте уже есть и узнаётся, менять её
+   палитру редизайн не поручал. Добавляется именно акцент слева,
+   и он в цвете рамки предупреждения, а не в --rz-fact: иначе
+   в одном блоке оказалось бы два тёплых оттенка сразу (§17.3).
+
+   overflow здесь по-прежнему ставить нельзя: у номеров tel:
+   в этой секции зона нажатия сделана невидимым ::after
+   с отрицательным inset, и обрезка съела бы её. */
+.rz-callout {
+	border-left: 3px solid var(--rz-fact);
+	border-radius: 0 var(--rz-radius-card) var(--rz-radius-card) 0;
+}
+
+.rz-callout > * {
+	margin-block: 0;
+}
+
+.rz-callout--warn {
+	border-left-color: var(--rz-warn-border);
+}
+
+/* Рамка по периметру уступила место вертикальному акценту:
+   две границы сразу спорили бы друг с другом. */
+.rz-callout--warn .rz-first-aid__warning {
+	border: 0;
+	border-radius: 0 var(--rz-radius-card) var(--rz-radius-card) 0;
+}
+
+/* Карточка услуги тянется на всю высоту колонки, поэтому цены
+   в ряду стоят на одной линии. height, а не min-height: колонки
+   сетки и так растянуты по самой высокой. */
+.wp-block-column > .rz-service-card {
+	height: 100%;
+}
+
+/* Поле у текста карточки — только там, где фотография идёт от края
+   до края. Отбор через :has(), а не отдельным классом: условие
+   ровно такое и есть, а в карточке архива услуг фотографии нет,
+   и поле ей задаёт сама карточка. */
+.rz-service-card:has(> .rz-service-card__photo) > .rz-service-card__body {
+	padding: 1.5rem;
+}
+
+/* Полоса доверия (§6.5, §8.6). Тёмно-зелёная заливка во всю ширину
+   окна — короткая смысловая пауза между светлыми секциями.
+
+   Заливка тянется за пределы колонки тем же приёмом, что у секций
+   на страницах услуг: тень с нулевым размытием и разлётом 100vmax
+   заливает поля, clip-path обрезает разлив по вертикали. alignfull
+   тут не годится — у секции нет класса has-global-padding, и
+   растяжка ядра не сработала бы. */
+.rz-advantages {
+	background-color: var(--rz-action);
+	box-shadow: 0 0 0 100vmax var(--rz-action);
+	clip-path: inset(0 -100vmax);
+	color: var(--rz-surface);
+}
+
+.rz-advantages h2 {
+	color: var(--rz-surface);
+}
+
+/* Четыре довода в ряд, разделённые тонкими вертикальными линиями
+   (§6.5). Сетка, а не флекс: колонки обязаны быть равными
+   независимо от длины пояснения, иначе третий довод, который
+   заметно длиннее прочих, забрал бы себе половину полосы. */
+.rz-advantages__list {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 0;
+	margin-top: 2.5rem;
+	border-bottom: 0;
+}
+
+.rz-advantage {
+	display: block;
+	align-items: initial;
+	gap: 0;
+	padding: 0 1.5rem;
+	border-top: 0;
+	border-left: 1px solid color-mix(in srgb, var(--rz-surface) 22%, transparent);
+}
+
+.rz-advantage:first-child {
+	border-left: 0;
+	padding-left: 0;
+}
+
+.rz-advantage:last-child {
+	padding-right: 0;
+}
+
+/* Иконки белым контуром без кругов (§6.5): в тёмной полосе круг
+   с собственной заливкой читался бы наклейкой поверх фона. */
+.rz-advantages .rz-icon {
+	display: block;
+	width: auto;
+	height: auto;
+	margin-bottom: 0.875rem;
+	background: none;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	color: var(--rz-surface);
+}
+
+.rz-advantages .rz-icon svg {
+	width: 2rem;
+	height: 2rem;
+	stroke-width: 1.8;
+}
+
+/* Ключевая фраза выделена, пояснение светлее (§6.5). Пояснение —
+   это сам абзац, ключевая фраза — <strong> внутри него, поэтому
+   приглушается абзац, а strong возвращается к полной яркости.
+
+   78% — то же приглушение, что у текста колонок подвала: приём
+   на сайте уже есть, второго значения не заводим. Контраст
+   получается 8.79:1 при пороге 4.5. */
+.rz-advantage p {
+	margin-top: 0;
+	max-width: none;
+	color: color-mix(in srgb, var(--rz-surface) 78%, transparent);
+}
+
+.rz-advantage strong {
+	display: block;
+	color: var(--rz-surface);
+}
+
+/* Обводка фокуса внутри тёмной полосы — светлая: коричневая
+   на хвойном зелёном даёт 2.26:1 при пороге 3.0. Тот же приём,
+   что в подвале и в призыве. */
+.rz-advantages a:focus-visible {
+	outline-color: var(--rz-surface);
+}
+
+@media (max-width: 65.61rem) {
+	.rz-advantages__list {
+		grid-template-columns: repeat(2, 1fr);
+		row-gap: 2rem;
+	}
+
+	/* В две колонки левая граница не нужна у первого в каждой строке. */
+	.rz-advantage:nth-child(odd) {
+		border-left: 0;
+		padding-left: 0;
+	}
+
+	.rz-advantage:nth-child(even) {
+		padding-right: 0;
+	}
+}
+
+@media (max-width: 47.99rem) {
+	.rz-advantages__list {
+		grid-template-columns: 1fr;
+		row-gap: 0;
+	}
+
+	/* В столбик вертикальные линии теряют смысл: соседей сбоку нет.
+	   Возвращаем горизонтальные — тот же ритм, что был до полосы. */
+	.rz-advantage {
+		padding: 1.25rem 0;
+		border-left: 0;
+		border-top: 1px solid color-mix(in srgb, var(--rz-surface) 22%, transparent);
+	}
+
+	.rz-advantage:first-child {
+		border-top: 0;
+		padding-top: 0;
+	}
+
+	.rz-advantage:last-child {
+		padding-bottom: 0;
+	}
+}
+
+/* Этапы работы на общей линии процесса (§6.6, §8.7).
+
+   Карточки перестают быть карточками: у рамки и тени здесь нет
+   работы — связь шагов показывает линия, а не четыре одинаковых
+   прямоугольника. */
+.rz-steps__grid {
+	position: relative;
+}
+
+.rz-step {
+	position: relative;
+	z-index: 1;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	background: none;
+}
+
+/* Линия проходит под кружками иконок и обрывается на центрах
+   крайних: 12.5% — половина колонки из четырёх, минус половина
+   зазора между ними.
+
+   Кружок .rz-icon непрозрачен и закрывает линию собой, поэтому
+   отдельной подложки не нужно. Секция «Как мы работаем» идёт
+   на --rz-surface, и заливка кружка та же — стык невидим. */
+@media (min-width: 68rem) {
+	.rz-steps__grid::before {
+		content: "";
+		position: absolute;
+		left: calc(12.5% - 1rem);
+		right: calc(12.5% - 1rem);
+		top: 1.75rem;
+		height: 1px;
+		background-color: var(--rz-line);
+	}
 }
 
 /* 6. Адаптив и уменьшение движения */
