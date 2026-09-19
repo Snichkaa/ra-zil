@@ -324,34 +324,55 @@ add_filter( 'get_the_excerpt', 'razil_no_auto_excerpt', 10, 2 );
  * идёт без них намеренно: у <source> один адрес без srcset, повторять
  * там нечего.
  *
- * Номера вложений берутся из констант RAZIL_HERO_IMAGE_DESKTOP
- * и RAZIL_HERO_IMAGE_MOBILE плагина razil-core — там же, где их читает
- * фильтр, собирающий <picture>. Запасные значения на случай выключенного
- * плагина зашиты здесь: без них предзагрузка молча исчезла бы.
+ * Номера вложений даёт razil_hero_attachment_id() плагина razil-core:
+ * функция ищет их по пути файла в медиатеке, а сами пути лежат в
+ * константах RAZIL_HERO_FILE_DESKTOP и RAZIL_HERO_FILE_MOBILE — там же,
+ * где их читает фильтр, собирающий <picture>. Номер вложению выдаётся
+ * при загрузке и на другом сайте будет другим; путь файла перенос
+ * переживает.
+ *
+ * Запасных числовых номеров на случай выключенного плагина здесь нет, и
+ * это выбор, а не упущение. Без плагина <picture> не соберётся, в
+ * разметке останется обычный img из шаблона, и предзагрузка по зашитому
+ * номеру тянула бы файл, которого на странице нет. Поэтому, не найдя
+ * функции, предзагрузка тихо выключается.
  *
  * Печатается только если в разметке текущего шаблона найден класс
- * wp-image-<номер десктопного вложения>. Без этой проверки смена
- * фотографии героя ломала бы страницу молча: у новой картинки будет
- * свой номер, предзагрузка продолжила бы тянуть старую, и браузер качал
- * бы лишний файл, который нигде не показывается. Источник — глобальная
- * переменная ядра с содержимым текущего шаблона: она заполняется при
- * подборе шаблона, то есть до вывода head, и учитывает копию из базы,
- * если шаблон когда-нибудь сохранят в редакторе сайта.
+ * rz-hero__photo. Без этой проверки перевёрстка первого экрана ломала бы
+ * страницу молча: предзагрузка продолжила бы тянуть фотографию, которую
+ * на странице уже никто не показывает. Источник — глобальная переменная
+ * ядра с содержимым текущего шаблона: она заполняется при подборе
+ * шаблона, то есть до вывода head, и учитывает копию из базы, если
+ * шаблон когда-нибудь сохранят в редакторе сайта.
  */
 function razil_preload_hero_image() {
 	if ( ! is_front_page() ) {
 		return;
 	}
-	$desktop_id = defined( 'RAZIL_HERO_IMAGE_DESKTOP' ) ? RAZIL_HERO_IMAGE_DESKTOP : 241;
-	$mobile_id  = defined( 'RAZIL_HERO_IMAGE_MOBILE' ) ? RAZIL_HERO_IMAGE_MOBILE : 242;
 
-	$tpl = isset( $GLOBALS['_wp_current_template_content'] ) ? $GLOBALS['_wp_current_template_content'] : '';
-	if ( ! preg_match( '/\bwp-image-' . $desktop_id . '\b/', $tpl ) ) {
+	// Номера вложений выдаёт резолвер плагина razil-core по пути файла.
+	// Плагина нет — нет и резолвера: выходим тихо. Предзагружать кадр,
+	// который без плагина в разметку не попадёт, значило бы качать
+	// лишний файл, а разбирать отсутствие плагина ошибкой — ронять шапку.
+	if ( ! function_exists( 'razil_hero_attachment_id' )
+		|| ! defined( 'RAZIL_HERO_FILE_DESKTOP' )
+		|| ! defined( 'RAZIL_HERO_FILE_MOBILE' ) ) {
 		return;
 	}
 
-	$desktop_src = wp_get_attachment_image_url( $desktop_id, 'full' );
-	$mobile_src  = wp_get_attachment_image_url( $mobile_id, 'full' );
+	// Сторож узнаёт героя по классу блока, а не по номеру вложения:
+	// номер выдаётся при загрузке и на другом сайте будет другим,
+	// класс переживает и перенос, и замену самой фотографии.
+	$tpl = isset( $GLOBALS['_wp_current_template_content'] ) ? $GLOBALS['_wp_current_template_content'] : '';
+	if ( false === strpos( $tpl, 'rz-hero__photo' ) ) {
+		return;
+	}
+
+	$desktop_id = razil_hero_attachment_id( RAZIL_HERO_FILE_DESKTOP );
+	$mobile_id  = razil_hero_attachment_id( RAZIL_HERO_FILE_MOBILE );
+
+	$desktop_src = $desktop_id ? wp_get_attachment_image_url( $desktop_id, 'full' ) : '';
+	$mobile_src  = $mobile_id ? wp_get_attachment_image_url( $mobile_id, 'full' ) : '';
 	if ( ! $desktop_src || ! $mobile_src ) {
 		return;
 	}
