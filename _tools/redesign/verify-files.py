@@ -1,13 +1,30 @@
 # -*- coding: utf-8 -*-
 """Бинарная проверка текстовых файлов темы и плагина.
 
-Проверяется три вещи: нет отметки порядка байтов в начале файла,
-все переводы строк — CRLF, нет управляющих символов кроме табуляции
-и самого перевода строки.
+Проверяется четыре вещи:
 
-Файл открывается строго в двоичном режиме. В текстовом режиме Python
-сам переводит CRLF в LF при чтении, и проверка переводов строк
-превратилась бы в проверку того, что Python умеет их переводить.
+  * нет отметки порядка байтов в начале файла;
+  * переводы строк не смешаны в пределах файла;
+  * стиль переводов строк не изменился по сравнению с копией темы
+    и плагина в _backup; у нового файла он обязан быть CRLF;
+  * нет управляющих символов, кроме табуляции и самого перевода строки.
+
+Про третий пункт отдельно. В этом репозитории нет .gitattributes,
+и файлы исторически разные: functions.php, header.js и шаблоны темы
+идут с CRLF, а большая часть модулей плагина — с LF. Требовать CRLF
+от всех подряд значило бы переписать десяток чужих файлов целиком
+ради одной правки в три строки. Поэтому правило такое: писать
+в двоичном режиме и НЕ нормализовать чужие переводы строк —
+файл остаётся в своём стиле, а новый заводится с CRLF.
+
+Сравнивать с git нельзя: core.autocrlf у репозитория включён, в самом
+хранилище всё лежит с LF, и разница со стилем рабочей копии ничего
+не значит. Эталоном служит копия темы и плагина в _backup — она снята
+до первой правки и хранит рабочую копию побайтово.
+
+Файл открывается строго в двоичном режиме. В текстовом Python сам
+переводит CRLF в LF при чтении, и проверка превратилась бы в проверку
+того, что Python умеет их переводить.
 
 Запуск:
     python _tools/redesign/verify-files.py <файл|каталог> ...
@@ -24,7 +41,7 @@ import sys
 # шрифты, изображения, архивы — сюда не попадают: в них и BOM-подобная
 # последовательность, и одиночный перевод строки законны.
 TEXT_EXT = {
-    ".php", ".css", ".js", ".json", ".html", ".htm", ".md",
+    ".php", ".css", ".js", ".mjs", ".json", ".html", ".htm", ".md",
     ".txt", ".svg", ".xml", ".py", ".ps1", ".scss",
 }
 
@@ -36,6 +53,59 @@ BOMS = (
     (b"\xff\xfe", "UTF-16LE"),
     (b"\xfe\xff", "UTF-16BE"),
 )
+
+_ROOT = None
+
+
+def git_root():
+    global _ROOT
+    if _ROOT is None:
+        try:
+            _ROOT = subprocess.run(
+                ["git", "rev-parse", "--show-toplevel"],
+                capture_output=True, text=True, check=True,
+            ).stdout.strip()
+        except Exception:
+            _ROOT = ""
+    return _ROOT
+
+
+# Копия рабочего дерева, снятая до первой правки (пункт 3.2 задания).
+BACKUP = "_backup/redesign-2026-09-19"
+BACKUP_MAP = (
+    ("wp-content/themes/razil/", BACKUP + "/theme-razil/"),
+    ("wp-content/plugins/razil-core/", BACKUP + "/plugin-razil-core/"),
+)
+
+
+def baseline_bytes(path):
+    """Содержимое файла в бэкапе или None, если его там нет."""
+    root = git_root()
+    if not root:
+        return None
+    rel = os.path.relpath(os.path.abspath(path), root).replace("\\", "/")
+    for src, dst in BACKUP_MAP:
+        if rel.startswith(src):
+            cand = os.path.join(root, dst + rel[len(src):])
+            if os.path.isfile(cand):
+                with open(cand, "rb") as fh:
+                    return fh.read()
+            return None
+    return None
+
+
+def eol_style(data):
+    """Стиль переводов строк: CRLF, LF, CR, СМЕШАННЫЙ или «нет строк»."""
+    crlf = data.count(b"\r\n")
+    lf = data.count(b"\n") - crlf
+    cr = data.count(b"\r") - crlf
+
+    kinds = [k for k, n in (("CRLF", crlf), ("LF", lf), ("CR", cr)) if n]
+    if not kinds:
+        return "нет строк"
+    if len(kinds) > 1:
+        return "СМЕШАННЫЙ (" + ", ".join(kinds) + ")"
+    return kinds[0]
 
 
 def check(path):
@@ -53,30 +123,18 @@ def check(path):
             problems.append("отметка порядка байтов %s в начале файла" % name)
             break
 
-    # Одиночные LF: перевод строки, перед которым нет возврата каретки.
-    lone_lf = []
-    # Одиночные CR: возврат каретки, за которым не идёт перевод строки.
-    lone_cr = []
-    line = 1
-    for i, byte in enumerate(data):
-        if byte == 0x0A:
-            if i == 0 or data[i - 1] != 0x0D:
-                lone_lf.append(line)
-            line += 1
-        elif byte == 0x0D:
-            if i + 1 >= len(data) or data[i + 1] != 0x0A:
-                lone_cr.append(line)
-
-    if lone_lf:
-        problems.append(
-            "одиночный перевод строки без возврата каретки: строк %d, первая %d"
-            % (len(lone_lf), lone_lf[0])
-        )
-    if lone_cr:
-        problems.append(
-            "возврат каретки без перевода строки: раз %d, первый около строки %d"
-            % (len(lone_cr), lone_cr[0])
-        )
+    style = eol_style(data)
+    if style.startswith("СМЕШАННЫЙ"):
+        problems.append("переводы строк смешаны: %s" % style)
+    else:
+        was = baseline_bytes(path)
+        if was is None:
+            if style not in ("CRLF", "нет строк"):
+                problems.append("новый файл должен быть CRLF, а он %s" % style)
+        else:
+            before = eol_style(was)
+            if before != style and "нет строк" not in (before, style):
+                problems.append("переводы строк изменились: было %s, стало %s" % (before, style))
 
     # Управляющие символы. Табуляция, возврат каретки и перевод строки
     # разрешены, остальное в исходниках означает случайную вставку.
@@ -90,7 +148,7 @@ def check(path):
         )
         problems.append("управляющие символы: %s" % listed)
 
-    return problems
+    return problems, style
 
 
 def collect(targets):
@@ -112,11 +170,7 @@ def collect(targets):
 
 def from_git():
     """Изменённые и новые файлы по данным git."""
-    root = subprocess.run(
-        ["git", "rev-parse", "--show-toplevel"],
-        capture_output=True, text=True, check=True,
-    ).stdout.strip()
-
+    root = git_root()
     out = subprocess.run(
         ["git", "status", "--porcelain", "--untracked-files=all"],
         capture_output=True, text=True, check=True, cwd=root,
@@ -149,15 +203,15 @@ def main(argv):
 
     failed = 0
     for path in files:
-        problems = check(path)
+        problems, style = check(path)
         shown = os.path.relpath(path).replace("\\", "/")
         if problems:
             failed += 1
-            print("УПАЛ    %s" % shown)
+            print("УПАЛ    %-58s %s" % (shown, style))
             for problem in problems:
                 print("        %s" % problem)
         else:
-            print("ПРОШЁЛ  %s" % shown)
+            print("ПРОШЁЛ  %-58s %s" % (shown, style))
 
     print("\n--- ИТОГО: проверено %d, упало %d" % (len(files), failed))
     return 1 if failed else 0

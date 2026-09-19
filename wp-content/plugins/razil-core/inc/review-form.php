@@ -240,7 +240,18 @@ function razil_review_form(): string {
 
 	$out .= '</form>';
 
-	$out .= razil_review_validation_js();
+	// Скрипт проверки полей уходит в подвал отдельным подключением,
+	// а не печатается здесь тегом <script>.
+	//
+	// Так пришлось сделать не для порядка. Блок core/shortcode
+	// прогоняет свой вывод через wpautop(), а тот расставляет абзацы
+	// по всей строке, не разбирая, где разметка, а где код. Пустые
+	// строки внутри скрипта превращались в </p><p>, и страница
+	// отзывов падала с SyntaxError: Unexpected token '<' —
+	// то есть подсказки под полями не работали вовсе.
+	// Подвальные скрипты печатаются мимо содержимого, и wpautop
+	// до них не добирается.
+	razil_review_enqueue_validation();
 
 	return $out;
 }
@@ -255,24 +266,37 @@ function razil_review_form(): string {
  * Разойдутся - человек получит подсказку от браузера, отправит, и всё
  * равно упрётся в отказ сервера.
  */
+function razil_review_enqueue_validation(): void {
+	// Ручка без файла: код целиком лежит в inline-довеске, и WordPress
+	// печатает его в подвале, после разметки формы.
+	if ( ! wp_script_is( 'razil-review-form', 'registered' ) ) {
+		wp_register_script( 'razil-review-form', false, array(), null, true );
+	}
+
+	wp_enqueue_script( 'razil-review-form' );
+	wp_add_inline_script( 'razil-review-form', razil_review_validation_js() );
+}
+
+/**
+ * Тело скрипта проверки полей, без тега script.
+ *
+ * Оборачивать в тег не нужно: его ставит сам WordPress вокруг
+ * inline-довеска ручки razil-review-form.
+ */
 function razil_review_validation_js(): string {
 	return <<<'JS'
-<script>
 ( function () {
 	/*
-	 * Ищем от самого тега script, а не по документу: класс rz-form носит
-	 * и форма обратного звонка, и querySelector взял бы ту, что выше
-	 * в DOM. document.currentScript указывает на этот script в момент
-	 * выполнения, а форма - его непосредственный предыдущий сосед,
-	 * потому что шорткод печатает их подряд. Заодно это делает вывод
-	 * безопасным при двух формах на странице: каждый скрипт найдёт свою.
+	 * Форму ищем по документу. Раньше скрипт стоял сразу за ней и брал
+	 * её через document.currentScript.previousElementSibling, но теперь
+	 * он печатается в подвале, и соседом ему приходится совсем другой
+	 * узел.
+	 *
+	 * Класс rz-review-form, а не общий rz-form: последний носит и форма
+	 * обратного звонка, и querySelector взял бы ту, что выше в DOM.
+	 * Формы отзыва на странице всегда одна.
 	 */
-	var tag = document.currentScript;
-	var form = tag ? tag.previousElementSibling : null;
-
-	if ( ! form || ! form.classList.contains( 'rz-review-form' ) ) {
-		form = document.querySelector( '.rz-review-form' );
-	}
+	var form = document.querySelector( '.rz-review-form' );
 
 	if ( ! form ) {
 		return;
@@ -336,7 +360,6 @@ function razil_review_validation_js(): string {
 	} );
 
 }() );
-</script>
 JS;
 }
 
