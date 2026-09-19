@@ -69,7 +69,7 @@ a:hover {
 .wp-block-button__link {
 	background-color: var(--rz-action);
 	color: var(--rz-surface);
-	border-radius: var(--rz-radius);
+	border-radius: var(--rz-radius-button);
 	padding: 0.5rem 1.5rem;
 	font-weight: 700;
 	transition: background-color var(--rz-transition);
@@ -146,5 +146,5 @@ blockquote {
 .wp-block-image img {
 	max-width: 100%;
 	height: auto;
-	border-radius: var(--rz-radius);
+	border-radius: var(--rz-radius-card);
 }

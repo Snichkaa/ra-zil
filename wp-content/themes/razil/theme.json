@@ -282,7 +282,7 @@
 					"text": "var(--wp--preset--color--surface)"
 				},
 				"border": {
-					"radius": "4px"
+					"radius": "var(--rz-radius-button)"
 				},
 				"typography": {
 					"fontFamily": "var(--wp--preset--font-family--pt-sans)",
@@ -335,7 +335,7 @@
 		"blocks": {
 			"core/button": {
 				"border": {
-					"radius": "4px"
+					"radius": "var(--rz-radius-button)"
 				},
 				"spacing": {
 					"margin": {

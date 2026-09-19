@@ -257,13 +257,13 @@ h1.has-heading-l-font-size {
 	max-width: 100%;
 	height: auto;
 	display: block;
-	border-radius: 4px;
+	border-radius: var(--rz-radius-card);
 }
 
 /* Блоки с фоном */
 .wp-block-group.has-background {
 	padding: 2rem;
-	border-radius: 4px;
+	border-radius: var(--rz-radius-card);
 }
 
 /* Полосы во всю ширину не скругляются. Правило выше рассчитано
@@ -398,7 +398,7 @@ h1.has-heading-l-font-size {
 	max-width: 100%;
 	height: auto;
 	display: block;
-	border-radius: 4px;
+	border-radius: var(--rz-radius-card);
 }
 
 .wp-block-image.aligncenter {
@@ -447,7 +447,8 @@ h1.has-heading-l-font-size {
 
 /* Кнопки: высота 56px на мобиле, 60px на десктопе */
 .wp-element-button,
-.wp-block-button__link {
+.wp-block-button__link,
+.rz-button {
 	min-height: 3.5rem;
 	display: inline-flex;
 	align-items: center;
@@ -473,26 +474,30 @@ h1.has-heading-l-font-size {
    Тот же приём, что у .wp-block-read-more:hover выше: состояние наведения
    собрано в одном правиле, отдельного под подчёркивание не заводим. */
 .wp-element-button:hover,
-.wp-block-button__link:hover {
+.wp-block-button__link:hover,
+.rz-button:hover {
 	text-decoration: none;
 	transform: scale(1.02);
 }
 
 .wp-element-button:active,
-.wp-block-button__link:active {
+.wp-block-button__link:active,
+.rz-button:active {
 	transform: scale(0.98);
 }
 
 @media (min-width: 64rem) {
 	.wp-element-button,
-	.wp-block-button__link {
+	.wp-block-button__link,
+	.rz-button {
 		min-height: 3.75rem;
 	}
 }
 
 @media (prefers-reduced-motion: reduce) {
 	.wp-element-button,
-	.wp-block-button__link {
+	.wp-block-button__link,
+	.rz-button {
 		transition: none;
 	}
 
@@ -500,8 +505,10 @@ h1.has-heading-l-font-size {
 	   не уползала бы плавно, а прыгала скачком. */
 	.wp-element-button:hover,
 	.wp-block-button__link:hover,
+	.rz-button:hover,
 	.wp-element-button:active,
-	.wp-block-button__link:active {
+	.wp-block-button__link:active,
+	.rz-button:active {
 		transform: none;
 	}
 }
@@ -564,7 +571,7 @@ h1.has-heading-l-font-size {
 	gap: var(--wp--preset--spacing--40);
 	background-color: var(--rz-surface);
 	padding: var(--wp--preset--spacing--50);
-	border-radius: 8px;
+	border-radius: var(--rz-radius-card);
 }
 
 /* Единая геометрия карточек. Радиус и тень заданы здесь, а не
@@ -969,12 +976,13 @@ input[type="reset"],
 	margin: 0.5rem 0;
 }
 
-.wp-block-button__link {
+.wp-block-button__link,
+.rz-button {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	padding: 0.75rem 1.5rem;
-	border-radius: 4px;
+	border-radius: var(--rz-radius-button);
 	font-weight: 600;
 	text-decoration: none;
 	cursor: pointer;
@@ -1194,7 +1202,7 @@ input[type="reset"],
 	background-color: transparent;
 	color: var(--rz-action);
 	border: 1px solid var(--rz-line);
-	border-radius: 4px;
+	border-radius: var(--rz-radius);
 	font-size: 1.25rem;
 	cursor: pointer;
 	transition: background-color 160ms, color 160ms, border-color 160ms,
@@ -2293,6 +2301,393 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 	margin-top: 1rem;
 }
 
+/* === ПЕРЕИСПОЛЬЗУЕМЫЕ КОМПОНЕНТЫ §24 ===
+
+   Таблица §24 концепции перечисляет девять строительных элементов.
+   Ниже заведены те, которых в теме не было. Классы описывают роль,
+   а не место: .rz-contact-cta устойчивее, чем .green-block-bottom.
+
+   Часть из них до фаз 3-6 в разметке не встречается. Это не мёртвый
+   код: композиции страниц собираются из них, и завести их разом
+   дешевле, чем изобретать заново на каждой странице. */
+
+/* Контейнер §24. Секции темы держат ширину через contentSize
+   из theme.json, поэтому класс нужен не им, а блокам внутри секций,
+   которые сами тянутся во всю ширину: тёмной полосе преимуществ,
+   контактному блоку, галерее. */
+.rz-shell {
+	width: var(--rz-shell);
+	margin-inline: auto;
+}
+
+/* Метка над крупным заголовком §17.4: 12-13 px, увеличенный
+   межбуквенный интервал. Пресета такого кегля в theme.json нет,
+   и заводить его нельзя - слаги не меняем, - поэтому размер здесь.
+
+   Цвет --rz-fact-text, а не --rz-fact: метка набирается 13 px,
+   то есть обычным кеглем, и обязана проходить AA. */
+.rz-eyebrow {
+	display: block;
+	margin: 0 0 0.75rem;
+	font-size: 0.8125rem;
+	font-weight: 700;
+	line-height: 1.3;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--rz-fact-text);
+}
+
+/* Карточка услуги §24, §8.5. Колонка, фотография сверху в единой
+   пропорции, цена прижата к низу авто-полем - поэтому у карточек
+   разной длины цены стоят на одной линии.
+
+   Подъём 5 px и увеличение снимка до 1.03 - верхние границы §8.9;
+   больше движения тема себе не позволяет.
+
+   Горизонтальная раскладка архива услуг живёт в правиле
+   .wp-block-group.rz-service-card выше по файлу: у него вес (0,2,0)
+   против (0,1,0) здесь, и до фазы 6 каталог остаётся прежним. */
+.rz-service-card {
+	display: flex;
+	flex-direction: column;
+	background-color: var(--rz-surface);
+	border: 1px solid var(--rz-line);
+	border-radius: var(--rz-radius-card);
+	overflow: hidden;
+	transition: transform 250ms ease, box-shadow 250ms ease;
+}
+
+.rz-service-card:hover {
+	transform: translateY(-5px);
+	box-shadow: var(--rz-shadow-hover);
+}
+
+.rz-service-card__photo {
+	margin: 0;
+}
+
+.rz-service-card__photo img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+	border-radius: 0;
+	transition: transform 450ms ease;
+}
+
+.rz-service-card:hover .rz-service-card__photo img {
+	transform: scale(1.03);
+}
+
+/* Цена всегда внизу карточки. margin-top: auto работает только
+   в колонке, поэтому правило и стоит рядом с ней. */
+.rz-service-card__price {
+	margin-top: auto;
+	color: var(--rz-fact-text);
+	font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.rz-service-card,
+	.rz-service-card__photo img {
+		transition: none;
+	}
+
+	.rz-service-card:hover,
+	.rz-service-card:hover .rz-service-card__photo img {
+		transform: none;
+	}
+}
+
+/* Информационная карточка §24: состав услуги и преимущества.
+   Тени нет намеренно - §21.2 прямо требует структуру, а не эффект
+   парения. Этим она и отличается от карточки услуги. */
+.rz-info-card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	padding: 1.5rem;
+	background-color: var(--rz-surface);
+	border: 1px solid var(--rz-line);
+	border-radius: var(--rz-radius-card);
+}
+
+.rz-info-card > * {
+	margin-block: 0;
+}
+
+/* Номер группы 01-04. Крупный, поэтому цвет --rz-fact: для текста
+   от 24 px порог контраста 3.0, и он пройден. */
+.rz-info-card__num {
+	font-family: var(--wp--preset--font-family--pt-serif);
+	font-size: 1.5rem;
+	line-height: 1;
+	color: var(--rz-fact);
+}
+
+/* Пункты внутри группы разделены волосяной линией, а не маркером:
+   тот же приём, что у преимуществ и у вопросов. */
+.rz-info-card__list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.rz-info-card__list li {
+	margin: 0;
+	padding: 0.625rem 0;
+	border-top: 1px solid var(--rz-line);
+}
+
+.rz-info-card__list li:first-child {
+	border-top: 0;
+	padding-top: 0;
+}
+
+.rz-info-card__list li:last-child {
+	padding-bottom: 0;
+}
+
+/* Галерея работ §24, §21.3. Одна колонка на телефоне, две от 48rem,
+   на широком экране первый кадр занимает две строки - результат
+   показывается крупнее остальных, как и требует §21.3. */
+.rz-project-gallery {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1rem;
+}
+
+.rz-project-gallery > * {
+	margin-block: 0;
+}
+
+@media (min-width: 48rem) {
+	.rz-project-gallery {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (min-width: 62rem) {
+	.rz-project-gallery {
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.25rem;
+	}
+
+	.rz-project-gallery > :first-child {
+		grid-column: span 2;
+		grid-row: span 2;
+	}
+}
+
+/* Временная схема §24, §21.5. На широком экране этапы соединены
+   тонкой линией, на узком линия убирается - адаптивное упрощение
+   §25: смысл остаётся, сложная геометрия исчезает. */
+.rz-timeline {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1.25rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: rz-tl;
+}
+
+.rz-timeline > li {
+	counter-increment: rz-tl;
+	position: relative;
+	margin: 0;
+	padding-left: 3.25rem;
+}
+
+/* Номер кружком на фоне страницы. Заливка обязательна: на широком
+   экране под кружком проходит линия процесса, и сквозь прозрачный
+   она бы просвечивала. */
+.rz-timeline > li::before {
+	content: "0" counter(rz-tl);
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	border-radius: 50%;
+	background-color: var(--rz-surface);
+	border: 1px solid var(--rz-line);
+	font-family: var(--wp--preset--font-family--pt-serif);
+	font-size: 0.9375rem;
+	color: var(--rz-fact);
+}
+
+.rz-timeline__term {
+	display: block;
+	font-weight: 700;
+	color: var(--rz-ink);
+}
+
+.rz-timeline__note {
+	display: block;
+	color: var(--rz-ink-soft);
+}
+
+@media (min-width: 62rem) {
+	.rz-timeline {
+		position: relative;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 1.5rem;
+	}
+
+	.rz-timeline > li {
+		padding-left: 0;
+		padding-top: 3.5rem;
+	}
+
+	/* Линия идёт между центрами крайних кружков, а не от края до края
+	   сетки: иначе она торчит слева от первого и справа от последнего.
+	   Центр крайнего кружка - это половина колонки, то есть 12.5%
+	   сетки из четырёх, минус половина зазора. */
+	.rz-timeline::before {
+		content: "";
+		position: absolute;
+		left: calc(12.5% - 0.5rem);
+		right: calc(12.5% - 0.5rem);
+		top: 1.25rem;
+		height: 1px;
+		background-color: var(--rz-line);
+	}
+}
+
+/* Аккордеон §24. Сам раскрывающийся элемент - нативный
+   details/summary, он уже оформлен правилами .wp-block-details
+   выше по файлу. Обёртке остаётся нижняя линия и точка привязки
+   для правила «одновременно открыт один вопрос» (§21.7): скрипт
+   ищет именно [data-accordion]. */
+.rz-accordion {
+	border-bottom: 1px solid var(--rz-line);
+}
+
+.rz-accordion > * {
+	margin-block: 0;
+}
+
+/* Контактный блок §24: конец содержательных страниц. От призыва
+   в подвале отличается тем, что стоит внутри колонки и не тянется
+   во всю ширину окна. */
+.rz-contact-cta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.5rem;
+	padding: 1.75rem;
+	background-color: var(--rz-surface);
+	border: 1px solid var(--rz-line);
+	border-radius: var(--rz-radius-card);
+}
+
+.rz-contact-cta > * {
+	margin-block: 0;
+}
+
+.rz-contact-cta__text {
+	flex: 1 1 18rem;
+	min-width: 0;
+}
+
+.rz-contact-cta__text > * {
+	margin-block: 0;
+}
+
+.rz-contact-cta__text > * + * {
+	margin-top: 0.5rem;
+}
+
+/* === ЗАГЛУШКА ПОД ФОТОГРАФИЮ ===
+
+   Раздел 5 задания. Реальные фотографии не выдумываются: там, где
+   снимок по §22 оправдан, а файла нет, стоит заглушка с описанием
+   нужного кадра.
+
+   Геометрия та же, что будет у настоящего снимка: пропорция задаётся
+   переменной --rz-slot-ratio из разметки, поэтому после подстановки
+   фотографии вёрстка не сдвинется ни на пиксель. */
+.rz-photo-slot {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	aspect-ratio: var(--rz-slot-ratio, 4 / 3);
+	padding: 1.25rem;
+	text-align: center;
+	background-color: var(--rz-bg);
+	border: 1px dashed var(--rz-line);
+	border-radius: var(--rz-radius-card);
+}
+
+.rz-photo-slot__num {
+	font-family: var(--wp--preset--font-family--pt-serif);
+	font-size: 1.5rem;
+	line-height: 1;
+	color: var(--rz-fact);
+}
+
+.rz-photo-slot__hint {
+	max-width: 22rem;
+	font-size: 0.8125rem;
+	line-height: 1.4;
+	color: var(--rz-ink-soft);
+}
+
+/* === НОМЕРА ЭКСТРЕННЫХ СЛУЖБ ===
+
+   Зона нажатия у этих номеров и раньше была 44 px, но приходила
+   от предка - правила .rz-first-aid a[href^="tel:"]::after. Проверено
+   пробой попадания на живой странице: края зоны нажимались у всех
+   пяти номеров.
+
+   Правило здесь не дублирует зону, а закрепляет её за самим классом.
+   Список первых действий когда-нибудь переедет из .rz-first-aid
+   в другую обёртку, и тогда зона исчезла бы молча; класс переедет
+   вместе с разметкой.
+
+   Начертание и цвет тоже здесь: до этого у класса не было ни одного
+   правила вовсе, а выглядел он так из-за соседнего селектора
+   по атрибуту href. */
+.rz-emergency-tel {
+	--rz-tap: 2.75rem;
+	--rz-tap-side: 0.75rem;
+	position: relative;
+	color: var(--rz-action);
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.rz-emergency-tel::after {
+	content: "";
+	position: absolute;
+	inset-block: min(0px, calc((var(--rz-tap) - 100%) / -2));
+	inset-inline: calc(-1 * var(--rz-tap-side));
+}
+
+/* Зону нажатия перекрывал сосед.
+
+   Замер на живой странице: у номера 112 в примечании нижняя кромка
+   не нажимается - её накрывает следующий элемент, и из 44 px работают
+   верхние 33. У номеров внутри списка такого нет: под строкой там
+   продолжение того же абзаца, а не другой блок.
+
+   Лечится слоем, а не размером: зона остаётся прежней, но всплывает
+   над соседом. z-index действует только на позиционированном
+   элементе, и position: relative у этих ссылок уже стоит - и в общем
+   правиле зон нажатия, и в правиле выше. */
+.rz-first-aid a[href^="tel:"],
+.entry-content a[href^="tel:"]:not(.wp-element-button) {
+	z-index: 1;
+}
+
 /* 5. Композиции страниц */
 
 /* Первый экран: фотография офиса фоном на всех ширинах.
@@ -2714,6 +3109,23 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 	left: 0;
 	right: 0;
 	z-index: 100;
+	/* Фон полупрозрачный с размытием (§6.1): при прокрутке шапка
+	   остаётся отделённой от содержимого, но не выглядит тяжёлой.
+
+	   Непрозрачность 86%. Замерено на живой странице: полоса шапки над
+	   прокрученной панорамой, содержимое шапки скрыто, худший контраст
+	   графита к фону — 13.53:1 при сплошной заливке, 10.40:1 при 86%
+	   и 7.43:1 при 70%. Порог 4.5 проходят все три, то есть выбор тут
+	   не про контраст, а про то, сколько фотографии видно сквозь шапку;
+	   86% — заметная прозрачность с большим запасом по читаемости.
+	   Размытие держит этот запас: без него пёстрый кадр давал бы
+	   разброс от пикселя к пикселю.
+
+	   Запасной непрозрачный фон объявлен первым: backdrop-filter
+	   поддержан не везде, и там, где его нет, полупрозрачная шапка
+	   осталась бы просто полупрозрачной, а текст под ней читался бы
+	   сквозь неё. @supports включает прозрачность только вместе
+	   с размытием. */
 	background-color: var(--rz-surface);
 	/* Граница тенью, а не border: тогда 5rem
 	   остаётся полной высотой шапки, и padding-top
@@ -2728,6 +3140,14 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 	   WCAG к нему не применяются. */
 	box-shadow: 0 1px 0 color-mix(in srgb, var(--rz-ink) 35%, transparent);
 	transition: transform var(--rz-transition);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+	.rz-header {
+		background-color: color-mix(in srgb, var(--rz-surface) 86%, transparent);
+		-webkit-backdrop-filter: blur(10px);
+		        backdrop-filter: blur(10px);
+	}
 }
 
 /* Умная шапка на узких экранах: класс ставит скрипт
@@ -3570,3 +3990,54 @@ html:not(.rz-js) .rz-cb-open {
 }
 
 /* 6. Адаптив и уменьшение движения */
+
+/* Блокировка прокрутки фона при открытом мобильном меню (§10).
+
+   Раньше её не было, и это был осознанный выбор: прежняя версия
+   запирала страницу через document.body.style.overflow из скрипта,
+   а такое запирание на мобильных даёт скачок к началу страницы.
+   Довод остаётся верным — поэтому запирание сделано иначе.
+
+   overflow: hidden на корневом элементе, а не position: fixed на body:
+   скачка не даёт именно position: fixed, он вырывает документ из
+   потока и теряет позицию прокрутки. overflow её сохраняет.
+
+   Через :has(), а не классом из скрипта: состояние меню уже выражено
+   атрибутом hidden на самой панели, и второй источник правды —
+   класс на html — рано или поздно с ним разошёлся бы. Приём в теме
+   не новый: тем же :has() отбираются страницы с хлебными крошками.
+
+   overscroll-behavior на самой панели обязателен в пару к этому:
+   без него прокрутка, дойдя до конца списка, продолжается на фоне. */
+html:has(.rz-menu:not([hidden])) {
+	overflow: hidden;
+}
+
+.rz-menu {
+	overscroll-behavior: contain;
+}
+
+/* Меньше движения — §8.9 концепции.
+
+   Блок общий и намеренно стоит последним: по всему файлу у каждого
+   компонента есть свой @media (prefers-reduced-motion: reduce),
+   и они точнее — снимают не только переход, но и само смещение.
+   Этот блок их не заменяет, а страхует: он выключит анимацию
+   у того, что добавят позже и забудут прикрыть.
+
+   !important здесь — единственное место, где он поставлен редизайном,
+   и поставлен по прямому тексту §8.9, где этот блок приведён именно
+   в таком виде. Без !important правило с нулевой специфичностью
+   проиграло бы любому правилу компонента и не страховало бы ничего.
+   Требование §1.12 задания это не нарушает по смыслу: там запрет
+   на !important ради перебивания собственных правил, а здесь
+   объявление, которое обязано перебить их все. */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation: none !important;
+		transition: none !important;
+		scroll-behavior: auto !important;
+	}
+}
