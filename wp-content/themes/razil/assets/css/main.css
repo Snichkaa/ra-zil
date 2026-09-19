@@ -2481,13 +2481,21 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 
 	/* Линия идёт между центрами крайних кружков, а не от края до края
 	   сетки: иначе она торчит слева от первого и справа от последнего.
-	   Центр крайнего кружка - это половина колонки, то есть 12.5%
-	   сетки из четырёх, минус половина зазора. */
+
+	   Кружок стоит у ЛЕВОГО края своей колонки, а не по её центру,
+	   поэтому слева линия начинается на половине кружка — 1.25rem.
+
+	   Справа считается от правого края сетки до центра последнего
+	   кружка: при ширине колонки (100% - 3g)/4 последняя колонка
+	   начинается на 3(cw+g), и до её кружка остаётся
+	   25% - 0.75g - 1.25rem. При g = 1.5rem это 25% - 2.375rem.
+	   Через 12.5% считать нельзя, и это проверено замером: зазоры
+	   сужают колонку, и линия вылезала за крайний кружок. */
 	.rz-timeline::before {
 		content: "";
 		position: absolute;
-		left: calc(12.5% - 0.5rem);
-		right: calc(12.5% - 0.5rem);
+		left: 1.25rem;
+		right: calc(25% - 2.375rem);
 		top: 1.25rem;
 		height: 1px;
 		background-color: var(--rz-line);
@@ -4261,9 +4269,13 @@ html:not(.rz-js) .rz-cb-open {
 	background: none;
 }
 
-/* Линия проходит под кружками иконок и обрывается на центрах
-   крайних: 12.5% — половина колонки из четырёх, минус половина
-   зазора между ними.
+/* Линия проходит под кружками иконок и обрывается на их центрах.
+
+   Кружок стоит у левого края колонки, поэтому слева линия начинается
+   на его половине — 1.75rem при диаметре 3.5rem. Справа до центра
+   последнего кружка остаётся 25% - 0.75g - 1.75rem; при зазоре
+   g = 2rem это 25% - 3.25rem. Замерено: линия кончается ровно
+   на центре четвёртого кружка.
 
    Кружок .rz-icon непрозрачен и закрывает линию собой, поэтому
    отдельной подложки не нужно. Секция «Как мы работаем» идёт
@@ -4272,12 +4284,138 @@ html:not(.rz-js) .rz-cb-open {
 	.rz-steps__grid::before {
 		content: "";
 		position: absolute;
-		left: calc(12.5% - 1rem);
-		right: calc(12.5% - 1rem);
+		left: 1.75rem;
+		right: calc(25% - 3.25rem);
 		top: 1.75rem;
 		height: 1px;
 		background-color: var(--rz-line);
 	}
+}
+
+
+/* === СТРАНИЦА УСЛУГИ: СОСТАВ, ДОКУМЕНТЫ, СРОКИ ===
+
+   Композиции эталонной страницы услуги (§20, §21). Сами компоненты —
+   .rz-info-card, .rz-project-gallery, .rz-timeline, .rz-accordion —
+   заведены в разделе 4; здесь только их расстановка на странице. */
+
+/* Состав услуги: четыре смысловые группы сеткой два на два (§21.2).
+   На телефоне — последовательный список. */
+.rz-compose {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1rem;
+	margin-top: 1.5rem;
+}
+
+.rz-compose > * {
+	margin-block: 0;
+}
+
+@media (min-width: 48rem) {
+	.rz-compose {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1.25rem;
+	}
+}
+
+/* Номер группы рисует счётчик, а не разметка: порядковый номер
+   выводится из порядка карточек, и держать его вторым источником
+   правды в тексте незачем. Номер стоит над коротким заголовком. */
+.rz-compose {
+	counter-reset: rz-group;
+}
+
+.rz-compose > .rz-info-card {
+	counter-increment: rz-group;
+}
+
+.rz-compose > .rz-info-card > h3::before {
+	content: "0" counter(rz-group);
+	display: block;
+	margin-bottom: 0.375rem;
+	font-family: var(--wp--preset--font-family--pt-serif);
+	font-size: 1.25rem;
+	line-height: 1;
+	color: var(--rz-fact);
+}
+
+/* Тени у карточек состава нет: §21.2 требует структуру, а не эффект
+   парения. Правило нужно потому, что .rz-info-card стоит внутри
+   .entry-content, где у групп с фоном тень приходит от общего
+   правила блоков. */
+.rz-compose > .rz-info-card {
+	box-shadow: none;
+}
+
+/* Документы: заголовок слева, список и пояснение справа (§21.4).
+   Формат намеренно не повторяет галерею выше — иначе два раздела
+   подряд читались бы одним. */
+.rz-docs-split {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1rem;
+	align-items: start;
+}
+
+.rz-docs-split > * {
+	margin-block: 0;
+}
+
+.rz-docs-split__body > * + * {
+	margin-top: 1rem;
+}
+
+@media (min-width: 62rem) {
+	.rz-docs-split {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.8fr);
+		gap: 2.5rem;
+	}
+
+	/* Заголовку раздела внутри сетки верхняя отбивка не нужна:
+	   её задаёт сама секция. Перебивает .entry-content h2
+	   с его (0,1,1) — здесь (0,2,1). */
+	.rz-docs-split > h2 {
+		margin-top: 0;
+	}
+}
+
+/* Сроки временной схемой (§21.5). Компонент .rz-timeline заведён
+   в разделе 4; здесь только то, чем список сроков отличается
+   от обычного списка контента: снимаем маркеры и поля, которые
+   ему достаются от общих правил ul и li. */
+.entry-content .rz-timeline {
+	margin-top: 1.5rem;
+	padding-left: 0;
+}
+
+.entry-content .rz-timeline > li {
+	margin: 0;
+}
+
+.entry-content .rz-timeline > li::marker {
+	content: none;
+}
+
+/* Галерея работ внутри содержимого: отбивка сверху, как у прочих
+   блоков раздела. */
+.entry-content .rz-project-gallery {
+	margin-top: 1.5rem;
+}
+
+/* Заглушка в галерее занимает всю ячейку сетки. */
+.entry-content .rz-project-gallery .rz-photo-slot {
+	height: 100%;
+}
+
+/* Вопросы в аккордеоне: у обёртки снизу линия, значит у последнего
+   вопроса своя не нужна — иначе выйдет двойная черта. */
+.entry-content .rz-accordion {
+	margin-top: 1.5rem;
+}
+
+.entry-content .rz-accordion > .wp-block-details:first-child {
+	border-top: 0;
 }
 
 /* 6. Адаптив и уменьшение движения */
