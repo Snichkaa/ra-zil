@@ -1,4 +1,15 @@
-/* Стили блочного редактора WordPress */
+/* Стили блочного редактора WordPress.
+
+   Задача файла — показать редактору то же, что увидит посетитель.
+   Полностью повторять main.css здесь нельзя и не нужно: редактор
+   рисует содержимое без шапки, подвала и секций-обёрток, поэтому
+   повторяется только то, что видно прямо в холсте — типографика,
+   ссылки, кнопки, таблицы, изображения и группы с фоном.
+
+   Числовых значений в файле нет: и цвета, и радиусы, и длительности
+   приходят из tokens.css, который подключается к редактору рядом
+   с этим файлом (см. razil_editor_styles в functions.php). Пока так,
+   палитра во фронте и в редакторе не может разойтись. */
 
 /* Базовые шрифты и цвета в редакторе */
 body {
@@ -41,13 +52,16 @@ h4, h5, h6 {
 	color: var(--rz-ink);
 }
 
-/* Ссылки */
+/* Ссылки. Наведение красит в зелёный, как во фронте: там это правило
+   a:hover из main.css, и оно перебивает тёплый оттенок из theme.json.
+   Без повтора здесь редактор показывал бы наведение другим цветом. */
 a {
 	color: var(--rz-action);
 	text-decoration: none;
 }
 
 a:hover {
+	color: var(--rz-action);
 	text-decoration: underline;
 }
 
@@ -55,14 +69,20 @@ a:hover {
 .wp-block-button__link {
 	background-color: var(--rz-action);
 	color: var(--rz-surface);
-	border-radius: 4px;
+	border-radius: var(--rz-radius);
 	padding: 0.5rem 1.5rem;
 	font-weight: 700;
-	transition: background-color 160ms;
+	transition: background-color var(--rz-transition);
 }
 
 .wp-block-button__link:hover {
 	background-color: var(--rz-action-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wp-block-button__link {
+		transition: none;
+	}
 }
 
 /* Код и pre */
@@ -70,7 +90,7 @@ code {
 	background-color: var(--rz-surface);
 	border: 1px solid var(--rz-line);
 	padding: 0.125rem 0.375rem;
-	border-radius: 4px;
+	border-radius: var(--rz-radius);
 	font-family: monospace;
 }
 
@@ -78,7 +98,7 @@ pre {
 	background-color: var(--rz-surface);
 	border: 1px solid var(--rz-line);
 	padding: 1rem;
-	border-radius: 4px;
+	border-radius: var(--rz-radius);
 	overflow-x: auto;
 }
 
@@ -112,4 +132,19 @@ blockquote {
 .wp-block-group {
 	margin: 0;
 	padding: 0;
+}
+
+/* Группа с фоном — та же карточка, что во фронте: отбивка и радиус
+   карточки, а не мелкий радиус кнопок. Без этого правила блок
+   с заливкой стоял в редакторе вплотную к своему тексту. */
+.wp-block-group.has-background {
+	padding: 2rem;
+	border-radius: var(--rz-radius-card);
+}
+
+/* Изображения скругляются так же, как во фронте. */
+.wp-block-image img {
+	max-width: 100%;
+	height: auto;
+	border-radius: var(--rz-radius);
 }

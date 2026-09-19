@@ -1,4 +1,43 @@
+/* 2. База: элементы и типографика */
+
 /* Основные стили темы (после tokens.css) */
+
+/* Глобальные состояния. Переехали из tokens.css: там остаются только
+   значения — цвета, размеры, радиусы, тени и ширина содержимого (§24.1).
+   Место в каскаде прежнее: конец tokens.css и начало main.css идут
+   подряд, поэтому перенос порядок правил не меняет. */
+* {
+	box-sizing: border-box;
+}
+
+/* 100%, а не 16px: жёсткий пиксель на корне отключает
+   настройку размера шрифта в браузере. На сайте,
+   где много пожилых посетителей, это недопустимо.
+   При настройках по умолчанию значение то же. */
+html {
+	font-size: 100%;
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background-color: var(--rz-bg);
+	color: var(--rz-ink);
+	font-family: 'PT Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
+	/* font-size не задаём: приходит из theme.json,
+	   var(--wp--preset--font-size--body) = 1.125rem.
+	   Правило здесь перебивало его порядком подключения,
+	   из-за чего фронт шёл 16px, а редактор 18px. */
+	line-height: 1.65;
+	transition: background-color var(--rz-transition), color var(--rz-transition);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body {
+		transition: none;
+	}
+}
 
 /* Запрет на синтез жирного/наклонного из светлого вес */
 * {
@@ -10,6 +49,401 @@ h1, h2, h3, h4, h5, h6,
 p {
 	margin: 0;
 }
+
+/* Все остальные переходы тоже 160ms */
+a,
+input,
+textarea,
+select {
+	transition: color 160ms, background-color 160ms, border-color 160ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	a,
+	input,
+	textarea,
+	select {
+		transition: none;
+	}
+}
+
+/* Ссылки: подчёркивание только при наведении */
+a {
+	color: var(--rz-action);
+	text-decoration: none;
+}
+
+a:hover {
+	color: var(--rz-action);
+	text-decoration: underline;
+}
+
+a:visited {
+	color: var(--rz-action);
+}
+
+/* Поля ввода */
+input,
+textarea,
+select {
+	font-family: var(--rz-sans-serif, 'PT Sans', system-ui, 'Segoe UI', Roboto, sans-serif);
+	border: 1px solid var(--rz-line);
+	background-color: var(--rz-bg);
+	color: var(--rz-ink);
+}
+
+input::placeholder,
+textarea::placeholder {
+	color: var(--rz-ink-soft);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+	outline: none;
+	background-color: var(--rz-surface);
+	border-color: var(--rz-action);
+}
+
+/* Таблицы */
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+/* Цвет рамки здесь фактически не работает внутри
+   .wp-block-table: ядро отдаёт .wp-block-table td
+   с border: 1px solid без цвета, то есть currentColor,
+   и выигрывает специфичностью (0,1,1) против (0,0,1).
+   Из-за этого разграфка шла графитом, а не бежевым.
+   Для таблиц цен это уже неважно — рамки ячеек сняты
+   правилами ниже. Для таблиц вне блока правило работает. */
+th, td {
+	border: 1px solid var(--rz-line);
+	text-align: left;
+}
+
+th {
+	background-color: var(--rz-surface);
+	font-weight: 700;
+}
+
+/* Списки */
+ul, ol {
+	margin: 0;
+	padding-left: 1.25rem;
+}
+
+li {
+	margin: 0.5rem 0;
+}
+
+/* Цитаты */
+blockquote {
+	border-left: 4px solid var(--rz-action);
+	padding: 1.5rem;
+	margin: 1.5rem 0;
+	background-color: var(--rz-surface);
+	color: var(--rz-ink-soft);
+}
+
+/* Горизонтальная линия */
+hr {
+	border: none;
+	border-top: 1px solid var(--rz-line);
+	margin: 2rem 0;
+}
+
+/* === ВСТРОЕННЫЕ БЛОКИ === */
+
+/* Заголовки в блоках */
+.wp-block-heading {
+	margin: 1.5rem 0 1rem 0;
+	font-family: var(--wp--preset--font-family--pt-serif, 'PT Serif', Georgia, serif);
+	font-weight: 400;
+	line-height: 1.2;
+}
+
+.wp-block-heading:first-child {
+	margin-top: 0;
+}
+
+/* Параграфы */
+.wp-block-paragraph {
+	margin: 1rem 0;
+	line-height: 1.65;
+	color: var(--rz-ink);
+}
+
+/* Маркеры списков в контенте — тёмно-зелёным.
+   Скоуп по обёртке контента: служебные списки в шапке,
+   подвале и навигации трогать нельзя. */
+.entry-content .wp-block-list > li::marker {
+	color: var(--rz-action);
+}
+
+/* Размер H1 задан здесь для всех типов страниц.
+   В шаблонах fontSize намеренно не указан:
+   класс пресета выводится с !important
+   и перебивает это правило. Не выставляйте
+   размер заголовка в редакторе.
+
+   Базовый текст 18px, и прежние 40/34 давали
+   разрыв больше двойного. */
+.wp-block-post-title,
+.wp-block-query-title,
+h1.wp-block-heading,
+.entry-content > h1,
+h1.has-heading-l-font-size {
+	font-size: var(--wp--preset--font-size--heading-l);
+}
+
+/* Кегль и вертикальный ритм заголовков разделов —
+   в одном правиле намеренно: разнесённые по файлу,
+   они рано или поздно разъедутся.
+
+   Кегль: базовый текст 18px, прежние 34px давали
+   разрыв больше двойного.
+
+   Ритм: blockGap 1.5rem одинаков между абзацами,
+   пунктами списка и перед заголовком, поэтому разделы
+   читались сплошным текстом. Даём заголовку вчетверо
+   больше воздуха сверху, чем снизу — так он прилипает
+   к своему тексту, а не висит между двумя разделами.
+   Отступы перебивают .wp-block-heading { margin: 1.5rem 0 1rem }
+   из блока выше по файлу: (0,1,1) против (0,1,0). */
+.entry-content h2 {
+	font-size: var(--wp--preset--font-size--heading-m);
+	margin-top: 3rem;
+	margin-bottom: 0.75rem;
+	padding-top: 1.375rem;
+	border-top: 1px solid var(--rz-line);
+}
+
+/* Первому заголовку линия не нужна: над ним вводный
+   текст, а не предыдущий раздел.
+
+   Селектор с > намеренно: на страницах услуг заголовки лежат
+   внутри секций .rz-sec, и :first-of-type без него совпадал бы
+   с каждым — он отсчитывается от родителя, а родитель у каждого
+   свой. Прямой потомок оставляет правило тем страницам, где
+   заголовки лежат в содержимом без обёрток; там их оформление
+   не менялось. */
+.entry-content > h2:first-of-type {
+	margin-top: 2rem;
+	padding-top: 0;
+	border-top: 0;
+}
+
+/* 3. Раскладка: контейнеры, сетки, ритм секций */
+
+/* Блоки WordPress */
+.wp-block-group {
+	margin: 0;
+	padding: 0;
+}
+
+.wp-block-separator {
+	border: none;
+	border-top: 1px solid var(--rz-line);
+	margin: 2rem 0;
+}
+
+.wp-block-image {
+	margin: 1.5rem 0;
+}
+
+.wp-block-image img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	border-radius: 4px;
+}
+
+/* Блоки с фоном */
+.wp-block-group.has-background {
+	padding: 2rem;
+	border-radius: 4px;
+}
+
+/* Полосы во всю ширину не скругляются. Правило выше рассчитано
+   на карточки; после перевода отступов секций в блочные атрибуты
+   класс has-background появился и у секций, и у них вылезли
+   скруглённые углы по 4px. */
+.wp-site-blocks > .wp-block-group.has-background,
+.wp-block-group.rz-cta,
+.wp-block-group.rz-footer {
+	border-radius: 0;
+}
+
+/* === ШАПКА === */
+
+/* Страница заканчивается тёмным подвалом.
+   На коротких страницах .wp-site-blocks не доходил до низа окна,
+   и под </footer> проступала светлая заливка body (--rz-bg). */
+.wp-site-blocks {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+.wp-site-blocks > footer {
+	margin-top: auto;
+}
+
+/* === СЕТКИ И АДАПТИВНОСТЬ === */
+
+/* Контейнер по центру с полями */
+@media (max-width: 767px) {
+	.wp-block-group.alignfull > * {
+		padding-left: 1.25rem;
+		padding-right: 1.25rem;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	.wp-block-group.alignfull > * {
+		padding-left: 2rem;
+		padding-right: 2rem;
+	}
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+	.wp-block-group.alignfull > * {
+		padding-left: 3rem;
+		padding-right: 3rem;
+	}
+}
+
+@media (min-width: 1280px) {
+	.wp-block-group.alignfull > * {
+		max-width: 72.5rem;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: 3rem;
+		padding-right: 3rem;
+	}
+}
+
+/* Сетка с адаптивными колонками */
+.wp-block-group[style*="grid"] {
+	display: grid;
+	gap: 1.5rem;
+}
+
+@media (max-width: 767px) {
+	.wp-block-group[style*="column"] {
+		grid-template-columns: 1fr !important;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	.wp-block-group[style*="columnCount=2"] {
+		grid-template-columns: repeat(2, 1fr) !important;
+	}
+	.wp-block-group[style*="columnCount=3"] {
+		grid-template-columns: 1fr !important;
+	}
+}
+
+@media (min-width: 1024px) {
+	.wp-block-group[style*="columnCount=3"] {
+		grid-template-columns: repeat(3, 1fr) !important;
+	}
+}
+
+/* Сетка из колонок */
+.wp-block-columns {
+	display: grid;
+	gap: 1.5rem;
+	margin: 1.5rem 0;
+}
+
+.wp-block-column {
+	min-width: 0;
+}
+
+@media (max-width: 767px) {
+	.wp-block-columns {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	.wp-block-columns {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.wp-block-columns > .wp-block-column:nth-child(3) {
+		grid-column: 1 / -1;
+	}
+}
+
+@media (min-width: 1024px) {
+	.wp-block-columns {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+/* Группы блоков */
+.wp-block-group {
+	width: 100%;
+}
+
+/* Изображения */
+.wp-block-image {
+	margin: 1.5rem 0;
+}
+
+.wp-block-image img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	border-radius: 4px;
+}
+
+.wp-block-image.aligncenter {
+	text-align: center;
+}
+
+/* Query блоки */
+.wp-block-query {
+	margin: 1.5rem 0;
+}
+
+/* === ОБЩИЕ СТИЛИ === */
+
+/* Линия между элементами */
+.wp-block-separator {
+	border: none;
+	border-top: 1px solid var(--rz-line);
+}
+
+/* === ВЕРТИКАЛЬНЫЙ РИТМ СЕКЦИЙ ГЛАВНОЙ === */
+
+/* Отступы были инлайновыми константами 3rem и 4rem: на 375px
+   стык двух секций давал до 128px пустоты, а медиазапросов
+   на вертикальные поля не было ни одного. Верхние границы clamp
+   совпадают с прежними значениями, поэтому на десктопе вид
+   не меняется. */
+.rz-section {
+	padding-block: clamp(2rem, 5vw, 3rem);
+	padding-inline: 1rem;
+	background-color: var(--rz-bg);
+}
+
+.rz-section--surface {
+	background-color: var(--rz-surface);
+}
+
+/* Три секции были на 4rem, а не на 3rem. Правило идёт после
+   .rz-section: специфичность та же (0,1,0), решает порядок. */
+.rz-first-aid,
+.rz-advantages,
+.rz-steps {
+	padding-block: clamp(2.5rem, 7vw, 4rem);
+}
+
+/* 4. Компоненты */
 
 /* Кнопки: высота 56px на мобиле, 60px на десктопе */
 .wp-element-button,
@@ -249,225 +683,6 @@ p {
 	}
 }
 
-/* Все остальные переходы тоже 160ms */
-a,
-input,
-textarea,
-select {
-	transition: color 160ms, background-color 160ms, border-color 160ms;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	a,
-	input,
-	textarea,
-	select {
-		transition: none;
-	}
-}
-
-/* Ссылки: подчёркивание только при наведении */
-a {
-	color: var(--rz-action);
-	text-decoration: none;
-}
-
-a:hover {
-	color: var(--rz-action);
-	text-decoration: underline;
-}
-
-a:visited {
-	color: var(--rz-action);
-}
-
-/* Поля ввода */
-input,
-textarea,
-select {
-	font-family: var(--rz-sans-serif, 'PT Sans', system-ui, 'Segoe UI', Roboto, sans-serif);
-	border: 1px solid var(--rz-line);
-	background-color: var(--rz-bg);
-	color: var(--rz-ink);
-}
-
-input::placeholder,
-textarea::placeholder {
-	color: var(--rz-ink-soft);
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-	outline: none;
-	background-color: var(--rz-surface);
-	border-color: var(--rz-action);
-}
-
-/* Таблицы */
-table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-/* Цвет рамки здесь фактически не работает внутри
-   .wp-block-table: ядро отдаёт .wp-block-table td
-   с border: 1px solid без цвета, то есть currentColor,
-   и выигрывает специфичностью (0,1,1) против (0,0,1).
-   Из-за этого разграфка шла графитом, а не бежевым.
-   Для таблиц цен это уже неважно — рамки ячеек сняты
-   правилами ниже. Для таблиц вне блока правило работает. */
-th, td {
-	border: 1px solid var(--rz-line);
-	text-align: left;
-}
-
-th {
-	background-color: var(--rz-surface);
-	font-weight: 700;
-}
-
-/* Списки */
-ul, ol {
-	margin: 0;
-	padding-left: 1.25rem;
-}
-
-li {
-	margin: 0.5rem 0;
-}
-
-/* Цитаты */
-blockquote {
-	border-left: 4px solid var(--rz-action);
-	padding: 1.5rem;
-	margin: 1.5rem 0;
-	background-color: var(--rz-surface);
-	color: var(--rz-ink-soft);
-}
-
-/* Горизонтальная линия */
-hr {
-	border: none;
-	border-top: 1px solid var(--rz-line);
-	margin: 2rem 0;
-}
-
-/* Блоки WordPress */
-.wp-block-group {
-	margin: 0;
-	padding: 0;
-}
-
-.wp-block-separator {
-	border: none;
-	border-top: 1px solid var(--rz-line);
-	margin: 2rem 0;
-}
-
-.wp-block-image {
-	margin: 1.5rem 0;
-}
-
-.wp-block-image img {
-	max-width: 100%;
-	height: auto;
-	display: block;
-	border-radius: 4px;
-}
-
-/* Блоки с фоном */
-.wp-block-group.has-background {
-	padding: 2rem;
-	border-radius: 4px;
-}
-
-/* Полосы во всю ширину не скругляются. Правило выше рассчитано
-   на карточки; после перевода отступов секций в блочные атрибуты
-   класс has-background появился и у секций, и у них вылезли
-   скруглённые углы по 4px. */
-.wp-site-blocks > .wp-block-group.has-background,
-.wp-block-group.rz-cta,
-.wp-block-group.rz-footer {
-	border-radius: 0;
-}
-
-/* === ШАПКА === */
-
-/* Страница заканчивается тёмным подвалом.
-   На коротких страницах .wp-site-blocks не доходил до низа окна,
-   и под </footer> проступала светлая заливка body (--rz-bg). */
-.wp-site-blocks {
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
-}
-
-.wp-site-blocks > footer {
-	margin-top: auto;
-}
-
-/* === СЕТКИ И АДАПТИВНОСТЬ === */
-
-/* Контейнер по центру с полями */
-@media (max-width: 767px) {
-	.wp-block-group.alignfull > * {
-		padding-left: 1.25rem;
-		padding-right: 1.25rem;
-	}
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-	.wp-block-group.alignfull > * {
-		padding-left: 2rem;
-		padding-right: 2rem;
-	}
-}
-
-@media (min-width: 1024px) and (max-width: 1279px) {
-	.wp-block-group.alignfull > * {
-		padding-left: 3rem;
-		padding-right: 3rem;
-	}
-}
-
-@media (min-width: 1280px) {
-	.wp-block-group.alignfull > * {
-		max-width: 72.5rem;
-		margin-left: auto;
-		margin-right: auto;
-		padding-left: 3rem;
-		padding-right: 3rem;
-	}
-}
-
-/* Сетка с адаптивными колонками */
-.wp-block-group[style*="grid"] {
-	display: grid;
-	gap: 1.5rem;
-}
-
-@media (max-width: 767px) {
-	.wp-block-group[style*="column"] {
-		grid-template-columns: 1fr !important;
-	}
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-	.wp-block-group[style*="columnCount=2"] {
-		grid-template-columns: repeat(2, 1fr) !important;
-	}
-	.wp-block-group[style*="columnCount=3"] {
-		grid-template-columns: 1fr !important;
-	}
-}
-
-@media (min-width: 1024px) {
-	.wp-block-group[style*="columnCount=3"] {
-		grid-template-columns: repeat(3, 1fr) !important;
-	}
-}
-
 /* === КНОПКА ЗВОНКА ===
 
    Пилюля в правом нижнем углу: подпись на бежевой подложке, трубка
@@ -497,7 +712,7 @@ hr {
 	padding-left: 1rem;
 	border-radius: 1.75rem;
 	background-color: var(--rz-surface);
-	box-shadow: 0 2px 12px rgb(0 0 0 / 25%);
+	box-shadow: var(--rz-shadow-float);
 	text-decoration: none;
 	transform: scale(0.8);
 	opacity: 0;
@@ -727,64 +942,6 @@ input[type="reset"],
 	inset-inline: calc(-1 * var(--rz-tap-side));
 }
 
-/* === ВСТРОЕННЫЕ БЛОКИ === */
-
-/* Заголовки в блоках */
-.wp-block-heading {
-	margin: 1.5rem 0 1rem 0;
-	font-family: var(--wp--preset--font-family--pt-serif, 'PT Serif', Georgia, serif);
-	font-weight: 400;
-	line-height: 1.2;
-}
-
-.wp-block-heading:first-child {
-	margin-top: 0;
-}
-
-/* Параграфы */
-.wp-block-paragraph {
-	margin: 1rem 0;
-	line-height: 1.65;
-	color: var(--rz-ink);
-}
-
-/* Сетка из колонок */
-.wp-block-columns {
-	display: grid;
-	gap: 1.5rem;
-	margin: 1.5rem 0;
-}
-
-.wp-block-column {
-	min-width: 0;
-}
-
-@media (max-width: 767px) {
-	.wp-block-columns {
-		grid-template-columns: 1fr;
-	}
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-	.wp-block-columns {
-		grid-template-columns: repeat(2, 1fr);
-	}
-	.wp-block-columns > .wp-block-column:nth-child(3) {
-		grid-column: 1 / -1;
-	}
-}
-
-@media (min-width: 1024px) {
-	.wp-block-columns {
-		grid-template-columns: repeat(3, 1fr);
-	}
-}
-
-/* Группы блоков */
-.wp-block-group {
-	width: 100%;
-}
-
 
 /* Кнопки */
 .wp-block-buttons {
@@ -841,35 +998,6 @@ input[type="reset"],
 	background-color: var(--rz-action-hover);
 }
 
-/* Изображения */
-.wp-block-image {
-	margin: 1.5rem 0;
-}
-
-.wp-block-image img {
-	max-width: 100%;
-	height: auto;
-	display: block;
-	border-radius: 4px;
-}
-
-.wp-block-image.aligncenter {
-	text-align: center;
-}
-
-/* Query блоки */
-.wp-block-query {
-	margin: 1.5rem 0;
-}
-
-/* === ОБЩИЕ СТИЛИ === */
-
-/* Линия между элементами */
-.wp-block-separator {
-	border: none;
-	border-top: 1px solid var(--rz-line);
-}
-
 /* === КАСТОМНЫЕ БЛОКИ === */
 
 /* Филиалы (branches-dark) */
@@ -915,7 +1043,7 @@ input[type="reset"],
 }
 
 .rz-doc-type {
-	color: var(--rz-fact);
+	color: var(--rz-fact-text);
 	font-weight: 700;
 }
 
@@ -1046,7 +1174,7 @@ input[type="reset"],
 
 .rz-review__name {
 	margin: 0;
-	color: var(--rz-fact);
+	color: var(--rz-fact-text);
 	font-weight: 700;
 }
 
@@ -1186,7 +1314,7 @@ input[type="reset"],
 }
 
 .rz-reviews__link a {
-	color: var(--rz-fact);
+	color: var(--rz-fact-text);
 	text-decoration-color: var(--rz-line);
 	text-underline-offset: 0.2em;
 }
@@ -1207,163 +1335,6 @@ input[type="reset"],
 
 	.rz-reviews__slide:not(.is-current) .rz-review {
 		transition: none;
-	}
-}
-
-/* Первый экран: фотография офиса фоном на всех ширинах.
-   Текст лежит поверх кадра, растяжка обеспечивает
-   контраст: на широких — градиент слева, где текст
-   занимает треть экрана; на узких — сплошная заливка,
-   потому что текст накрывает кадр целиком.
-   На узких в кадр попадает 44% ширины панорамы —
-   участок с 28% по 72%, со зданием и крыльцом.
-
-   Плотность 65% в обоих режимах. Проверены ОБА, включая
-   градиентный: восемь ширин от 375 до 1920, обе темы,
-   контраст мерен по пикселям под самими буквами — маской
-   служит разница снимков со скрытым и показанным текстом.
-   Худшее значение по всем режимам и элементам — 4.92:1
-   у подзаголовка на 1280, то есть в режиме сплошной
-   заливки; в градиентном худшее 5.07:1. Порог 4.5 для
-   14 и 18 px, 3.0 для H1 как крупного текста.
-
-   Прежняя пометка обещала 4.93:1 и «вся площадь проходит
-   AA», но это значение относилось только к сплошному
-   режиму: градиентный, включающийся с 1360 px, тогда
-   не проверяли, и подзаголовок в нём давал 4.06:1. */
-
-/* Селекторы намеренно длиннее необходимого. Ядро WordPress отдаёт:
-     .wp-block-image.alignfull img { height: auto; width: 100% }   (0,2,1)
-     .has-global-padding > .alignfull { margin-inline: ... }       (0,2,0)
-   Медиазапрос специфичности не добавляет, поэтому короткие
-   селекторы проигрывают. Не упрощать. */
-.rz-hero {
-	position: relative;
-	overflow: hidden;
-}
-
-/* Слои: фото 0, растяжка 1, текст 2. */
-.rz-hero > .wp-block-group {
-	position: relative;
-	z-index: 2;
-}
-
-/* Ширина текста героя. Убрав колонки, абзацы растянулись на весь
-   контейнер 1160px: строка уходит за правый край растяжки на кирпич
-   и даёт ~90 знаков в строке при оптимуме 45-75.
-   !important обязателен: ядро WP задаёт margin-left/right: auto
-   !important потомкам constrained-группы, иначе блок отцентрируется. */
-.rz-hero .rz-hero__text > * {
-	max-width: 41.5rem;
-	margin-left: 0 !important;
-	margin-right: auto !important;
-}
-
-.rz-hero > .rz-hero__photo.alignfull {
-	position: absolute;
-	inset: 0;
-	z-index: 0;
-	margin: 0;
-	max-width: none;
-	width: 100%;
-	height: 100%;
-}
-
-.rz-hero > .rz-hero__photo.alignfull img {
-	display: block;
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	object-position: 50% 40%;
-}
-
-.rz-hero .rz-hero__text > p:first-child {
-	color: var(--rz-fact);
-}
-
-.rz-hero .rz-hero__text > p:nth-child(3),
-.rz-hero .rz-hero__text > p:last-child {
-	color: var(--rz-ink-soft);
-}
-
-.rz-hero .rz-hero__text > h1,
-.rz-hero .rz-hero__text > p:first-child,
-.rz-hero .rz-hero__text > p:nth-child(3),
-.rz-hero .rz-hero__text > p:last-child {
-	color: var(--rz-hero-on-photo);
-}
-
-.rz-hero::before {
-	content: "";
-	position: absolute;
-	inset: 0;
-	z-index: 1;
-	pointer-events: none;
-	/* Точки остановки привязаны к текстовому блоку, а не к доле ширины
-	   окна. Прежние 14% и 46% отсчитывались от окна, а текст шириной
-	   41.5rem стоит по левому краю колонки contentSize, то есть от
-	   (100% - 72.5rem) / 2. На 1440 полная плотность кончалась
-	   на 662 px, а текст тянулся до 804: хвост последней строки
-	   подзаголовка лежал на слабеющей растяжке и давал 4.08:1
-	   при пороге 4.5.
-
-	   Теперь полная плотность держится ровно от левого до правого края
-	   текста, а дальше сходит на нет за 12.5rem. Чистой фотографии при
-	   этом стало БОЛЬШЕ, а не меньше: прежний спуск начинался слишком
-	   рано и тянулся 28% ширины, поэтому полностью открытый кадр
-	   занимал на 1440 всего 374 px, а теперь 436. */
-	background: linear-gradient(
-		to right,
-		transparent 0,
-		color-mix(in srgb, var(--rz-hero-scrim) 65%, transparent) calc((100% - 72.5rem) / 2),
-		color-mix(in srgb, var(--rz-hero-scrim) 65%, transparent) calc((100% - 72.5rem) / 2 + 41.5rem),
-		transparent calc((100% - 72.5rem) / 2 + 54rem)
-	);
-}
-
-/* На узких экранах текст занимает весь кадр, а не левую
-   треть, поэтому растяжка сплошная. Плотность та же 65%.
-   Худшее в этом режиме — 4.92:1 у подзаголовка на 1280
-   при пороге 4.5; это же значение и худшее по теме
-   в целом, запас до порога наименьший здесь. */
-@media (max-width: 84.99rem) {
-	.rz-hero::before {
-		background: color-mix(in srgb, var(--rz-hero-scrim) 65%, transparent);
-	}
-}
-
-/* На узких в кадр попадает 44% ширины панорамы.
-   При 50% видно участок с 28% по 72% — здание
-   с крыльцом, небо сверху, асфальт снизу.
-   По вертикали кадр помещается целиком. */
-@media (max-width: 84.99rem) {
-	.rz-hero > .rz-hero__photo.alignfull img {
-		object-position: 50% 50%;
-	}
-}
-
-/* Мобильный кадр 3:4 — отдельное вложение 242, подставляется
-   фильтром razil_hero_picture(). Здание в верхней половине,
-   поэтому точка смещена вверх от центра. */
-@media (max-width: 47.99rem) {
-	.rz-hero > .rz-hero__photo.alignfull img {
-		object-position: 50% 45%;
-	}
-}
-
-/* picture по умолчанию inline и не наследует высоту figure —
-   без этого img схлопывается в ноль. */
-.rz-hero > .rz-hero__photo.alignfull picture {
-	display: block;
-	width: 100%;
-	height: 100%;
-}
-
-@media (max-width: 84.99rem) {
-	.rz-hero {
-		min-height: 30rem;
-		display: flex;
-		align-items: center;
 	}
 }
 
@@ -1395,113 +1366,6 @@ input[type="reset"],
 	.rz-icon svg {
 		stroke-width: 2.5;
 	}
-}
-
-/* Обёртки — это wp:group с раскладкой flow, ядро WP навешивает
-   на потомков margin-block-start. Под display:grid и display:flex
-   эти отступы ломают сетку. Правила ядра в :where(), их
-   специфичность равна нулю, поэтому обычного селектора достаточно. */
-.rz-steps__grid > *,
-.rz-step > * {
-	margin-block: 0;
-}
-
-/* Преимущества построчно. Сетка 2x2 заставляла глаз ходить зигзагом,
-   а описания встают на разной высоте. Четыре строки с линейками
-   читаются сверху вниз без вариантов. */
-.rz-advantages__list {
-	margin-top: 2.5rem;
-	border-bottom: 1px solid var(--rz-line);
-}
-
-/* Иконка равняется по первой строке описания, а не по центру блока:
-   пункт может занять и одну строку, и три, и центр тогда уезжает
-   к середине абзаца.
-
-   Голого align-items: flex-start для этого мало. Он равняет верхние
-   края коробок, а иконка 56px против строки 30px — её центр
-   оказывается на 28px от верха, середина первой строки на 15px,
-   и остаётся систематический сдвиг 13px при любой длине текста.
-   Поэтому абзац опускается на те же 13px (0.8125rem), и центр
-   иконки садится ровно на первую строку. Замерено: сдвиг 0px
-   и у однострочных пунктов, и у двухстрочных.
-
-   Отбивка абзаца перебивает .rz-advantage > * { margin-block: 0 }
-   ниже: (0,1,1) против (0,1,0). */
-.rz-advantage {
-	display: flex;
-	align-items: flex-start;
-	gap: 1rem;
-	padding: 1.25rem 0;
-	border-top: 1px solid var(--rz-line);
-}
-
-.rz-advantage > * {
-	margin-block: 0;
-}
-
-.rz-advantage p {
-	margin-top: 0.8125rem;
-	max-width: 52rem;
-}
-
-/* Шаги: четыре в ряд. Порядок читается слева направо,
-   поэтому номера не нужны. */
-/* Заголовок и лид в общей обёртке: она создаёт настоящий бокс
-   шириной с колонку, и margin-left: 0 отсчитывается от него.
-   Без обёртки лид прижимался к padding-box секции (16px),
-   а не к колонке (140px) — колонки как бокса просто не было. */
-.rz-steps__head > * {
-	margin-block: 0;
-}
-
-.rz-steps__lead {
-	margin-top: 0.75rem !important;
-	margin-left: 0 !important;
-	max-width: 41.5rem;
-	color: var(--rz-ink-soft);
-}
-
-.rz-steps__grid {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 2rem;
-	margin-top: 3rem;
-}
-
-.rz-step {
-	border: 1px solid var(--rz-line);
-	padding: 1.5rem;
-}
-
-.rz-step h3 {
-	margin: 1rem 0 0;
-}
-
-.rz-step p {
-	margin: 0.5rem 0 0;
-	color: var(--rz-ink-soft);
-}
-
-@media (max-width: 67.99rem) {
-	.rz-steps__grid {
-		grid-template-columns: repeat(2, 1fr);
-		gap: 2.5rem 2rem;
-	}
-}
-
-@media (max-width: 47.99rem) {
-	.rz-steps__grid {
-		grid-template-columns: 1fr;
-		gap: 2rem;
-	}
-}
-
-/* Маркеры списков в контенте — тёмно-зелёным.
-   Скоуп по обёртке контента: служебные списки в шапке,
-   подвале и навигации трогать нельзя. */
-.entry-content .wp-block-list > li::marker {
-	color: var(--rz-action);
 }
 
 /* Вопросы FAQ. Разделители повторяют приём из
@@ -1594,59 +1458,6 @@ input[type="reset"],
 	}
 }
 
-/* Размер H1 задан здесь для всех типов страниц.
-   В шаблонах fontSize намеренно не указан:
-   класс пресета выводится с !important
-   и перебивает это правило. Не выставляйте
-   размер заголовка в редакторе.
-
-   Базовый текст 18px, и прежние 40/34 давали
-   разрыв больше двойного. */
-.wp-block-post-title,
-.wp-block-query-title,
-h1.wp-block-heading,
-.entry-content > h1,
-h1.has-heading-l-font-size {
-	font-size: clamp(1.75rem, 1.55rem + 0.9vw, 2.125rem);
-}
-
-/* Кегль и вертикальный ритм заголовков разделов —
-   в одном правиле намеренно: разнесённые по файлу,
-   они рано или поздно разъедутся.
-
-   Кегль: базовый текст 18px, прежние 34px давали
-   разрыв больше двойного.
-
-   Ритм: blockGap 1.5rem одинаков между абзацами,
-   пунктами списка и перед заголовком, поэтому разделы
-   читались сплошным текстом. Даём заголовку вчетверо
-   больше воздуха сверху, чем снизу — так он прилипает
-   к своему тексту, а не висит между двумя разделами.
-   Отступы перебивают .wp-block-heading { margin: 1.5rem 0 1rem }
-   из блока выше по файлу: (0,1,1) против (0,1,0). */
-.entry-content h2 {
-	font-size: clamp(1.375rem, 1.25rem + 0.55vw, 1.625rem);
-	margin-top: 3rem;
-	margin-bottom: 0.75rem;
-	padding-top: 1.375rem;
-	border-top: 1px solid var(--rz-line);
-}
-
-/* Первому заголовку линия не нужна: над ним вводный
-   текст, а не предыдущий раздел.
-
-   Селектор с > намеренно: на страницах услуг заголовки лежат
-   внутри секций .rz-sec, и :first-of-type без него совпадал бы
-   с каждым — он отсчитывается от родителя, а родитель у каждого
-   свой. Прямой потомок оставляет правило тем страницам, где
-   заголовки лежат в содержимом без обёрток; там их оформление
-   не менялось. */
-.entry-content > h2:first-of-type {
-	margin-top: 2rem;
-	padding-top: 0;
-	border-top: 0;
-}
-
 /* Таблицы цен — строками-карточками. Стандартная сетка
    с рамкой у каждой ячейки читается как разграфлённый
    бланк, а цены, прижатые влево, не дают глазу пробежать
@@ -1736,7 +1547,7 @@ h1.has-heading-l-font-size {
 }
 
 .entry-content .wp-block-table tbody td:last-child {
-	color: var(--rz-fact);
+	color: var(--rz-fact-text);
 	text-align: right;
 	white-space: nowrap;
 }
@@ -1808,80 +1619,6 @@ h1.has-heading-l-font-size {
 .rz-service-card__head .wp-block-post-title {
 	flex: 1 1 auto;
 	min-width: 0;
-}
-
-/* Страница «О компании». Вводный текст и видео рядом:
-   человек читает, чем занимается агентство, и тут же
-   видит территорию. */
-.rz-about__intro {
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: 2rem;
-	align-items: start;
-	/* Третий абзац вынесен из сетки наружу, на всю ширину колонки:
-	   отбиваем его от сетки, иначе он прилипает к её нижнему краю. */
-	margin-bottom: 2rem;
-}
-
-.rz-about__intro > * {
-	margin-block: 0;
-}
-
-@media (min-width: 48rem) {
-	.rz-about__intro {
-		grid-template-columns: 1.15fr 1fr;
-		gap: 2.5rem;
-	}
-}
-
-.rz-about__text > * + * {
-	margin-top: 1rem;
-}
-
-.rz-about__video {
-	margin: 0;
-}
-
-/* background-color намеренно: пока постер грузится, пустой
-   прямоугольник не должен светиться белым на бежевом фоне. */
-.rz-about__video video {
-	display: block;
-	width: 100%;
-	height: auto;
-	border-radius: var(--rz-radius-card);
-	background-color: var(--rz-ink);
-}
-
-/* Карта 2ГИС на контактах. Виджет строится скриптом
-   с чужого домена, не iframe — отложить загрузку
-   через loading="lazy" нельзя, атрибут к script
-   не применяется. */
-.rz-map {
-	margin-top: 2rem;
-}
-
-.rz-map > div {
-	border-radius: var(--rz-radius-card);
-	overflow: hidden;
-}
-
-.rz-map__links {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 1.5rem;
-	margin: 1rem 0 0;
-	font-size: 0.9375rem;
-}
-
-.rz-map__links a {
-	color: var(--rz-fact);
-	text-decoration-color: var(--rz-line);
-	text-underline-offset: 0.2em;
-}
-
-.rz-map__note {
-	margin: 1rem 0 0;
-	color: var(--rz-ink-soft);
 }
 
 /* Список отзывов на отдельной странице. В отличие
@@ -2090,7 +1827,7 @@ h1.has-heading-l-font-size {
 }
 
 .rz-form__consent a {
-	color: var(--rz-fact);
+	color: var(--rz-fact-text);
 	text-decoration-color: var(--rz-line);
 	text-underline-offset: 0.2em;
 }
@@ -2187,8 +1924,706 @@ h1.has-heading-l-font-size {
 .entry-content .rz-service-photo figcaption {
 	margin: 0.75rem 0 0;
 	font-size: 0.9375rem;
-	color: var(--rz-fact);
+	color: var(--rz-fact-text);
 	text-align: left;
+}
+
+/* Вторичная кнопка: контур вместо заливки.
+   Прежде у неё был задан только цвет текста,
+   а фон приходил по умолчанию из theme.json —
+   тот же --rz-action, и текст сливался с фоном.
+   Третий случай этой ловушки на проекте:
+   см. липкую полосу, этап 37.
+
+   Второй селектор — для кнопок вне блока
+   core/button: у них нет обёртки
+   div.wp-block-button. */
+.rz-btn-outline .wp-block-button__link,
+.rz-btn-outline__link {
+	background-color: transparent;
+	color: var(--rz-action);
+	border: 1px solid var(--rz-action);
+}
+
+.rz-btn-outline .wp-block-button__link:hover,
+.rz-btn-outline__link:hover {
+	background-color: var(--rz-action);
+	color: var(--rz-surface);
+}
+
+/* Та же ловушка, что у кнопки шапки: своё :hover выше весит (0,2,0)
+   и перебивает :active из theme.json с его (0,1,0). Масштаб идёт
+   от .wp-element-button:active — класс на кнопке есть. */
+.rz-btn-outline .wp-block-button__link:active,
+.rz-btn-outline__link:active {
+	background-color: var(--rz-action-active);
+	border-color: var(--rz-action-active);
+	color: var(--rz-surface);
+}
+
+/* === ХЛЕБНЫЕ КРОШКИ === */
+
+/* Полоса стоит между шапкой и содержимым. Разметку даёт блок Yoast
+   в parts/header.html, семантику — фильтры в razil-core; здесь только вид.
+
+   Ширина и отбивка повторяют колонку страницы: 72.5rem плюс 1rem по бокам.
+   Так левый край крошек совпадает с левым краем H1 — 140 px на 1440,
+   16 px на 375. Своих значений не вводим: это те же contentPadding
+   и contentSize, что у групп в шаблонах. */
+.rz-breadcrumbs {
+	max-width: 74.5rem;
+	margin-inline: auto;
+	padding: 0.75rem 1rem;
+}
+
+/* Разрыв между крошками и заголовком.
+
+   Он складывался из двух слагаемых, и замер показал, из каких именно:
+   0.75rem снизу у самой полосы и 3rem сверху у контейнера содержания.
+   У H1 отступов нет вовсе. Итого от текста крошек до заголовка 60 px,
+   и полоса читалась как чужая, приклеенная к шапке.
+
+   Убавляется только второе слагаемое, и только там, где крошки есть:
+   на страницах без них 3rem сверху — тот отступ, который и нужен,
+   H1 стоит на 128 px и трогать его нельзя. Отбор через :has() у части
+   шапки: она содержит крошки ровно на тех страницах, где они выводятся,
+   и правило само распространится на каталог, когда его включат.
+
+   !important обязателен: отступ приходит инлайновым стилем из блочного
+   атрибута шаблона (style="padding-top:3rem"), а инлайн не перебить
+   ни специфичностью, ни порядком. Без него правило молча не работает —
+   первый замер это и показал.
+
+   0.5rem — существующая ступень темы. Итог: от текста крошек до H1
+   20 px вместо 60, высота самой полосы не меняется.
+
+   Перекос с отбивкой снизу (0.5rem против 3rem) кажущийся. Полоса крошек
+   сама стоит внутри верхнего просвета, поэтому от линии шапки до H1
+   выходит 55 px против 48 px от последнего блока до низа контейнера —
+   блок почти уравновешен. Сравнивать надо это, а не значения padding. */
+header.wp-block-template-part:has(.rz-breadcrumbs) + .wp-block-group {
+	padding-top: 0.5rem !important;
+}
+
+/* Зеркало правила выше — страницы БЕЗ крошек. Там между низом шапки
+   и H1 оставался инлайновый padding-top: 3rem из атрибута блока,
+   и суммарно с компенсацией шапки разрыв читался как пустота.
+
+   1.5rem — ступень шкалы темы. Больше 0.5rem соседнего правила
+   намеренно: там воздух добирают сами крошки (padding 0.75rem),
+   здесь добирать нечем.
+
+   :has() и !important по той же причине, что и выше: инлайновый
+   стиль не перебить ни специфичностью, ни порядком. */
+header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
+	padding-top: 1.5rem !important;
+}
+
+.rz-breadcrumbs__list {
+	display: flex;
+	align-items: baseline;
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-size: 0.875rem;
+	color: var(--rz-ink-soft);
+}
+
+/* Звенья не сжимаются, последнее — сжимается: см. правило ниже.
+
+   margin: 0 обязателен: общее правило li выше по файлу (строка 226) даёт
+   пунктам 0.5rem сверху и снизу, и полоса вырастала с 47 до 63 px —
+   замер показал у ol высоту 39.1 при строке 23.1. Тут пункты стоят
+   в строку, вертикальные поля списка им не нужны. */
+.rz-breadcrumbs__list > li {
+	flex: none;
+	margin: 0;
+}
+
+/* Разделитель рисуется здесь, а не приходит текстом.
+   Во-первых, текстовый узел прямо внутри ol недопустим. Во-вторых,
+   символ в разметке скринридер прочитал бы вслух между каждой парой
+   звеньев. Уголок из двух границ, повёрнутый на 45deg, — тот же приём,
+   что у галочки в аккордеоне; он молчит и не требует иконки.
+
+   Контраст здесь не нормируется: разделитель декоративный, его удаление
+   не меняет ни смысла, ни навигации. */
+.rz-breadcrumbs__list > li + li::before {
+	content: "";
+	display: inline-block;
+	width: 0.3125rem;
+	height: 0.3125rem;
+	margin-inline: 0.5rem;
+	border-top: 1px solid var(--rz-ink-soft);
+	border-right: 1px solid var(--rz-ink-soft);
+	transform: rotate(45deg);
+	vertical-align: 0.1em;
+}
+
+/* Последнее звено обрезается многоточием, а не переносится.
+
+   Замер: три цепочки из пяти в строку на 375 не умещаются, самая длинная
+   занимает 519 px при доступных 343. Перенос дал бы вторую строку над
+   заголовком и сдвинул бы первый экран вниз ради текста, который человек
+   тут же читает в H1: последнее звено — это и есть название открытой
+   страницы. Вдобавок это не ссылка, а aria-current="page", поэтому
+   обрезка не прячет цель перехода.
+
+   Обрезается только внешний вид: полный текст остаётся в разметке,
+   и скринридер читает его целиком.
+
+   min-width: 0 обязателен — без него флекс-элемент не сжимается ниже
+   своей внутренней ширины, и многоточие никогда не появится. */
+.rz-breadcrumbs__list > .breadcrumb_last {
+	flex: 0 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+/* === КАПЧА === */
+
+/* Контейнер невидимой капчи. В невидимом режиме виджет ничего не рисует
+   и в поток не встаёт, но полагаться на это целиком не стоит: у Яндекса
+   есть режим со значком в углу, и если его однажды включат, контейнер
+   не должен раздвинуть форму. Нулевая высота и отсутствие отступов
+   гарантируют, что кнопка «Отправить» не сдвинется ни на пиксель.
+
+   display: none не годится: скрытый так виджет часть браузеров
+   не инициализирует, и токена не будет вовсе. */
+.rz-captcha {
+	margin: 0;
+	padding: 0;
+	line-height: 0;
+}
+
+/* Всплывающее окно проверки, если Яндекс решит показать задание,
+   рисуется поверх страницы самим виджетом. Ему нужен слой выше
+   модального окна заявки, иначе задание окажется под ним. */
+.smart-captcha-overlay,
+.smart-captcha iframe {
+	z-index: 1000;
+}
+
+/* === ОБЪЯВЛЕНИЯ БЕЗ БЛОЧНЫХ АТРИБУТОВ === */
+
+/* Всё, что ниже, раньше стояло инлайново, но не выражается
+   атрибутами блока: у core/group нет поддержки display,
+   align-items, justify-content, flex-direction и height,
+   а layout: flex дал бы другие классы и другую раскладку. */
+.rz-screen-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.rz-card-col {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Пресет heading-l и произвольный кегль в модели WordPress
+   взаимоисключающи: класс пресета и style.typography.fontSize
+   не уживаются в одном блоке. Кегль задан здесь. */
+.rz-404__code {
+	font-size: clamp(60px, 10vw, 120px);
+}
+
+/* Отступ у обёртки core/button: сериализация spacing у этого
+   блока зависит от версии ядра, поэтому надёжнее классом. */
+.rz-btn-gap {
+	margin-top: 2rem;
+}
+
+/* === ДИАЛОГ ПОДТВЕРЖДЕНИЯ ЗВОНКА === */
+
+/* Окно собирает header.js: кнопка со звонком спрашивает подтверждение,
+   чтобы случайное касание не набирало номер. Здесь только то, без чего
+   диалог нечитаем — рамка, фон, отбивка и размер кнопок. Цвета взяты
+   из токенов, новых не вводится: подтверждение зелёное, как остальные
+   кнопки действия, отмена — контурная, как .rz-btn-outline. */
+.rz-tel-dialog,
+.rz-cb-dialog {
+	max-width: min(22rem, calc(100vw - 2rem));
+	padding: 0;
+	border: 1px solid var(--rz-line);
+	border-radius: var(--rz-radius-card);
+	background-color: var(--rz-surface);
+	color: var(--rz-ink);
+	box-shadow: var(--rz-shadow);
+}
+
+/* Тот же графит, что в --rz-shadow, только плотнее: своего цвета
+   у затемнения нет. Значение вынесено в --rz-backdrop. */
+.rz-tel-dialog::backdrop,
+.rz-cb-dialog::backdrop {
+	background-color: var(--rz-backdrop);
+}
+
+.rz-tel-dialog__box,
+.rz-cb-dialog__box {
+	padding: 1.5rem;
+}
+
+.rz-tel-dialog__title,
+.rz-cb-dialog__title {
+	margin: 0;
+	font-weight: 700;
+}
+
+.rz-tel-dialog__number {
+	margin: 0.5rem 0 0;
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: var(--rz-action);
+}
+
+.rz-tel-dialog__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	margin-top: 1.5rem;
+}
+
+/* 3rem по высоте — как у кнопок в липкой панели: окно открывается
+   с телефона, и мимо такой кнопки промахнуться труднее. */
+.rz-tel-dialog__ok,
+.rz-tel-dialog__cancel,
+.rz-cb-dialog__cancel {
+	flex: 1 1 8rem;
+	min-height: 3rem;
+	padding: 0.75rem 1.25rem;
+	border-radius: var(--rz-radius);
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background-color var(--rz-transition),
+	            border-color var(--rz-transition),
+	            transform var(--rz-transition);
+}
+
+.rz-tel-dialog__ok {
+	border: 1px solid var(--rz-action);
+	background-color: var(--rz-action);
+	color: var(--rz-surface);
+}
+
+.rz-tel-dialog__cancel,
+.rz-cb-dialog__cancel {
+	border: 1px solid var(--rz-line);
+	background-color: transparent;
+	color: var(--rz-ink);
+}
+
+/* Масштаб — всем трём, цвет — только заливной. У «Отмены» и «Закрыть»
+   фон прозрачный, темнеть нечему, а залить их в --rz-action-hover значило бы
+   сделать отказ похожим на главное действие. Тот же довод, что у бургера. */
+.rz-tel-dialog__ok:hover,
+.rz-tel-dialog__cancel:hover,
+.rz-cb-dialog__cancel:hover {
+	transform: scale(1.02);
+}
+
+.rz-tel-dialog__ok:active,
+.rz-tel-dialog__cancel:active,
+.rz-cb-dialog__cancel:active {
+	transform: scale(0.98);
+}
+
+.rz-tel-dialog__ok:hover {
+	background-color: var(--rz-action-hover);
+	border-color: var(--rz-action-hover);
+}
+
+.rz-tel-dialog__ok:active {
+	background-color: var(--rz-action-active);
+	border-color: var(--rz-action-active);
+}
+
+.rz-tel-dialog__ok:focus-visible,
+.rz-tel-dialog__cancel:focus-visible,
+.rz-cb-dialog__cancel:focus-visible {
+	outline: 2px solid var(--rz-action-focus);
+	outline-offset: 2px;
+}
+
+/* Своего блока «меньше движения» у окон не было: до этой правки им нечего
+   было отменять — transition у кнопок отсутствовал вовсе. */
+@media (prefers-reduced-motion: reduce) {
+	.rz-tel-dialog__ok,
+	.rz-tel-dialog__cancel,
+	.rz-cb-dialog__cancel {
+		transition: none;
+	}
+
+	.rz-tel-dialog__ok:hover,
+	.rz-tel-dialog__cancel:hover,
+	.rz-cb-dialog__cancel:hover,
+	.rz-tel-dialog__ok:active,
+	.rz-tel-dialog__cancel:active,
+	.rz-cb-dialog__cancel:active {
+		transform: none;
+	}
+}
+
+/* === ОКНО ОБРАТНОГО ЗВОНКА === */
+
+/* Оболочка, фон и кнопка отмены — общие с окном подтверждения звонка,
+   см. правила выше. Здесь только то, чем окно с формой отличается:
+   оно шире, и на низком экране форма должна прокручиваться внутри окна,
+   а не уезжать за край. */
+.rz-cb-dialog {
+	max-width: min(26rem, calc(100vw - 2rem));
+	max-height: calc(100vh - 2rem);
+	overflow: auto;
+}
+
+.rz-cb-dialog__title {
+	margin-bottom: 1rem;
+	font-size: 1.125rem;
+}
+
+/* Кнопка «Закрыть» под формой, во всю ширину: в окне это единственный
+   способ уйти, кроме Esc и клика по фону. */
+.rz-cb-dialog__cancel {
+	width: 100%;
+	margin-top: 1rem;
+}
+
+/* 5. Композиции страниц */
+
+/* Первый экран: фотография офиса фоном на всех ширинах.
+   Текст лежит поверх кадра, растяжка обеспечивает
+   контраст: на широких — градиент слева, где текст
+   занимает треть экрана; на узких — сплошная заливка,
+   потому что текст накрывает кадр целиком.
+   На узких в кадр попадает 44% ширины панорамы —
+   участок с 28% по 72%, со зданием и крыльцом.
+
+   Плотность 65% в обоих режимах. Проверены ОБА, включая
+   градиентный: восемь ширин от 375 до 1920, обе темы,
+   контраст мерен по пикселям под самими буквами — маской
+   служит разница снимков со скрытым и показанным текстом.
+   Худшее значение по всем режимам и элементам — 4.92:1
+   у подзаголовка на 1280, то есть в режиме сплошной
+   заливки; в градиентном худшее 5.07:1. Порог 4.5 для
+   14 и 18 px, 3.0 для H1 как крупного текста.
+
+   Прежняя пометка обещала 4.93:1 и «вся площадь проходит
+   AA», но это значение относилось только к сплошному
+   режиму: градиентный, включающийся с 1360 px, тогда
+   не проверяли, и подзаголовок в нём давал 4.06:1. */
+
+/* Селекторы намеренно длиннее необходимого. Ядро WordPress отдаёт:
+     .wp-block-image.alignfull img { height: auto; width: 100% }   (0,2,1)
+     .has-global-padding > .alignfull { margin-inline: ... }       (0,2,0)
+   Медиазапрос специфичности не добавляет, поэтому короткие
+   селекторы проигрывают. Не упрощать. */
+.rz-hero {
+	position: relative;
+	overflow: hidden;
+}
+
+/* Слои: фото 0, растяжка 1, текст 2. */
+.rz-hero > .wp-block-group {
+	position: relative;
+	z-index: 2;
+}
+
+/* Ширина текста героя. Убрав колонки, абзацы растянулись на весь
+   контейнер 1160px: строка уходит за правый край растяжки на кирпич
+   и даёт ~90 знаков в строке при оптимуме 45-75.
+   !important обязателен: ядро WP задаёт margin-left/right: auto
+   !important потомкам constrained-группы, иначе блок отцентрируется. */
+.rz-hero .rz-hero__text > * {
+	max-width: 41.5rem;
+	margin-left: 0 !important;
+	margin-right: auto !important;
+}
+
+.rz-hero > .rz-hero__photo.alignfull {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	margin: 0;
+	max-width: none;
+	width: 100%;
+	height: 100%;
+}
+
+.rz-hero > .rz-hero__photo.alignfull img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: 50% 40%;
+}
+
+.rz-hero .rz-hero__text > p:first-child {
+	color: var(--rz-fact);
+}
+
+.rz-hero .rz-hero__text > p:nth-child(3),
+.rz-hero .rz-hero__text > p:last-child {
+	color: var(--rz-ink-soft);
+}
+
+.rz-hero .rz-hero__text > h1,
+.rz-hero .rz-hero__text > p:first-child,
+.rz-hero .rz-hero__text > p:nth-child(3),
+.rz-hero .rz-hero__text > p:last-child {
+	color: var(--rz-hero-on-photo);
+}
+
+.rz-hero::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+	/* Точки остановки привязаны к текстовому блоку, а не к доле ширины
+	   окна. Прежние 14% и 46% отсчитывались от окна, а текст шириной
+	   41.5rem стоит по левому краю колонки contentSize, то есть от
+	   (100% - 72.5rem) / 2. На 1440 полная плотность кончалась
+	   на 662 px, а текст тянулся до 804: хвост последней строки
+	   подзаголовка лежал на слабеющей растяжке и давал 4.08:1
+	   при пороге 4.5.
+
+	   Теперь полная плотность держится ровно от левого до правого края
+	   текста, а дальше сходит на нет за 12.5rem. Чистой фотографии при
+	   этом стало БОЛЬШЕ, а не меньше: прежний спуск начинался слишком
+	   рано и тянулся 28% ширины, поэтому полностью открытый кадр
+	   занимал на 1440 всего 374 px, а теперь 436. */
+	background: linear-gradient(
+		to right,
+		transparent 0,
+		color-mix(in srgb, var(--rz-hero-scrim) 65%, transparent) calc((100% - 72.5rem) / 2),
+		color-mix(in srgb, var(--rz-hero-scrim) 65%, transparent) calc((100% - 72.5rem) / 2 + 41.5rem),
+		transparent calc((100% - 72.5rem) / 2 + 54rem)
+	);
+}
+
+/* На узких экранах текст занимает весь кадр, а не левую
+   треть, поэтому растяжка сплошная. Плотность та же 65%.
+   Худшее в этом режиме — 4.92:1 у подзаголовка на 1280
+   при пороге 4.5; это же значение и худшее по теме
+   в целом, запас до порога наименьший здесь. */
+@media (max-width: 84.99rem) {
+	.rz-hero::before {
+		background: color-mix(in srgb, var(--rz-hero-scrim) 65%, transparent);
+	}
+}
+
+/* На узких в кадр попадает 44% ширины панорамы.
+   При 50% видно участок с 28% по 72% — здание
+   с крыльцом, небо сверху, асфальт снизу.
+   По вертикали кадр помещается целиком. */
+@media (max-width: 84.99rem) {
+	.rz-hero > .rz-hero__photo.alignfull img {
+		object-position: 50% 50%;
+	}
+}
+
+/* Мобильный кадр 3:4 — отдельное вложение 242, подставляется
+   фильтром razil_hero_picture(). Здание в верхней половине,
+   поэтому точка смещена вверх от центра. */
+@media (max-width: 47.99rem) {
+	.rz-hero > .rz-hero__photo.alignfull img {
+		object-position: 50% 45%;
+	}
+}
+
+/* picture по умолчанию inline и не наследует высоту figure —
+   без этого img схлопывается в ноль. */
+.rz-hero > .rz-hero__photo.alignfull picture {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+@media (max-width: 84.99rem) {
+	.rz-hero {
+		min-height: 30rem;
+		display: flex;
+		align-items: center;
+	}
+}
+
+/* Обёртки — это wp:group с раскладкой flow, ядро WP навешивает
+   на потомков margin-block-start. Под display:grid и display:flex
+   эти отступы ломают сетку. Правила ядра в :where(), их
+   специфичность равна нулю, поэтому обычного селектора достаточно. */
+.rz-steps__grid > *,
+.rz-step > * {
+	margin-block: 0;
+}
+
+/* Преимущества построчно. Сетка 2x2 заставляла глаз ходить зигзагом,
+   а описания встают на разной высоте. Четыре строки с линейками
+   читаются сверху вниз без вариантов. */
+.rz-advantages__list {
+	margin-top: 2.5rem;
+	border-bottom: 1px solid var(--rz-line);
+}
+
+/* Иконка равняется по первой строке описания, а не по центру блока:
+   пункт может занять и одну строку, и три, и центр тогда уезжает
+   к середине абзаца.
+
+   Голого align-items: flex-start для этого мало. Он равняет верхние
+   края коробок, а иконка 56px против строки 30px — её центр
+   оказывается на 28px от верха, середина первой строки на 15px,
+   и остаётся систематический сдвиг 13px при любой длине текста.
+   Поэтому абзац опускается на те же 13px (0.8125rem), и центр
+   иконки садится ровно на первую строку. Замерено: сдвиг 0px
+   и у однострочных пунктов, и у двухстрочных.
+
+   Отбивка абзаца перебивает .rz-advantage > * { margin-block: 0 }
+   ниже: (0,1,1) против (0,1,0). */
+.rz-advantage {
+	display: flex;
+	align-items: flex-start;
+	gap: 1rem;
+	padding: 1.25rem 0;
+	border-top: 1px solid var(--rz-line);
+}
+
+.rz-advantage > * {
+	margin-block: 0;
+}
+
+.rz-advantage p {
+	margin-top: 0.8125rem;
+	max-width: 52rem;
+}
+
+/* Шаги: четыре в ряд. Порядок читается слева направо,
+   поэтому номера не нужны. */
+/* Заголовок и лид в общей обёртке: она создаёт настоящий бокс
+   шириной с колонку, и margin-left: 0 отсчитывается от него.
+   Без обёртки лид прижимался к padding-box секции (16px),
+   а не к колонке (140px) — колонки как бокса просто не было. */
+.rz-steps__head > * {
+	margin-block: 0;
+}
+
+.rz-steps__lead {
+	margin-top: 0.75rem !important;
+	margin-left: 0 !important;
+	max-width: 41.5rem;
+	color: var(--rz-ink-soft);
+}
+
+.rz-steps__grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 2rem;
+	margin-top: 3rem;
+}
+
+.rz-step {
+	border: 1px solid var(--rz-line);
+	padding: 1.5rem;
+}
+
+.rz-step h3 {
+	margin: 1rem 0 0;
+}
+
+.rz-step p {
+	margin: 0.5rem 0 0;
+	color: var(--rz-ink-soft);
+}
+
+@media (max-width: 67.99rem) {
+	.rz-steps__grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 2.5rem 2rem;
+	}
+}
+
+@media (max-width: 47.99rem) {
+	.rz-steps__grid {
+		grid-template-columns: 1fr;
+		gap: 2rem;
+	}
+}
+
+/* Страница «О компании». Вводный текст и видео рядом:
+   человек читает, чем занимается агентство, и тут же
+   видит территорию. */
+.rz-about__intro {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 2rem;
+	align-items: start;
+	/* Третий абзац вынесен из сетки наружу, на всю ширину колонки:
+	   отбиваем его от сетки, иначе он прилипает к её нижнему краю. */
+	margin-bottom: 2rem;
+}
+
+.rz-about__intro > * {
+	margin-block: 0;
+}
+
+@media (min-width: 48rem) {
+	.rz-about__intro {
+		grid-template-columns: 1.15fr 1fr;
+		gap: 2.5rem;
+	}
+}
+
+.rz-about__text > * + * {
+	margin-top: 1rem;
+}
+
+.rz-about__video {
+	margin: 0;
+}
+
+/* background-color намеренно: пока постер грузится, пустой
+   прямоугольник не должен светиться белым на бежевом фоне. */
+.rz-about__video video {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: var(--rz-radius-card);
+	background-color: var(--rz-ink);
+}
+
+/* Карта 2ГИС на контактах. Виджет строится скриптом
+   с чужого домена, не iframe — отложить загрузку
+   через loading="lazy" нельзя, атрибут к script
+   не применяется. */
+.rz-map {
+	margin-top: 2rem;
+}
+
+.rz-map > div {
+	border-radius: var(--rz-radius-card);
+	overflow: hidden;
+}
+
+.rz-map__links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.5rem;
+	margin: 1rem 0 0;
+	font-size: 0.9375rem;
+}
+
+.rz-map__links a {
+	color: var(--rz-fact-text);
+	text-decoration-color: var(--rz-line);
+	text-underline-offset: 0.2em;
+}
+
+.rz-map__note {
+	margin: 1rem 0 0;
+	color: var(--rz-ink-soft);
 }
 
 /* Пара «текст и фотография» на страницах услуг.
@@ -2649,39 +3084,6 @@ html {
 	}
 }
 
-/* Вторичная кнопка: контур вместо заливки.
-   Прежде у неё был задан только цвет текста,
-   а фон приходил по умолчанию из theme.json —
-   тот же --rz-action, и текст сливался с фоном.
-   Третий случай этой ловушки на проекте:
-   см. липкую полосу, этап 37.
-
-   Второй селектор — для кнопок вне блока
-   core/button: у них нет обёртки
-   div.wp-block-button. */
-.rz-btn-outline .wp-block-button__link,
-.rz-btn-outline__link {
-	background-color: transparent;
-	color: var(--rz-action);
-	border: 1px solid var(--rz-action);
-}
-
-.rz-btn-outline .wp-block-button__link:hover,
-.rz-btn-outline__link:hover {
-	background-color: var(--rz-action);
-	color: var(--rz-surface);
-}
-
-/* Та же ловушка, что у кнопки шапки: своё :hover выше весит (0,2,0)
-   и перебивает :active из theme.json с его (0,1,0). Масштаб идёт
-   от .wp-element-button:active — класс на кнопке есть. */
-.rz-btn-outline .wp-block-button__link:active,
-.rz-btn-outline__link:active {
-	background-color: var(--rz-action-active);
-	border-color: var(--rz-action-active);
-	color: var(--rz-surface);
-}
-
 /* Порядок действий в первые часы. Секция стоит
    перед услугами намеренно: человек, попавший
    на сайт сразу после смерти близкого, должен
@@ -2776,152 +3178,6 @@ html {
 .rz-first-aid__warning a[href^="tel:"] {
 	color: var(--rz-action);
 	font-weight: 700;
-}
-
-/* === ХЛЕБНЫЕ КРОШКИ === */
-
-/* Полоса стоит между шапкой и содержимым. Разметку даёт блок Yoast
-   в parts/header.html, семантику — фильтры в razil-core; здесь только вид.
-
-   Ширина и отбивка повторяют колонку страницы: 72.5rem плюс 1rem по бокам.
-   Так левый край крошек совпадает с левым краем H1 — 140 px на 1440,
-   16 px на 375. Своих значений не вводим: это те же contentPadding
-   и contentSize, что у групп в шаблонах. */
-.rz-breadcrumbs {
-	max-width: 74.5rem;
-	margin-inline: auto;
-	padding: 0.75rem 1rem;
-}
-
-/* Разрыв между крошками и заголовком.
-
-   Он складывался из двух слагаемых, и замер показал, из каких именно:
-   0.75rem снизу у самой полосы и 3rem сверху у контейнера содержания.
-   У H1 отступов нет вовсе. Итого от текста крошек до заголовка 60 px,
-   и полоса читалась как чужая, приклеенная к шапке.
-
-   Убавляется только второе слагаемое, и только там, где крошки есть:
-   на страницах без них 3rem сверху — тот отступ, который и нужен,
-   H1 стоит на 128 px и трогать его нельзя. Отбор через :has() у части
-   шапки: она содержит крошки ровно на тех страницах, где они выводятся,
-   и правило само распространится на каталог, когда его включат.
-
-   !important обязателен: отступ приходит инлайновым стилем из блочного
-   атрибута шаблона (style="padding-top:3rem"), а инлайн не перебить
-   ни специфичностью, ни порядком. Без него правило молча не работает —
-   первый замер это и показал.
-
-   0.5rem — существующая ступень темы. Итог: от текста крошек до H1
-   20 px вместо 60, высота самой полосы не меняется.
-
-   Перекос с отбивкой снизу (0.5rem против 3rem) кажущийся. Полоса крошек
-   сама стоит внутри верхнего просвета, поэтому от линии шапки до H1
-   выходит 55 px против 48 px от последнего блока до низа контейнера —
-   блок почти уравновешен. Сравнивать надо это, а не значения padding. */
-header.wp-block-template-part:has(.rz-breadcrumbs) + .wp-block-group {
-	padding-top: 0.5rem !important;
-}
-
-/* Зеркало правила выше — страницы БЕЗ крошек. Там между низом шапки
-   и H1 оставался инлайновый padding-top: 3rem из атрибута блока,
-   и суммарно с компенсацией шапки разрыв читался как пустота.
-
-   1.5rem — ступень шкалы темы. Больше 0.5rem соседнего правила
-   намеренно: там воздух добирают сами крошки (padding 0.75rem),
-   здесь добирать нечем.
-
-   :has() и !important по той же причине, что и выше: инлайновый
-   стиль не перебить ни специфичностью, ни порядком. */
-header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
-	padding-top: 1.5rem !important;
-}
-
-.rz-breadcrumbs__list {
-	display: flex;
-	align-items: baseline;
-	min-width: 0;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	font-size: 0.875rem;
-	color: var(--rz-ink-soft);
-}
-
-/* Звенья не сжимаются, последнее — сжимается: см. правило ниже.
-
-   margin: 0 обязателен: общее правило li выше по файлу (строка 226) даёт
-   пунктам 0.5rem сверху и снизу, и полоса вырастала с 47 до 63 px —
-   замер показал у ol высоту 39.1 при строке 23.1. Тут пункты стоят
-   в строку, вертикальные поля списка им не нужны. */
-.rz-breadcrumbs__list > li {
-	flex: none;
-	margin: 0;
-}
-
-/* Разделитель рисуется здесь, а не приходит текстом.
-   Во-первых, текстовый узел прямо внутри ol недопустим. Во-вторых,
-   символ в разметке скринридер прочитал бы вслух между каждой парой
-   звеньев. Уголок из двух границ, повёрнутый на 45deg, — тот же приём,
-   что у галочки в аккордеоне; он молчит и не требует иконки.
-
-   Контраст здесь не нормируется: разделитель декоративный, его удаление
-   не меняет ни смысла, ни навигации. */
-.rz-breadcrumbs__list > li + li::before {
-	content: "";
-	display: inline-block;
-	width: 0.3125rem;
-	height: 0.3125rem;
-	margin-inline: 0.5rem;
-	border-top: 1px solid var(--rz-ink-soft);
-	border-right: 1px solid var(--rz-ink-soft);
-	transform: rotate(45deg);
-	vertical-align: 0.1em;
-}
-
-/* Последнее звено обрезается многоточием, а не переносится.
-
-   Замер: три цепочки из пяти в строку на 375 не умещаются, самая длинная
-   занимает 519 px при доступных 343. Перенос дал бы вторую строку над
-   заголовком и сдвинул бы первый экран вниз ради текста, который человек
-   тут же читает в H1: последнее звено — это и есть название открытой
-   страницы. Вдобавок это не ссылка, а aria-current="page", поэтому
-   обрезка не прячет цель перехода.
-
-   Обрезается только внешний вид: полный текст остаётся в разметке,
-   и скринридер читает его целиком.
-
-   min-width: 0 обязателен — без него флекс-элемент не сжимается ниже
-   своей внутренней ширины, и многоточие никогда не появится. */
-.rz-breadcrumbs__list > .breadcrumb_last {
-	flex: 0 1 auto;
-	min-width: 0;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
-/* === КАПЧА === */
-
-/* Контейнер невидимой капчи. В невидимом режиме виджет ничего не рисует
-   и в поток не встаёт, но полагаться на это целиком не стоит: у Яндекса
-   есть режим со значком в углу, и если его однажды включат, контейнер
-   не должен раздвинуть форму. Нулевая высота и отсутствие отступов
-   гарантируют, что кнопка «Отправить» не сдвинется ни на пиксель.
-
-   display: none не годится: скрытый так виджет часть браузеров
-   не инициализирует, и токена не будет вовсе. */
-.rz-captcha {
-	margin: 0;
-	padding: 0;
-	line-height: 0;
-}
-
-/* Всплывающее окно проверки, если Яндекс решит показать задание,
-   рисуется поверх страницы самим виджетом. Ему нужен слой выше
-   модального окна заявки, иначе задание окажется под ним. */
-.smart-captcha-overlay,
-.smart-captcha iframe {
-	z-index: 1000;
 }
 
 /* === ПРИЗЫВ ПЕРЕД ПОДВАЛОМ === */
@@ -3068,31 +3324,6 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 	font-weight: 700;
 }
 
-/* === ВЕРТИКАЛЬНЫЙ РИТМ СЕКЦИЙ ГЛАВНОЙ === */
-
-/* Отступы были инлайновыми константами 3rem и 4rem: на 375px
-   стык двух секций давал до 128px пустоты, а медиазапросов
-   на вертикальные поля не было ни одного. Верхние границы clamp
-   совпадают с прежними значениями, поэтому на десктопе вид
-   не меняется. */
-.rz-section {
-	padding-block: clamp(2rem, 5vw, 3rem);
-	padding-inline: 1rem;
-	background-color: var(--rz-bg);
-}
-
-.rz-section--surface {
-	background-color: var(--rz-surface);
-}
-
-/* Три секции были на 4rem, а не на 3rem. Правило идёт после
-   .rz-section: специфичность та же (0,1,0), решает порядок. */
-.rz-first-aid,
-.rz-advantages,
-.rz-steps {
-	padding-block: clamp(2.5rem, 7vw, 4rem);
-}
-
 /* Было инлайново на самой кнопке героя. */
 .rz-hero .wp-block-button {
 	display: block;
@@ -3112,192 +3343,6 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
    худшее значение 5.03:1 при пороге 3.0. */
 .rz-hero .wp-block-button__link:focus-visible {
 	outline-color: var(--rz-hero-on-photo);
-}
-
-/* === ОБЪЯВЛЕНИЯ БЕЗ БЛОЧНЫХ АТРИБУТОВ === */
-
-/* Всё, что ниже, раньше стояло инлайново, но не выражается
-   атрибутами блока: у core/group нет поддержки display,
-   align-items, justify-content, flex-direction и height,
-   а layout: flex дал бы другие классы и другую раскладку. */
-.rz-screen-center {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.rz-card-col {
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-}
-
-/* Пресет heading-l и произвольный кегль в модели WordPress
-   взаимоисключающи: класс пресета и style.typography.fontSize
-   не уживаются в одном блоке. Кегль задан здесь. */
-.rz-404__code {
-	font-size: clamp(60px, 10vw, 120px);
-}
-
-/* Отступ у обёртки core/button: сериализация spacing у этого
-   блока зависит от версии ядра, поэтому надёжнее классом. */
-.rz-btn-gap {
-	margin-top: 2rem;
-}
-
-/* === ДИАЛОГ ПОДТВЕРЖДЕНИЯ ЗВОНКА === */
-
-/* Окно собирает header.js: кнопка со звонком спрашивает подтверждение,
-   чтобы случайное касание не набирало номер. Здесь только то, без чего
-   диалог нечитаем — рамка, фон, отбивка и размер кнопок. Цвета взяты
-   из токенов, новых не вводится: подтверждение зелёное, как остальные
-   кнопки действия, отмена — контурная, как .rz-btn-outline. */
-.rz-tel-dialog,
-.rz-cb-dialog {
-	max-width: min(22rem, calc(100vw - 2rem));
-	padding: 0;
-	border: 1px solid var(--rz-line);
-	border-radius: var(--rz-radius-card);
-	background-color: var(--rz-surface);
-	color: var(--rz-ink);
-	box-shadow: var(--rz-shadow);
-}
-
-/* Тот же графит, что в --rz-shadow, только плотнее: своего цвета
-   у затемнения нет. */
-.rz-tel-dialog::backdrop,
-.rz-cb-dialog::backdrop {
-	background-color: rgba(46, 46, 44, 0.55);
-}
-
-.rz-tel-dialog__box,
-.rz-cb-dialog__box {
-	padding: 1.5rem;
-}
-
-.rz-tel-dialog__title,
-.rz-cb-dialog__title {
-	margin: 0;
-	font-weight: 700;
-}
-
-.rz-tel-dialog__number {
-	margin: 0.5rem 0 0;
-	font-size: 1.25rem;
-	font-weight: 700;
-	color: var(--rz-action);
-}
-
-.rz-tel-dialog__row {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.75rem;
-	margin-top: 1.5rem;
-}
-
-/* 3rem по высоте — как у кнопок в липкой панели: окно открывается
-   с телефона, и мимо такой кнопки промахнуться труднее. */
-.rz-tel-dialog__ok,
-.rz-tel-dialog__cancel,
-.rz-cb-dialog__cancel {
-	flex: 1 1 8rem;
-	min-height: 3rem;
-	padding: 0.75rem 1.25rem;
-	border-radius: var(--rz-radius);
-	font: inherit;
-	font-weight: 700;
-	cursor: pointer;
-	transition: background-color var(--rz-transition),
-	            border-color var(--rz-transition),
-	            transform var(--rz-transition);
-}
-
-.rz-tel-dialog__ok {
-	border: 1px solid var(--rz-action);
-	background-color: var(--rz-action);
-	color: var(--rz-surface);
-}
-
-.rz-tel-dialog__cancel,
-.rz-cb-dialog__cancel {
-	border: 1px solid var(--rz-line);
-	background-color: transparent;
-	color: var(--rz-ink);
-}
-
-/* Масштаб — всем трём, цвет — только заливной. У «Отмены» и «Закрыть»
-   фон прозрачный, темнеть нечему, а залить их в --rz-action-hover значило бы
-   сделать отказ похожим на главное действие. Тот же довод, что у бургера. */
-.rz-tel-dialog__ok:hover,
-.rz-tel-dialog__cancel:hover,
-.rz-cb-dialog__cancel:hover {
-	transform: scale(1.02);
-}
-
-.rz-tel-dialog__ok:active,
-.rz-tel-dialog__cancel:active,
-.rz-cb-dialog__cancel:active {
-	transform: scale(0.98);
-}
-
-.rz-tel-dialog__ok:hover {
-	background-color: var(--rz-action-hover);
-	border-color: var(--rz-action-hover);
-}
-
-.rz-tel-dialog__ok:active {
-	background-color: var(--rz-action-active);
-	border-color: var(--rz-action-active);
-}
-
-.rz-tel-dialog__ok:focus-visible,
-.rz-tel-dialog__cancel:focus-visible,
-.rz-cb-dialog__cancel:focus-visible {
-	outline: 2px solid var(--rz-action-focus);
-	outline-offset: 2px;
-}
-
-/* Своего блока «меньше движения» у окон не было: до этой правки им нечего
-   было отменять — transition у кнопок отсутствовал вовсе. */
-@media (prefers-reduced-motion: reduce) {
-	.rz-tel-dialog__ok,
-	.rz-tel-dialog__cancel,
-	.rz-cb-dialog__cancel {
-		transition: none;
-	}
-
-	.rz-tel-dialog__ok:hover,
-	.rz-tel-dialog__cancel:hover,
-	.rz-cb-dialog__cancel:hover,
-	.rz-tel-dialog__ok:active,
-	.rz-tel-dialog__cancel:active,
-	.rz-cb-dialog__cancel:active {
-		transform: none;
-	}
-}
-
-/* === ОКНО ОБРАТНОГО ЗВОНКА === */
-
-/* Оболочка, фон и кнопка отмены — общие с окном подтверждения звонка,
-   см. правила выше. Здесь только то, чем окно с формой отличается:
-   оно шире, и на низком экране форма должна прокручиваться внутри окна,
-   а не уезжать за край. */
-.rz-cb-dialog {
-	max-width: min(26rem, calc(100vw - 2rem));
-	max-height: calc(100vh - 2rem);
-	overflow: auto;
-}
-
-.rz-cb-dialog__title {
-	margin-bottom: 1rem;
-	font-size: 1.125rem;
-}
-
-/* Кнопка «Закрыть» под формой, во всю ширину: в окне это единственный
-   способ уйти, кроме Esc и клика по фону. */
-.rz-cb-dialog__cancel {
-	width: 100%;
-	margin-top: 1rem;
 }
 
 /* === БЛОК ЗАЯВКИ НА СТРАНИЦАХ УСЛУГ === */
@@ -3495,7 +3540,7 @@ html:not(.rz-js) .rz-cb-open {
    Знак меняет обе стороны отношения: и подложку, и текст — цвет
    текста полупрозрачный и смешивается с тем, что под ним. Худший
    случай — копирайт на 70% в тёмной теме, где подложка светлее
-   (#3A3936 против #2E2E2C): 5.51:1 при пороге 4.5. Запас есть
+   (#3A3936 против #292C29): 5.51:1 при пороге 4.5. Запас есть
    до 12%, но дальше знак из фактуры становится рисунком.
 
    Высота 15rem — натуральная высота рисунка. При ширине окна
@@ -3523,3 +3568,5 @@ html:not(.rz-js) .rz-cb-open {
 	-webkit-mask-size: contain;
 	        mask-size: contain;
 }
+
+/* 6. Адаптив и уменьшение движения */

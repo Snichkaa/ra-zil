@@ -116,18 +116,18 @@
 				},
 				{
 					"slug": "heading-s",
-					"name": "H3 21-24",
-					"size": "clamp(1.3125rem, 1.2348rem + 0.331vw, 1.5rem)"
+					"name": "H3 22-30",
+					"size": "clamp(1.375rem, 1.2539rem + 0.518vw, 1.875rem)"
 				},
 				{
 					"slug": "heading-m",
-					"name": "H2 26-34",
-					"size": "clamp(1.625rem, 1.4178rem + 0.884vw, 2.125rem)"
+					"name": "H2 36-64",
+					"size": "clamp(2.25rem, 1.8252rem + 1.812vw, 4rem)"
 				},
 				{
 					"slug": "heading-l",
-					"name": "H1 32-40",
-					"size": "clamp(2rem, 1.7928rem + 0.884vw, 2.5rem)"
+					"name": "H1 44-84",
+					"size": "clamp(2.75rem, 2.1432rem + 2.589vw, 5.25rem)"
 				}
 			]
 		},
@@ -256,7 +256,7 @@
 				},
 				":hover": {
 					"color": {
-						"text": "var(--wp--preset--color--fact)"
+						"text": "var(--rz-fact-text)"
 					},
 					"typography": {
 						"textDecoration": "underline"
@@ -269,7 +269,7 @@
 				},
 				":focus-visible": {
 					"outline": {
-						"color": "var(--wp--preset--color--fact)",
+						"color": "var(--rz-action-focus)",
 						"offset": "2px",
 						"style": "solid",
 						"width": "2px"
@@ -315,7 +315,7 @@
 				},
 				":focus-visible": {
 					"outline": {
-						"color": "var(--wp--preset--color--fact)",
+						"color": "var(--rz-action-focus)",
 						"offset": "2px",
 						"style": "solid",
 						"width": "2px"
