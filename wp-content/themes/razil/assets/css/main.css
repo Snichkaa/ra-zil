@@ -4494,6 +4494,69 @@ html:not(.rz-js) .rz-cb-open {
 	}
 }
 
+/* === КОНТАКТЫ ===
+
+   §23.4: приоритет у телефона, адреса, режима работы, карты
+   и понятной фотографии входа. Справочная часть слева и шире,
+   фотографии — сбоку: они помогают найти офис, а не украшают
+   страницу, поэтому стоят рядом с адресом, а не отдельной галереей. */
+.rz-contacts {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 2rem;
+	align-items: start;
+	margin-top: 1.5rem;
+}
+
+.rz-contacts > * {
+	margin-block: 0;
+}
+
+@media (min-width: 62rem) {
+	.rz-contacts {
+		grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+		gap: 2.5rem;
+	}
+}
+
+/* Справочные блоки идут подряд с одинаковым ритмом; заголовок раздела
+   внутри них линии сверху не получает — её роль играет сам просвет. */
+.rz-contacts__main > * + * {
+	margin-top: 1.75rem;
+}
+
+.rz-contacts__block > * {
+	margin-block: 0;
+}
+
+.rz-contacts__block > * + * {
+	margin-top: 0.5rem;
+}
+
+/* Перебивает .entry-content h2 с его линией и тройным отступом сверху:
+   (0,2,1) против (0,1,1). Внутри справочной колонки такой заголовок
+   читался бы как начало новой крупной части страницы. */
+.rz-contacts__block > h2 {
+	margin-top: 0;
+	padding-top: 0;
+	border-top: 0;
+}
+
+.rz-contacts__aside > * {
+	margin-block: 0;
+}
+
+.rz-contacts__aside > * + * {
+	margin-top: 1rem;
+}
+
+.rz-contacts__photo img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: var(--rz-radius-card);
+}
+
 /* 6. Адаптив и уменьшение движения */
 
 /* Блокировка прокрутки фона при открытом мобильном меню (§10).
