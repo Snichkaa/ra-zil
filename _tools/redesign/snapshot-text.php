@@ -88,7 +88,13 @@ function rz_dump_group( $title, $source, $content ) {
 $theme_dir = get_stylesheet_directory();
 
 $files = array();
-foreach ( array( 'templates', 'parts', 'patterns' ) as $sub ) {
+// patterns/ намеренно не сканируется. Паттерн — это скелет для
+// редактора: он лежит в теме, но ни на одной странице сайта
+// не отображается, пока его не вставили. Его рыба («Вводный
+// текст услуги.», «Пункт состава.», «Вопрос.», «Ответ.»)
+// попадала в снимок и засоряла базу сравнения, маскируя
+// настоящие расхождения в содержимом страниц.
+foreach ( array( 'templates', 'parts' ) as $sub ) {
 	$dir = $theme_dir . '/' . $sub;
 	if ( ! is_dir( $dir ) ) {
 		continue;
