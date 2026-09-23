@@ -142,9 +142,9 @@ blockquote {
 	border-radius: var(--rz-radius-card);
 }
 
-/* Изображения скругляются так же, как во фронте. */
+/* Изображения с прямыми углами так же, как во фронте. */
 .wp-block-image img {
 	max-width: 100%;
 	height: auto;
-	border-radius: var(--rz-radius-card);
+	border-radius: var(--rz-radius-media);
 }

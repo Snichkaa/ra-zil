@@ -260,11 +260,20 @@ h1.has-heading-l-font-size {
 	margin: 1.5rem 0;
 }
 
+/* Прямые углы у всех картинок ядра.
+
+   Это корневое правило: через него радиус доставался и панораме
+   первого экрана, и снимкам в тексте, и эмблеме в шапке. Замер
+   до правки: 26 медиа-элементов на 11 страницах со скруглением 14px.
+
+   ВНИМАНИЕ: это правило написано в файле дважды, дословно (второе
+   вхождение ниже, в разделе блоков ядра). Правка одного вхождения
+   ничего бы не дала — второе перебило бы его позицией. */
 .wp-block-image img {
 	max-width: 100%;
 	height: auto;
 	display: block;
-	border-radius: var(--rz-radius-card);
+	border-radius: var(--rz-radius-media);
 }
 
 /* Блоки с фоном */
@@ -401,11 +410,20 @@ h1.has-heading-l-font-size {
 	margin: 1.5rem 0;
 }
 
+/* Прямые углы у всех картинок ядра.
+
+   Это корневое правило: через него радиус доставался и панораме
+   первого экрана, и снимкам в тексте, и эмблеме в шапке. Замер
+   до правки: 26 медиа-элементов на 11 страницах со скруглением 14px.
+
+   ВНИМАНИЕ: это правило написано в файле дважды, дословно (второе
+   вхождение ниже, в разделе блоков ядра). Правка одного вхождения
+   ничего бы не дала — второе перебило бы его позицией. */
 .wp-block-image img {
 	max-width: 100%;
 	height: auto;
 	display: block;
-	border-radius: var(--rz-radius-card);
+	border-radius: var(--rz-radius-media);
 }
 
 .wp-block-image.aligncenter {
@@ -1991,7 +2009,7 @@ input[type="reset"],
 	display: block;
 	width: 100%;
 	height: auto;
-	border-radius: var(--rz-radius-card);
+	border-radius: var(--rz-radius-media);
 }
 
 .entry-content .rz-service-photo figcaption {
@@ -2431,6 +2449,13 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 	margin: 0;
 }
 
+/* Радиус нулевой, а верхние углы всё равно скруглены: их обрезает
+   карточка своим overflow: hidden. Это единственный способ, которым
+   угол снимка ТОЧНО совпадает с углом карточки — своим радиусом
+   у снимка он совпал бы только при одинаковой толщине рамки.
+   Снимать обрезку у карточки нельзя: снимок вылезет за её скруглённый
+   край. Нижние углы снимка прямые и должны такими остаться — там
+   он к краю карточки не примыкает. */
 .rz-service-card__photo img {
 	display: block;
 	width: 100%;
@@ -2697,7 +2722,10 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 	text-align: center;
 	background-color: var(--rz-bg);
 	border: 1px dashed var(--rz-line);
-	border-radius: var(--rz-radius-card);
+	/* Углы прямые по той же причине, что у снимков: заглушка держит
+	   геометрию будущего кадра, и если у неё углы скруглены, а у кадра
+	   нет, подстановка снимка сдвинет картинку. */
+	border-radius: var(--rz-radius-media);
 }
 
 .rz-photo-slot__num {
@@ -3091,7 +3119,7 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 	display: block;
 	width: 100%;
 	height: auto;
-	border-radius: var(--rz-radius-card);
+	border-radius: var(--rz-radius-media);
 	background-color: var(--rz-ink);
 }
 
@@ -4964,7 +4992,7 @@ html:not(.rz-js) .rz-cb-open {
 	display: block;
 	width: 100%;
 	height: auto;
-	border-radius: var(--rz-radius-card);
+	border-radius: var(--rz-radius-media);
 }
 
 /* 6. Адаптив и уменьшение движения */
