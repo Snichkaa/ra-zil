@@ -137,7 +137,19 @@ $stored = $wpdb->get_var( $wpdb->prepare( "SELECT post_content FROM {$wpdb->post
 
 if ( $stored === $candidate ) {
 	printf( "ЧТЕНИЕ ОБРАТНО: СОВПАЛО (%d байт, md5=%s)\n", strlen( $stored ), md5( $stored ) );
-	exit( 0 );
+
+	// Слаг проверяется отдельно и после записи: wp_update_post умеет
+	// пересчитать post_name сам, если заголовок или статус меняются,
+	// а адрес страницы — SEO-поле, которое трогать запрещено.
+	$slug_now = $wpdb->get_var( $wpdb->prepare( "SELECT post_name FROM {$wpdb->posts} WHERE ID = %d", $post_id ) );
+	if ( $slug_now === $post->post_name ) {
+		printf( "СЛАГ: не изменился (%s)\n", $slug_now );
+		exit( 0 );
+	}
+
+	printf( "СЛАГ: ИЗМЕНИЛСЯ — был %s, стал %s\n", $post->post_name, (string) $slug_now );
+	printf( "ТРЕБУЕТСЯ НЕМЕДЛЕННЫЙ ОТКАТ: php _tools/redesign/restore-post.php %d\n", $post_id );
+	exit( 1 );
 }
 
 $len = min( strlen( $candidate ), strlen( (string) $stored ) );
