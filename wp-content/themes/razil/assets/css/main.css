@@ -587,17 +587,20 @@ h1.has-heading-l-font-size {
 	}
 }
 
-/* Каталог услуг: сетка карточек (§23.1).
+/* Каталог услуг: одна услуга в строку, во всю ширину контейнера.
 
-   До фазы 6 здесь лежала строчная раскладка — содержимое слева,
-   кнопка справа. Она ушла вместе с разметкой: карточка каталога
-   теперь та же, что на главной, и отличается только тем, что
-   фотографии у неё нет, а вместо неё иконка услуги.
+   23 сентября сетка 3 → 2 → 1 заменена обратно на строки. Причина
+   не вкусовая: в трёх колонках карточке достаётся 371 px, а название
+   «Организация достойной церемонии прощания и погребения» при кегле
+   heading-s занимает в такой ширине пять строк. Карточка вытягивается
+   вверх, соседние карточки тянутся за ней, и каталог из пяти услуг
+   читается как стена текста. В строке во всю ширину то же название
+   укладывается в одну строку — замер в отчёте.
 
-   Три колонки на широком экране, две на среднем, одна на узком.
-   Пять услуг ложатся как 3+2: последняя строка неполная, и это
-   нормально — растягивать её значило бы делать карточки разной
-   ширины. */
+   Класс менять не стал: `.rz-services-grid` встречается только
+   в archive-services.html (и в несобранном src/blocks/services-grid),
+   переименование тронуло бы разметку ради слова. Это по-прежнему
+   сетка, просто в одну колонку. */
 .rz-services-grid {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
@@ -607,18 +610,6 @@ h1.has-heading-l-font-size {
 
 .rz-services-grid > * {
 	margin-block: 0;
-}
-
-@media (min-width: 48rem) {
-	.rz-services-grid {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-}
-
-@media (min-width: 62rem) {
-	.rz-services-grid {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-	}
 }
 
 /* Карточка растягивается на всю высоту строки сетки.
@@ -678,6 +669,57 @@ h1.has-heading-l-font-size {
 .rz-service-card__more {
 	margin-top: auto;
 	align-self: flex-start;
+}
+
+/* СТРОЧНАЯ КАРТОЧКА КАТАЛОГА.
+
+   Привязка к странице архива, а не к классу, — решение прошлого
+   прогона, и оно здесь главное. Цитата из отчёта от 19 сентября:
+   «правило строчной карточки архива .wp-block-group.rz-service-card
+   поймало и новую карточку главной, и текст сжался в колонку
+   по букве. Исправлено привязкой правила к странице архива».
+   Классы у карточек общие по замыслу §24, значит различать их
+   должно место, а не класс.
+
+   Раскладка не та, что была до редизайна. Прежняя ставила в строку
+   всё тело карточки — название с описанием слева, кнопку справа,
+   и при длинном названии слева получалась та же узкая колонка.
+   Здесь строка разделена на два ряда: шапка с иконкой и названием
+   идёт во всю ширину, а описание и кнопка встают рядом под ней.
+   Название получает все 1112 px и укладывается в одну строку.
+
+   Сетка, а не флексы: два ряда с разными правилами выравнивания
+   во флексах потребовали бы третьей обёртки в разметке, а разметку
+   каталога трогать незачем. */
+body.post-type-archive-services .rz-service-card__body {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	column-gap: 2rem;
+	row-gap: 1rem;
+	align-items: center;
+}
+
+body.post-type-archive-services .rz-service-card__head {
+	grid-column: 1 / -1;
+}
+
+/* Авто-поле у кнопки снимается: оно прижимало её к низу колонки,
+   а в строке кнопка стоит по центру своего ряда. */
+body.post-type-archive-services .rz-service-card__more {
+	margin-top: 0;
+	align-self: center;
+}
+
+/* До 760 px строка складывается в столбик. Порог тот же, что
+   у остальных раскладок этого прогона. */
+@media (max-width: 47.5rem) {
+	body.post-type-archive-services .rz-service-card__body {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	body.post-type-archive-services .rz-service-card__more {
+		justify-self: start;
+	}
 }
 
 /* === КНОПКА ЗВОНКА ===
@@ -949,7 +991,8 @@ input[type="reset"],
 .rz-reviews__link a,
 .rz-footer__col a,
 .rz-footer__copyright a,
-.rz-breadcrumbs__list a {
+.rz-breadcrumbs__list a,
+.rz-service-card__head .wp-block-post-title a {
 	--rz-tap: 2.75rem;
 	--rz-tap-side: 0px;
 	position: relative;
@@ -982,6 +1025,11 @@ input[type="reset"],
    остальных: у них зоны не было вовсе, замер давал 23 и 31 px
    при норме 44. Это главный номер агентства — по нему звонят,
    и промах по нему дороже промаха по ссылке в подвале. */
+/* Название услуги в каталоге попало в этот набор 23 сентября:
+   в сетке из трёх колонок оно занимало от двух до пяти строк и было
+   выше 44 px само собой, а в строчной карточке стало однострочным —
+   замер дал 33 px на 1366 и 29 px на 768. Зона возвращает цель
+   к 44 px, не трогая кегль. */
 .rz-first-aid a[href^="tel:"]::after,
 .entry-content a[href^="tel:"]:not(.wp-element-button)::after,
 .entry-content a[href^="mailto:"]:not(.wp-element-button)::after,
@@ -994,7 +1042,8 @@ input[type="reset"],
 .rz-reviews__link a::after,
 .rz-footer__col a::after,
 .rz-footer__copyright a::after,
-.rz-breadcrumbs__list a::after {
+.rz-breadcrumbs__list a::after,
+.rz-service-card__head .wp-block-post-title a::after {
 	content: "";
 	position: absolute;
 	inset-block: min(0px, calc((var(--rz-tap) - 100%) / -2));
