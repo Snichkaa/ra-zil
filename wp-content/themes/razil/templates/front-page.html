@@ -84,14 +84,17 @@
 		<!-- Правая колонка: карточка с примечанием про 112 и фотография
 		     под ней. Карточка и снимок — соседи, а не вложение: тёплая
 		     полоса слева помечает именно примечание, и тянуть её вдоль
-		     фотографии значило бы пометить ею и снимок. -->
+		     фотографии значило бы пометить ею и снимок.
+
+		     Иконки в карточке нет намеренно. Она тут была и убрана
+		     23 сентября: в колонке из двух частей кружок читался
+		     третьим, посторонним элементом, а не частью системы.
+		     Заодно ушла причина, по которой карточка была гибкой
+		     строкой с переносом. -->
 		<!-- wp:group {"className":"rz-first-aid__aside"} -->
 		<div class="wp-block-group rz-first-aid__aside">
 			<!-- wp:group {"className":"rz-first-aid__note-card"} -->
 			<div class="wp-block-group rz-first-aid__note-card">
-				<!-- wp:html -->
-				<span class="rz-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="15"/><circle cx="20" cy="20" r="7"/><path d="M9.4 9.4 L15 15"/><path d="M30.6 9.4 L25 15"/><path d="M9.4 30.6 L15 25"/><path d="M30.6 30.6 L25 25"/></svg></span>
-				<!-- /wp:html -->
 				<!-- wp:paragraph {"className":"rz-first-aid__note"} -->
 				<p class="rz-first-aid__note">Если растерялись или забыли номера — звоните на <a href="tel:112">112</a>. Единый номер работает всегда, даже при нулевом балансе и заблокированной сим-карте, и оператор соединит с нужной службой.</p>
 				<!-- /wp:paragraph -->
@@ -99,7 +102,7 @@
 			<!-- /wp:group -->
 
 			<!-- wp:html -->
-			<div class="rz-photo-slot" data-slot="1" style="--rz-slot-ratio: 16/9">
+			<div class="rz-photo-slot" data-slot="1" style="--rz-slot-ratio: 21/9">
 				<span class="rz-photo-slot__num">Фото 1</span>
 				<span class="rz-photo-slot__hint">Оформление документов: руки, папка и спокойная рабочая обстановка</span>
 			</div>
