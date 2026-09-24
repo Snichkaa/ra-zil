@@ -5476,3 +5476,349 @@ body.single-services .rz-svc-sec h2 {
 .rz-svc-card > :last-child {
 	margin-block-end: 0;
 }
+
+/* ------------------------------------------------------------------
+   4. ПЕРВЫЙ ЭКРАН (паттерн razil/service-hero)
+   ------------------------------------------------------------------ */
+
+/* Крошки над первым экраном.
+
+   Фон отдельно не задаётся: полоса стоит на фоне body (--rz-bg),
+   и первый экран залит тем же токеном — шва между ними нет
+   по построению, проверено снимком.
+
+   На телефоне вместо цепочки показывается одна ссылка «‹ Все услуги»
+   (её печатает razil_breadcrumbs_back в razil-core/inc/breadcrumbs.php).
+   Показывается ровно одно из двух, и не только глазу: display: none
+   убирает скрытое и из дерева доступности. */
+body.single-services .rz-breadcrumbs__back {
+	display: none;
+}
+
+@media (max-width: 47.5rem) {
+	body.single-services .rz-breadcrumbs__list {
+		display: none;
+	}
+
+	body.single-services .rz-breadcrumbs__back {
+		display: inline-block;
+		font-size: 0.875rem;
+		color: var(--rz-ink-soft);
+		--rz-tap: 2rem;
+		position: relative;
+	}
+
+	/* Зона нажатия та же, что у звеньев цепочки: 32 px. Осознанное
+	   исключение прошлых прогонов для крошек сохраняется (И11). */
+	body.single-services .rz-breadcrumbs__back::after {
+		content: "";
+		position: absolute;
+		inset-block: min(0px, calc((var(--rz-tap) - 100%) / -2));
+		inset-inline: 0;
+	}
+}
+
+
+/* Поля у первого экрана свои, не общие для секций: сверху его поджимают
+   крошки (над ними уже есть 0.5rem от правила main.css:2219), снизу
+   он открывает страницу и потому просторнее прочих. На телефоне нижнее
+   поле нулевое — там снимок идёт до края и до низа. */
+body.single-services .rz-svc-hero {
+	padding-block: 2.5rem 5rem;
+}
+
+body.single-services .rz-svc-hero__grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 2rem;
+	align-items: start;
+}
+
+/* 48rem — порог из спецификации, и он НЕ тот же, что 47.5rem у
+   остальных раскладок прогона. Оставлен как задано: первый экран
+   ломается раньше прочих, потому что в две колонки ему нужно больше
+   места, чем строке карточки. */
+@media (min-width: 48rem) {
+	body.single-services .rz-svc-hero__grid {
+		grid-template-columns: 1.12fr 1fr;
+		gap: 4rem;
+	}
+}
+
+/* Отбивки внутри левой колонки заданы поимённо, а не через blockGap:
+   шаг между заголовком, лидом, кнопками и фактами разный (1.5 / 2.25 /
+   2.5rem), и один общий зазор его не даст. */
+body.single-services .rz-svc-hero__title {
+	margin-block: 0;
+}
+
+body.single-services .rz-svc-hero__lead {
+	margin-block: 1.5rem 0;
+}
+
+body.single-services .rz-svc-hero__actions {
+	margin-block: 2.25rem 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+	gap: 0.75rem;
+}
+
+/* Зазор в строке задаёт gap, а не поля потомков. Раскладка «поток»
+   у группы ядра приписывает каждому следующему ребёнку
+   margin-block-start: 1.5rem — кнопка заявки вставала на 24 px ниже
+   кнопки звонка, и в ряд они не выравнивались. */
+body.single-services .rz-svc-hero__actions > * {
+	margin-block: 0;
+}
+
+/* Обёртка кнопки ядра внутри строки действий: своих полей и своего
+   зазора у неё быть не должно — и то, и другое задаёт строка. */
+body.single-services .rz-svc-hero__call-wrap {
+	margin: 0;
+	gap: 0.75rem;
+}
+
+/* --- Кнопка звонка. Залитая, с трубкой слева. --- */
+body.single-services .rz-svc-hero__call .wp-block-button__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.625rem;
+	min-height: 3.5rem;
+	padding: 0 1.75rem;
+	font-family: var(--wp--preset--font-family--pt-sans);
+	font-size: 1.125rem;
+	font-weight: 700;
+	line-height: 1.2;
+	border-radius: var(--rz-radius-button);
+	background-color: var(--rz-action);
+	color: var(--rz-surface);
+	text-decoration: none;
+}
+
+/* Трубка маской, а не картинкой и не инлайновым SVG.
+
+   Через <img src> нельзя: внешний SVG не наследует currentColor
+   и не перевернётся в тёмной теме. Инлайновым SVG внутри core/button
+   тоже нельзя по другой причине: текст кнопки — rich text, и владелец
+   сайта, поправив подпись в редакторе, потерял бы вместе с ней иконку.
+   Маска живёт в стилях, руками её не сотрёшь.
+
+   Файл отдельный от icon-zvonok.svg, и вот почему. Набор рисуется
+   в поле 40 и показывается при 28 px с обводкой 2.15 (.rz-icon svg).
+   Здесь иконка 20 px, и та же обводка дала бы волосок в 0.75 px.
+   Толщина пересчитана под размер — 3.0 при поле 40, то есть ровно
+   та же видимая толщина, что у соседей по набору. Геометрия пути
+   не менялась. */
+body.single-services .rz-svc-hero__call .wp-block-button__link::before {
+	content: "";
+	flex: none;
+	width: 1.25rem;
+	height: 1.25rem;
+	background-color: currentColor;
+	-webkit-mask-image: url("../icons/icon-zvonok-20.svg");
+	        mask-image: url("../icons/icon-zvonok-20.svg");
+	-webkit-mask-repeat: no-repeat;
+	        mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	        mask-position: center;
+	-webkit-mask-size: contain;
+	        mask-size: contain;
+}
+
+/* Приставка «Позвонить: » видна только на телефоне. На компьютере
+   рядом стоит трубка и подпись второй кнопки, и слово было бы
+   лишним; на телефоне трубка сама по себе читается как «набрать»,
+   а не как «позвонить нам». Текст настоящий, а не из content:
+   его можно выделить и скопировать, и скринридер читает его
+   там же, где видит глаз. */
+body.single-services .rz-svc-hero__call-prefix {
+	display: none;
+}
+
+/* Подпись кнопки обёрнута отдельным span, и это не украшение.
+   Ссылка — inline-flex, а значит каждый её ребёнок становится
+   флекс-элементом: приставка и номер разошлись бы на gap в 10 px,
+   как будто между ними лишний пробел. В обёртке они снова обычный
+   текст в одной строке. */
+body.single-services .rz-svc-hero__call-text {
+	display: inline;
+}
+
+/* --- Кнопка заявки. Контурная. --- */
+
+/* Скоуп body.single-services обязателен: у кнопки уже есть свой вид
+   от theme.json (styles.elements.button), и он приходит селектором
+   :root :where(.wp-element-button) — вес тот же (0,1,0), что у одного
+   класса. При равном весе решал бы порядок подключения, а он
+   не гарантирован. */
+body.single-services .rz-svc-hero__cta {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 3.5rem;
+	padding: 0 1.75rem;
+	font-family: var(--wp--preset--font-family--pt-sans);
+	font-size: 1.125rem;
+	font-weight: 700;
+	line-height: 1.2;
+	border: 1.5px solid var(--rz-action);
+	border-radius: var(--rz-radius-button);
+	background-color: transparent;
+	color: var(--rz-action);
+	cursor: pointer;
+	transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+body.single-services .rz-svc-hero__cta:hover {
+	background-color: var(--rz-action);
+	color: var(--rz-surface);
+}
+
+body.single-services .rz-svc-hero__cta:active {
+	background-color: var(--rz-action-active);
+	border-color: var(--rz-action-active);
+	color: var(--rz-surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.single-services .rz-svc-hero__cta {
+		transition: none;
+	}
+}
+
+/* На телефоне кнопки во всю ширину и друг под другом. */
+@media (max-width: 47.5rem) {
+	body.single-services .rz-svc-hero__actions {
+		flex-direction: column;
+		gap: 0.625rem;
+	}
+
+	body.single-services .rz-svc-hero__call-wrap,
+	body.single-services .rz-svc-hero__call,
+	body.single-services .rz-svc-hero__call .wp-block-button__link,
+	body.single-services .rz-svc-hero__cta {
+		width: 100%;
+	}
+
+	body.single-services .rz-svc-hero__call-prefix {
+		display: inline;
+	}
+}
+
+/* --- Три факта --- */
+body.single-services .rz-svc-hero__facts {
+	margin-block: 2.5rem 0;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--rz-line);
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1.5rem;
+}
+
+body.single-services .rz-svc-hero__fact > p {
+	margin-block: 0;
+	font-size: 1.125rem;
+	font-weight: 700;
+	line-height: 1.3;
+}
+
+/* Второй абзац отбирается через p + p, а не через :last-child:
+   второго абзаца у факта может не быть вовсе (правило Т4 разрешает
+   факт из одной строки), и :last-child покрасил бы тогда первый. */
+body.single-services .rz-svc-hero__fact > p + p {
+	margin-block: 0.25rem 0;
+	font-size: 0.9375rem;
+	font-weight: 400;
+	color: var(--rz-ink-soft);
+}
+
+@media (max-width: 47.5rem) {
+	body.single-services .rz-svc-hero__facts {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		padding-top: 0;
+		border-top: 0;
+	}
+
+	/* Столбиком линия сверху не нужна — она отделяла бы факты
+	   от кнопок, а не колонки друг от друга. Роль разделителя
+	   берёт точка перед каждым фактом. */
+	body.single-services .rz-svc-hero__fact {
+		position: relative;
+		padding-left: 1rem;
+	}
+
+	body.single-services .rz-svc-hero__fact::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0.6em;
+		width: 0.375rem;
+		height: 0.375rem;
+		border-radius: 50%;
+		background-color: var(--rz-fact);
+	}
+}
+
+/* --- Снимок --- */
+/* Пропорция задаётся здесь, а не атрибутом блока: инлайновый стиль
+   от ядра на телефоне пришлось бы перебивать !important. */
+body.single-services .rz-svc-hero__photo {
+	margin: 0;
+	aspect-ratio: 11 / 10;
+}
+
+body.single-services .rz-svc-hero__photo img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: var(--rz-radius-media);
+}
+
+body.single-services .rz-svc-hero__caption {
+	margin-block: 0.75rem 0;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	color: var(--rz-fact-text);
+}
+
+/* Заглушка на месте снимка держит ту же геометрию, что и фотография:
+   замена одной на другую не должна сдвигать колонку. */
+body.single-services .rz-svc-hero__media .rz-photo-slot {
+	aspect-ratio: 11 / 10;
+}
+
+@media (max-width: 47.5rem) {
+	/* Снимок идёт до края окна: отрицательное поле ровно в то боковое
+	   поле, которое секция задаёт себе сама. Высота фиксированная —
+	   пропорция 11:10 на узком экране отдала бы снимку пол-экрана
+	   и утопила бы всё остальное. */
+	body.single-services .rz-svc-hero__media {
+		margin-inline: -1rem;
+		/* width: auto по той же причине, что у полноширинной секции:
+		   .wp-block-group { width: 100% } переопределяет раскладку,
+		   и правое отрицательное поле отбрасывается. Замер без этой
+		   строки: снимок 343 px в окне 375. */
+		width: auto;
+	}
+
+	body.single-services .rz-svc-hero__photo,
+	body.single-services .rz-svc-hero__media .rz-photo-slot {
+		height: 13.75rem;
+		aspect-ratio: auto;
+	}
+
+	/* Подпись прячется вместе с полями: под снимком во всю ширину
+	   она висела бы у самого края. */
+	body.single-services .rz-svc-hero__caption {
+		display: none;
+	}
+
+	body.single-services .rz-svc-hero {
+		padding-block: 1.25rem 0;
+	}
+}

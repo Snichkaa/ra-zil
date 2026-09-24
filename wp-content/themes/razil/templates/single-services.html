@@ -32,8 +32,14 @@
 	     fontSize здесь намеренно не указан — класс пресета
 	     has-heading-l-font-size выводится с !important и перебивает
 	     любое авторское правило. Не выставляйте размер в редакторе. -->
-	<!-- wp:group {"className":"rz-svc-head","style":{"spacing":{"padding":{"top":"3rem"}}},"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group rz-svc-head" style="padding-top:3rem">
+	<!-- Своего верхнего поля у шапки нет, и это замерено, а не на глаз.
+	     Над ней стоит правило main.css:2219
+	     header…:has(.rz-breadcrumbs) + .wp-block-group { padding-top: 0.5rem !important },
+	     которое даёт оболочке 8 px. Первая редакция этой группы несла
+	     ещё и padding-top: 3rem — от крошек до H1 получалось 56 px вместо
+	     прежних 8. -->
+	<!-- wp:group {"className":"rz-svc-head","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group rz-svc-head">
 		<!-- wp:post-title {"level":1} /-->
 
 		<!-- wp:post-excerpt {"fontSize":"lead"} /-->
