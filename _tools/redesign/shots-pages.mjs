@@ -16,7 +16,13 @@
  * Запуск:
  *   node _tools/redesign/shots-pages.mjs --out <каталог>
  *        [--widths 375,768,1024,1366,1920] [--zoom 100]
- *        [--only home,svc-krematsiya]
+ *        [--only home,svc-krematsiya] [--dark]
+ *
+ * --dark — эмуляция prefers-color-scheme: dark. Тёмная тема на сайте
+ * сделана медиазапросом, а не классом на body, поэтому включить её
+ * можно только со стороны браузера; переключателя в интерфейсе нет.
+ * Имя файла получает суффикс -dark, иначе светлый и тёмный снимок
+ * одной ширины легли бы в один файл.
  */
 
 import { mkdirSync } from 'node:fs'
@@ -35,8 +41,9 @@ function arg(name, fallback) {
   return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : fallback
 }
 
-// Набор по умолчанию — главная, каталог услуг и пять услуг: ровно те
-// страницы, которых касаются правки услуг.
+// Набор по умолчанию — главная, каталог услуг, пять услуг и две
+// соседние страницы. Соседи здесь затем, что по ним сверяется
+// отсутствие регрессии: правка услуг не должна их задеть.
 const PAGES = [
   ['home', '/'],
   ['uslugi', '/uslugi/'],
@@ -45,6 +52,8 @@ const PAGES = [
   ['svc-transportirovka', '/uslugi/transportirovka/'],
   ['svc-blagoustroystvo', '/uslugi/blagoustroystvo/'],
   ['svc-yurpomoshch', '/uslugi/yuridicheskaya-pomoshch/'],
+  ['o-kompanii', '/o-kompanii/'],
+  ['kontakty', '/kontakty/'],
 ]
 
 const out = arg('out', null)
@@ -55,6 +64,7 @@ if (!out) {
 const widths = arg('widths', '375,768,1024,1366,1920').split(',').map(Number)
 const zoom = Number(arg('zoom', '100'))
 const only = arg('only', '')
+const dark = process.argv.includes('--dark')
 const pages = only ? PAGES.filter(([k]) => only.split(',').includes(k)) : PAGES
 
 mkdirSync(out, { recursive: true })
@@ -63,7 +73,11 @@ const browser = await chromium.launch({ channel: 'chrome', headless: true })
 
 for (const [key, url] of pages) {
   for (const width of widths) {
-    const ctx = await browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: 1 })
+    const ctx = await browser.newContext({
+      viewport: { width, height: 900 },
+      deviceScaleFactor: 1,
+      colorScheme: dark ? 'dark' : 'light',
+    })
     const page = await ctx.newPage()
     const resp = await page.goto('http://ra-zil.test' + url, { waitUntil: 'networkidle', timeout: 45000 })
 
@@ -82,7 +96,8 @@ for (const [key, url] of pages) {
     })
     await page.waitForTimeout(400)
 
-    const name = key + '-' + width + 'w' + (zoom !== 100 ? '-zoom' + zoom : '') + '.png'
+    const name = key + '-' + width + 'w' + (zoom !== 100 ? '-zoom' + zoom : '') +
+      (dark ? '-dark' : '') + '.png'
     await page.screenshot({ path: join(out, name), fullPage: true })
 
     const h = await page.evaluate(() => document.documentElement.scrollHeight)

@@ -9,6 +9,17 @@
 множества обязаны совпадать точно.
 
 Запуск: python _tools/redesign/compare-text.py <до.txt> <после.txt>
+         [--t1] [--skip <подстрока имени группы>]
+
+  --t1    нормализация по правилу Т1 задания от 24 сентября: у пункта
+          списка разрешено поменять регистр первой буквы и убрать
+          конечные «;» и «.». Обе стороны приводятся к одному виду,
+          иначе перенос пункта в новую разметку выглядел бы как
+          пропажа старого предложения и появление нового.
+
+  --skip  группа с такой подстрокой в имени выбрасывается из обоих
+          снимков. Нужно для временной тестовой записи, на которой
+          обкатываются паттерны: её рыба не содержание сайта.
 
 Код возврата 1, если что-то пропало или появилось.
 """
@@ -17,7 +28,17 @@ import re
 import sys
 
 
-def load(path):
+def norm_t1(s):
+    """Пункт списка по правилу Т1: без конечных «;» «.», с малой буквы."""
+    s = s.rstrip()
+    while s and s[-1] in ';.':
+        s = s[:-1].rstrip()
+    if s:
+        s = s[0].lower() + s[1:]
+    return s
+
+
+def load(path, skip=None):
     """Снимок -> (множество предложений, отображение предложение->страницы)."""
     text = open(path, 'rb').read().decode('utf-8')
     groups = {}
@@ -25,6 +46,9 @@ def load(path):
     for line in text.replace('\r\n', '\n').split('\n'):
         if line.startswith('===== '):
             current = line[6:].strip()
+            if skip and skip in current:
+                current = None
+                continue
             groups[current] = []
             continue
         if line.startswith('----- ') or not line.strip():
@@ -34,11 +58,11 @@ def load(path):
     return groups
 
 
-def sentences(groups):
+def sentences(groups, t1=False):
     out = {}
     for page, lines in groups.items():
         for s in lines:
-            out.setdefault(s, set()).add(page)
+            out.setdefault(norm_t1(s) if t1 else s, set()).add(page)
     return out
 
 
@@ -81,10 +105,22 @@ def main(argv):
         print(__doc__)
         return 2
 
-    gb, ga = load(argv[0]), load(argv[1])
+    t1 = '--t1' in argv
+    skip = None
+    if '--skip' in argv:
+        skip = argv[argv.index('--skip') + 1]
+    files = [a for a in argv if not a.startswith('--') and a != skip]
+
+    gb, ga = load(files[0], skip), load(files[1], skip)
+
+    if t1:
+        print('--- нормализация Т1 включена: регистр первой буквы и '
+              'конечные «;» «.» не считаются расхождением')
+    if skip:
+        print('--- группы с «%s» в имени пропущены в обоих снимках' % skip)
 
     problems = 0
-    problems += report('Предложения', sentences(gb), sentences(ga))
+    problems += report('Предложения', sentences(gb, t1), sentences(ga, t1))
     problems += report('Телефоны', extract(gb, RE_TEL), extract(ga, RE_TEL))
     problems += report('Денежные суммы', extract(gb, RE_MONEY), extract(ga, RE_MONEY))
 
