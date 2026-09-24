@@ -5822,3 +5822,191 @@ body.single-services .rz-svc-hero__media .rz-photo-slot {
 		padding-block: 1.25rem 0;
 	}
 }
+
+/* ------------------------------------------------------------------
+   5. ВСТУПЛЕНИЕ (паттерн razil/service-intro)
+   ------------------------------------------------------------------ */
+
+body.single-services .rz-svc-intro__grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 2rem;
+	align-items: start;
+}
+
+@media (min-width: 48rem) {
+	body.single-services .rz-svc-intro__grid {
+		grid-template-columns: 1.4fr 1fr;
+		gap: 4rem;
+	}
+
+	/* Карточку разрешено удалить: готового текста для неё есть только
+	   на одной услуге из пяти, а выдумывать его нельзя (И18). Без неё
+	   сетка переходит в одну колонку сама — по наличию карточки,
+	   а не по классу-модификатору, который пришлось бы не забыть
+	   поставить.
+
+	   Текст при этом НЕ растягивается во всю ширину: он получает меру
+	   строки. Разница между «полем справа» и «пустотой справа» ровно
+	   в этом — поле принадлежит колонке, пустота остаётся от изъятого
+	   предмета. Именно вторую заказчик откатывал 8 и 23 сентября.
+
+	   :has() работает с Chrome 105 и Safari 15.4. На старом браузере
+	   раскладка деградирует в одну колонку без меры строки — то есть
+	   в то, что было до этого прогона. */
+	body.single-services .rz-svc-intro__grid:not(:has(> .rz-svc-intro__card)) {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	body.single-services .rz-svc-intro__grid:not(:has(> .rz-svc-intro__card)) .rz-svc-intro__text {
+		max-width: 40rem;
+	}
+}
+
+/* Межстрочный 1.65, а не 1.6, как у остального текста услуги: это
+   первые абзацы страницы, их читают внимательнее прочего. Кегль
+   не переопределяется — его даёт общая мера 17 → 18 px из раздела 3,
+   и заводить здесь второй источник размера незачем. */
+body.single-services .rz-svc-intro__text p {
+	line-height: 1.65;
+}
+
+body.single-services .rz-svc-intro__text > * + * {
+	margin-block-start: 1.25rem;
+}
+
+/* --- Карточка первых действий --- */
+
+/* Песочная карточка на светлой секции: заливка --rz-bg на фоне
+   --rz-surface. Обратное сочетание — светлая карточка на песочном —
+   стоит в других секциях; здесь фон секции светлый, и карточка
+   обязана отличаться от него, иначе рамка останется единственным
+   признаком, что это предмет, а не отступ. */
+body.single-services .rz-svc-card--sand {
+	background-color: var(--rz-bg);
+	padding: 2rem;
+}
+
+/* Расстояние внутри карточки задаёт gap, а не поля потомков.
+   Полями не вышло: у списка шагов и у обёртки кнопки стоит
+   margin: 0 — им это нужно самим, — и правило margin-block-start
+   на потомков они съедали. Замер: между заголовком и списком
+   получалось 0 вместо 20 px. */
+body.single-services .rz-svc-intro__card {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+/* Селектор с .rz-svc-sec посередине не для красоты: общее правило
+   заголовка секции body.single-services .rz-svc-sec h2 весит (0,2,2)
+   и перебивало кегль карточки — замер давал 40 px вместо 26.
+   Здесь (0,3,1). */
+body.single-services .rz-svc-sec .rz-svc-card__title {
+	font-family: var(--wp--preset--font-family--pt-serif);
+	font-size: 1.625rem;
+	font-weight: 400;
+	line-height: 1.25;
+	margin-block: 0;
+}
+
+/* --- Нумерованные шаги --- */
+
+/* Номера рисуются счётчиком, а не собственным маркером списка.
+   Маркер ядра не покрасить и не обвести кругом, а текст номера
+   в разметке пришлось бы править руками при каждой перестановке
+   пункта. Счётчик пересчитывается сам: третий пункт получает «3»,
+   даже если его вставили вторым и потом передвинули. */
+body.single-services .rz-svc-steps {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	counter-reset: rz-step;
+}
+
+body.single-services .rz-svc-steps > li {
+	counter-increment: rz-step;
+	position: relative;
+	padding-left: 2.625rem;
+	margin: 0;
+	font-size: 1.0625rem;
+	line-height: 1.55;
+}
+
+body.single-services .rz-svc-steps > li + li {
+	margin-top: 1rem;
+}
+
+/* Круг 28 px против строки 17 px с межстрочным 1.55: середина первой
+   строки на 13.2 px от верха, центр круга — на 14. Разницу в 0.8 px
+   глаз не ловит, поэтому круг ставится от верха, а не центрируется
+   по первой строке вычислением. */
+body.single-services .rz-svc-steps > li::before {
+	content: counter(rz-step);
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	border-radius: 50%;
+	background-color: var(--rz-action);
+	color: var(--rz-surface);
+	font-family: var(--wp--preset--font-family--pt-sans);
+	font-size: 0.875rem;
+	font-weight: 700;
+	line-height: 1;
+}
+
+/* --- Кнопка звонка в карточке --- */
+body.single-services .rz-svc-card__call-wrap {
+	margin: 0;
+	width: 100%;
+}
+
+body.single-services .rz-svc-card__call {
+	width: 100%;
+}
+
+body.single-services .rz-svc-card__call .wp-block-button__link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.625rem;
+	width: 100%;
+	min-height: 3.5rem;
+	padding: 0 1.25rem;
+	font-family: var(--wp--preset--font-family--pt-sans);
+	font-size: 1.125rem;
+	font-weight: 700;
+	line-height: 1.2;
+	border-radius: var(--rz-radius-button);
+	background-color: var(--rz-action);
+	color: var(--rz-surface);
+	text-decoration: none;
+}
+
+/* Трубка та же, что у кнопки первого экрана. */
+body.single-services .rz-svc-card__call .wp-block-button__link::before {
+	content: "";
+	flex: none;
+	width: 1.25rem;
+	height: 1.25rem;
+	background-color: currentColor;
+	-webkit-mask-image: url("../icons/icon-zvonok-20.svg");
+	        mask-image: url("../icons/icon-zvonok-20.svg");
+	-webkit-mask-repeat: no-repeat;
+	        mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	        mask-position: center;
+	-webkit-mask-size: contain;
+	        mask-size: contain;
+}
+
+@media (max-width: 47.5rem) {
+	body.single-services .rz-svc-card--sand {
+		padding: 1.25rem;
+	}
+}
