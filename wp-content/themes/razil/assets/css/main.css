@@ -2614,9 +2614,17 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 	}
 }
 
-/* Информационная карточка §24: состав услуги и преимущества.
+/* УДАЛИТЬ ПОСЛЕ ПЕРЕНОСА (задача 13 прогона 24.09).
+
+   Информационная карточка §24: состав услуги и преимущества.
    Тени нет намеренно - §21.2 прямо требует структуру, а не эффект
-   парения. Этим она и отличается от карточки услуги. */
+   парения. Этим она и отличается от карточки услуги.
+
+   Замещена компонентом .rz-svc-stages__card: тот делит состав
+   на группы с заголовками, а этот держал один плоский список
+   из восьми-четырнадцати пунктов. Пока класс ещё стоит в разметке
+   страниц услуг — до задачи 12. Удалять только после grep
+   по templates, parts, patterns и post_content всех записей. */
 .rz-info-card {
 	display: flex;
 	flex-direction: column;
@@ -2663,9 +2671,17 @@ header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 	padding-bottom: 0;
 }
 
-/* Галерея работ §24, §21.3. Одна колонка на телефоне, две от 48rem,
+/* УДАЛИТЬ ПОСЛЕ ПЕРЕНОСА (задача 13 прогона 24.09).
+
+   Галерея работ §24, §21.3. Одна колонка на телефоне, две от 48rem,
    на широком экране первый кадр занимает две строки - результат
-   показывается крупнее остальных, как и требует §21.3. */
+   показывается крупнее остальных, как и требует §21.3.
+
+   Замещена компонентом .rz-svc-gallery: там три кадра одного
+   размера в ряд. Крупный первый кадр хорош, когда есть что
+   показывать крупно; на страницах услуг все три ячейки пока
+   заглушки, и увеличенная заглушка — это просто больше пустого
+   места. Пока класс ещё стоит в разметке — до задачи 12. */
 .rz-project-gallery {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
@@ -6008,5 +6024,242 @@ body.single-services .rz-svc-card__call .wp-block-button__link::before {
 @media (max-width: 47.5rem) {
 	body.single-services .rz-svc-card--sand {
 		padding: 1.25rem;
+	}
+}
+
+/* ------------------------------------------------------------------
+   6. ЧТО ВХОДИТ (razil/service-stages) И ТРИ ФОТО (razil/service-gallery)
+   ------------------------------------------------------------------ */
+
+/* Лид под заголовком. Мера строки ему достаётся от общего правила
+   раздела 3 — это прямой ребёнок контейнера секции. Здесь только
+   отбивка: 1rem до лида и 3rem от лида до сетки. */
+body.single-services .rz-svc-stages__lead {
+	margin-block: 1rem 0;
+}
+
+body.single-services .rz-svc-stages__grid {
+	margin-block: 3rem 0;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1rem;
+	counter-reset: rz-stage;
+}
+
+/* Две колонки с 48rem. Число карточек не закреплено: три, пять
+   и шесть ложатся в ту же сетку, последняя в нечётном ряду занимает
+   свою половину. Карточки одного ряда одной высоты — это поведение
+   сетки по умолчанию (align-items: stretch), отдельного правила
+   не нужно, и проверено оно замером. */
+@media (min-width: 48rem) {
+	body.single-services .rz-svc-stages__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.5rem;
+	}
+}
+
+/* Расстояние внутри карточки — gap, а не поля потомков: у списка
+   состава стоит margin: 0, и поля он бы съел (та же ловушка, что
+   в карточке вступления). */
+body.single-services .rz-svc-stages__card {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+/* --- Номер карточки --- */
+
+/* Круг рисуется на заголовке, а не отдельным элементом разметки:
+   номер — свойство порядка, а не содержания, и в тексте его быть
+   не должно. Счётчик увеличивается на H3, поэтому перестановка
+   карточек пересчитывает номера сама.
+
+   Цифра красится --rz-fact-text, а не --rz-fact: 15 px — обычный
+   кегль, и тёплый тон полной насыщенности на нём не проходит AA
+   (И21, решение 3 от 19.09). Обводка круга при этом --rz-fact:
+   она нетекстовая, для неё порог 3.0. */
+body.single-services .rz-svc-stages__card > h3 {
+	counter-increment: rz-stage;
+	position: relative;
+	padding-left: 3.125rem;
+	min-height: 2.25rem;
+	display: flex;
+	align-items: center;
+	margin-block: 0;
+}
+
+body.single-services .rz-svc-stages__card > h3::before {
+	content: counter(rz-stage);
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border: 1.5px solid var(--rz-fact);
+	border-radius: 50%;
+	font-family: var(--wp--preset--font-family--pt-sans);
+	font-size: 0.9375rem;
+	font-weight: 700;
+	line-height: 1;
+	color: var(--rz-fact-text);
+}
+
+/* Стиль блока «Без номеров» — на группе-сетке, а не на каждой
+   карточке: у раздела либо есть последовательность, либо нет,
+   и половинчатого случая не бывает. */
+body.single-services .rz-svc-stages__grid.is-style-no-numbers .rz-svc-stages__card > h3 {
+	padding-left: 0;
+	min-height: 0;
+}
+
+body.single-services .rz-svc-stages__grid.is-style-no-numbers .rz-svc-stages__card > h3::before {
+	content: none;
+}
+
+/* --- Список состава --- */
+body.single-services .rz-svc-stages__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+body.single-services .rz-svc-stages__list > li {
+	position: relative;
+	padding-left: 1.125rem;
+	margin: 0;
+	font-size: 1.0625rem;
+	line-height: 1.5;
+}
+
+body.single-services .rz-svc-stages__list > li + li {
+	margin-top: 0.75rem;
+}
+
+/* Точка по ПЕРВОЙ строке, а не по середине пункта: пункты бывают
+   в две и три строки, и маркер, съехавший к их центру, перестаёт
+   читаться как начало строки. 0.62em от верха — середина первой
+   строки при межстрочном 1.5. */
+body.single-services .rz-svc-stages__list > li::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0.62em;
+	width: 0.375rem;
+	height: 0.375rem;
+	border-radius: 50%;
+	background-color: var(--rz-fact);
+}
+
+/* --- Заметка --- */
+
+/* Заметка шире меры строки намеренно: это не бегущий текст, а плашка
+   во всю ширину сетки, и узкая рамка под широкой сеткой читалась бы
+   как обрывок. Общее правило раздела 3 сужает прямых детей
+   контейнера до 40rem — здесь оно снимается. */
+body.single-services .rz-svc-sec__inner > p.is-style-note {
+	max-width: none;
+	margin-block: 1.5rem 0;
+	padding: 1.375rem 2rem;
+	border: 1px solid var(--rz-line);
+	border-radius: var(--rz-radius-card);
+	font-size: 1.125rem;
+	line-height: 1.6;
+}
+
+@media (max-width: 47.5rem) {
+	body.single-services .rz-svc-sec__inner > p.is-style-note {
+		padding: 1.125rem 1.25rem;
+	}
+}
+
+/* --- Ряд из трёх снимков --- */
+body.single-services .rz-svc-gallery {
+	margin-block: 3rem 0;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1.5rem;
+	align-items: start;
+}
+
+/* Зазор в ряду задаёт gap. Поля потомков снимаются: раскладка
+   «поток» от ядра отбивает каждого следующего ребёнка на 1.5rem,
+   и в сетке это сдвигало вторую и третью ячейку вниз относительно
+   первой — замер дал 25 px расхождения по верхней кромке. */
+body.single-services .rz-svc-gallery > *,
+body.single-services .rz-svc-stages__grid > * {
+	margin-block: 0;
+}
+
+@media (min-width: 48rem) {
+	body.single-services .rz-svc-gallery {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	/* Два снимка вместо трёх — две колонки, а не три с дырой.
+	   Отбор по числу детей: :nth-child(2):last-child совпадает
+	   тогда и только тогда, когда детей ровно два. */
+	body.single-services .rz-svc-gallery:has(> :nth-child(2):last-child) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+/* Высота ячейки одна у снимка и у заглушки — 260 px. Это и есть
+   условие того, что подстановка настоящего кадра не двинет ряд.
+   aspect-ratio у заглушки снимается: у неё своя пропорция из
+   инлайнового --rz-slot-ratio, и с фиксированной высотой она
+   конфликтует.
+
+   Значение в ПИКСЕЛЯХ, а не в rem, и это единственное место раздела,
+   где так. Причина: rem растёт вместе с кеглем, и при 200 % текста
+   ряд из трёх кадров становился 520 px высотой вместо 260 —
+   фотография от увеличения шрифта понятнее не делается, а экран
+   съедает. Текст внутри заглушки при этом по-прежнему в rem
+   и растёт как положено; что он при этом не вылезает за рамку,
+   проверено check-slots.mjs при 200 % на пяти ширинах. */
+body.single-services .rz-svc-gallery .wp-block-image {
+	margin: 0;
+}
+
+body.single-services .rz-svc-gallery .wp-block-image img {
+	display: block;
+	width: 100%;
+	height: 260px;
+	object-fit: cover;
+	border-radius: var(--rz-radius-media);
+}
+
+/* У заглушки НЕ height, а min-height — и это не мелочь.
+
+   Жёсткая высота в 260 px при 200 % текста снова ломала подпись:
+   check-slots.mjs дал «подпись за рамкой на 5 px» на 768. Ровно этот
+   долг закрывали 23 сентября, и повторять его нельзя.
+
+   min-height оставляет рамке те же 260 px при обычном кегле —
+   ряд из заглушек и снимков стоит ровно, — но разрешает ей вырасти,
+   когда текст внутри перестал помещаться. У самого снимка высота
+   жёсткая: картинке расти незачем, ей нечего показывать крупнее. */
+body.single-services .rz-svc-gallery__slot {
+	min-height: 260px;
+	height: auto;
+	aspect-ratio: auto;
+}
+
+body.single-services .rz-svc-gallery figcaption {
+	margin-block: 0.75rem 0;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	color: var(--rz-fact-text);
+}
+
+@media (max-width: 47.5rem) {
+	body.single-services .rz-svc-gallery .wp-block-image img {
+		height: 220px;
+	}
+
+	body.single-services .rz-svc-gallery__slot {
+		min-height: 220px;
 	}
 }

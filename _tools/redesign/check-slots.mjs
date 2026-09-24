@@ -25,11 +25,18 @@
  * Запуск:
  *   node _tools/redesign/check-slots.mjs [--widths 375,768,1024,1366,1920]
  *        [--zoom 100] [--only svc-blagoustroystvo]
+ *        [--url /путь/] [--cookies <файл.json>]
+ *
+ * --url добавляет к обходу одну страницу сверх списка, --cookies даёт
+ * доступ к приватной. Понадобилось для тестовой записи, на которой
+ * обкатываются паттерны: заглушки нового ряда живут сначала там,
+ * и проверять их надо ТЕМ ЖЕ инструментом, что и настоящие.
  *
  * Возвращает ненулевой код, если хоть где-то подпись вылезла
  * за рамку или рамка вылезла за свою ячейку.
  */
 
+import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { createRequire } from 'node:module'
 
@@ -60,7 +67,14 @@ const PAGES = [
 const widths = arg('widths', '375,768,1024,1366,1920').split(',').map(Number)
 const zooms = arg('zoom', '100,200').split(',').map(Number)
 const only = arg('only', '')
-const pages = only ? PAGES.filter(([k]) => only.split(',').includes(k)) : PAGES
+const extra = arg('url', '')
+const cookiesFile = arg('cookies', '')
+const cookies = cookiesFile ? JSON.parse(readFileSync(cookiesFile, 'utf8')) : null
+
+let pages = only ? PAGES.filter(([k]) => only.split(',').includes(k)) : PAGES
+if (extra) {
+  pages = [['доп', extra]]
+}
 
 const browser = await chromium.launch({ channel: 'chrome', headless: true })
 let failed = 0
@@ -70,6 +84,9 @@ for (const [key, url] of pages) {
   for (const width of widths) {
     for (const zoom of zooms) {
       const ctx = await browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: 1 })
+      if (cookies) {
+        await ctx.addCookies(cookies)
+      }
       const page = await ctx.newPage()
       await page.goto('http://ra-zil.test' + url, { waitUntil: 'networkidle', timeout: 45000 })
       if (zoom !== 100) {
