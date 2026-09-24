@@ -1,30 +1,59 @@
 <!-- wp:template-part {"slug":"header","theme":"razil"} /-->
 
-<!-- wp:group {"style":{"color":{"background":"var(\u002d\u002drz-bg)"},"spacing":{"padding":{"top":"3rem","right":"1rem","bottom":"3rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group has-background" style="background-color:var(--rz-bg);padding-top:3rem;padding-right:1rem;padding-bottom:3rem;padding-left:1rem">
-	<!-- wp:group {"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group">
-		<!-- Размер задан в main.css: .single-services .wp-block-post-title.
-		     fontSize здесь намеренно не указан — класс пресета
-		     has-heading-l-font-size выводится с !important и перебивает
-		     любое авторское правило. Не выставляйте размер в редакторе. -->
+<!-- ОБОЛОЧКА СТРАНИЦЫ УСЛУГИ.
+
+     Раскладка «поток», а не «ограниченная», и БЕЗ боковых полей —
+     это и есть условие того, чтобы секция с align: full легла от края
+     до края окна. Раньше здесь стояла ограниченная группа с инлайновым
+     padding-inline: 1rem, и полноширинность приходилось подделывать
+     тенью в 100vmax: заливка растягивалась, а сама коробка секции
+     оставалась в контейнере, и фотография до края окна не доходила.
+
+     Боковые поля теперь у каждого потомка свои, задаются в main.css
+     разделом «Страницы услуг — редизайн 2026-09». Там же полноширинные
+     секции вытягиваются обратно на эти поля.
+
+     Боковые нули заданы ЯВНО и не лишние: правило
+     .wp-block-group.has-background в main.css:274 даёт группе с заливкой
+     padding: 2rem со всех сторон. Без нулей оболочка съедала бы по 2rem
+     с каждого края, и полноширинная секция на 375 px не доходила бы
+     до края окна на 32 px — замерено.
+
+     Верхнее поле у оболочки не задано намеренно: его держит .rz-svc-head,
+     и в задаче 13, когда заголовок с отрывком уйдут из шаблона, первый
+     экран встанет вплотную к крошкам без правки этого блока. -->
+<!-- wp:group {"className":"rz-svc-shell","style":{"color":{"background":"var(\u002d\u002drz-bg)"},"spacing":{"padding":{"top":"0","right":"0","bottom":"3rem","left":"0"}}},"layout":{"type":"default"}} -->
+<div class="wp-block-group rz-svc-shell has-background" style="background-color:var(--rz-bg);padding-top:0;padding-right:0;padding-bottom:3rem;padding-left:0">
+	<!-- Заголовок и отрывок. Оба уходят в задаче 13 вместе с этой
+	     группой: их печатает паттерн первого экрана. До тех пор
+	     на странице два H1 — это ожидаемо и записано в отчёте.
+
+	     Размер задан в main.css: body.single-services .wp-block-post-title.
+	     fontSize здесь намеренно не указан — класс пресета
+	     has-heading-l-font-size выводится с !important и перебивает
+	     любое авторское правило. Не выставляйте размер в редакторе. -->
+	<!-- wp:group {"className":"rz-svc-head","style":{"spacing":{"padding":{"top":"3rem"}}},"layout":{"type":"constrained"}} -->
+	<div class="wp-block-group rz-svc-head" style="padding-top:3rem">
 		<!-- wp:post-title {"level":1} /-->
 
 		<!-- wp:post-excerpt {"fontSize":"lead"} /-->
+	</div>
+	<!-- /wp:group -->
 
-		<!-- wp:post-content /-->
+	<!-- Раскладка «ограниченная» у самого содержимого, а не у обёртки.
+	     Только так потомок с align: full получает от ядра max-width: none,
+	     а обычный блок — ширину контейнера 72.5rem по центру. -->
+	<!-- wp:post-content {"layout":{"type":"constrained"}} /-->
 
-		<!-- wp:group {"className":"rz-callback","layout":{"type":"constrained"}} -->
-		<div class="wp-block-group rz-callback">
-			<!-- wp:paragraph {"className":"rz-callback__lead"} -->
-			<p class="rz-callback__lead">Остались вопросы — оставьте заявку, и специалист перезвонит сам.</p>
-			<!-- /wp:paragraph -->
+	<!-- wp:group {"className":"rz-callback","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group rz-callback">
+		<!-- wp:paragraph {"className":"rz-callback__lead"} -->
+		<p class="rz-callback__lead">Остались вопросы — оставьте заявку, и специалист перезвонит сам.</p>
+		<!-- /wp:paragraph -->
 
-			<!-- wp:shortcode -->
-			[razil_callback_button]
-			<!-- /wp:shortcode -->
-		</div>
-		<!-- /wp:group -->
+		<!-- wp:shortcode -->
+		[razil_callback_button]
+		<!-- /wp:shortcode -->
 	</div>
 	<!-- /wp:group -->
 </div>

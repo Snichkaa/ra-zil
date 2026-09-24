@@ -148,3 +148,66 @@ blockquote {
 	height: auto;
 	border-radius: var(--rz-radius-media);
 }
+
+/* === СТРАНИЦЫ УСЛУГ — РЕДИЗАЙН 2026-09 ===
+
+   Повторяется только то, что видно прямо в холсте редактора:
+   кегли, мера строки, карточка. Полноширинность и чередование фона
+   сюда не переносятся — холст рисует содержимое без шаблона, и там
+   нет ни окна во всю ширину, ни соседних секций.
+
+   Отбор по классу .rz-svc-sec, а не по body.single-services:
+   у холста редактора класса типа записи нет вовсе, а этот класс
+   встречается только в содержимом страниц услуг. Значит правила
+   не заденут другие типы записей. */
+
+.rz-svc-sec__inner {
+	max-width: 72.5rem;
+	margin-inline: auto;
+}
+
+.rz-svc-sec h2 {
+	font-size: clamp(1.75rem, 1.4714rem + 1.1429vw, 2.5rem);
+	line-height: 1.2;
+}
+
+.rz-svc-sec h3 {
+	font-size: clamp(1.375rem, 1.3286rem + 0.1905vw, 1.5rem);
+	line-height: 1.3;
+}
+
+.rz-svc-sec p,
+.rz-svc-sec li {
+	font-size: clamp(1.0625rem, 1.0393rem + 0.0952vw, 1.125rem);
+	line-height: 1.6;
+}
+
+.rz-svc-lead {
+	font-size: clamp(1.0625rem, 0.9929rem + 0.2857vw, 1.25rem);
+	line-height: 1.55;
+}
+
+/* Мера строки — та же 40rem и только у прямых детей контейнера.
+   В редакторе она нужна не меньше, чем во фронте: иначе редактор
+   показывает строку во всю ширину холста, и правка текста идёт
+   вслепую относительно того, как он ляжет на странице. */
+.rz-svc-sec__inner > p,
+.rz-svc-sec__inner > ul,
+.rz-svc-sec__inner > ol {
+	max-width: 40rem;
+}
+
+.rz-svc-sec figcaption,
+.rz-svc-sec .wp-element-caption,
+.rz-svc-caption {
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	color: var(--rz-fact-text);
+}
+
+.rz-svc-card {
+	background-color: var(--rz-surface);
+	border: 1px solid var(--rz-line);
+	border-radius: var(--rz-radius-card);
+	padding: 1.75rem;
+}
