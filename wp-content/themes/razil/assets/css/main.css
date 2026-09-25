@@ -1048,6 +1048,7 @@ input[type="reset"],
 .rz-header__nav a,
 .rz-header__phone a,
 .rz-cta__phone a,
+.rz-callback__phone a,
 .rz-form__consent a,
 .rz-reviews__link a,
 .rz-footer__col a,
@@ -1099,6 +1100,7 @@ input[type="reset"],
 .rz-header__nav a::after,
 .rz-header__phone a::after,
 .rz-cta__phone a::after,
+.rz-callback__phone a::after,
 .rz-form__consent a::after,
 .rz-reviews__link a::after,
 .rz-footer__col a::after,
@@ -5269,8 +5271,7 @@ html:has(.rz-menu:not([hidden])) {
    его значило бы добавить поля всем страницам сайта разом. */
 
 body.single-services .rz-svc-head,
-body.single-services .entry-content,
-body.single-services .rz-callback {
+body.single-services .entry-content {
 	padding-inline: 1rem;
 }
 
@@ -6958,4 +6959,177 @@ body.single-services .rz-svc-faq__list > .wp-block-details > p {
 		font-size: 1.125rem;
 		padding-block: 1.125rem;
 	}
+}
+
+/* ------------------------------------------------------------------
+   11. ФИНАЛЬНЫЙ БЛОК ЗАЯВКИ
+   ------------------------------------------------------------------ */
+
+/* Полоса во всю ширину окна, вплотную к подвалу. Блок вынесен
+   из оболочки в шаблоне, поэтому боковые поля у него свои.
+
+   Цвета взяты из --rz-cta-bg / --rz-cta-fg, а не из --rz-action /
+   --rz-surface, как буквально просит спецификация. В СВЕТЛОЙ теме
+   это ровно те же цвета: #233D31 и #FBFAF6 — вид совпадает
+   до байта. Разница только в тёмной: --rz-action там становится
+   светло-зелёным, и полоса внизу тёмной страницы вспыхнула бы
+   ярким прямоугольником. Токены --rz-cta-* заведены 19 сентября
+   именно затем, чтобы призыв не переворачивался; в tokens.css
+   рядом с ними так и написано: «Призыв не инвертируется никогда».
+   Отступление от буквы спецификации ради её же замысла. */
+body.single-services .rz-callback {
+	margin: 0;
+	padding-block: 5rem;
+	padding-inline: 1rem;
+	background-color: var(--rz-cta-bg);
+	color: var(--rz-cta-fg);
+	/* Линия над текстом убрана: полоса сама себе граница. */
+	border-top: 0;
+}
+
+body.single-services .rz-callback__inner {
+	max-width: 72.5rem;
+	margin-inline: auto;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1.75rem;
+	align-items: center;
+}
+
+@media (min-width: 48rem) {
+	body.single-services .rz-callback__inner {
+		grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+		gap: 4rem;
+	}
+}
+
+body.single-services .rz-callback__lead {
+	margin: 0;
+	max-width: none;
+	font-family: var(--wp--preset--font-family--pt-serif);
+	font-size: 2.125rem;
+	font-weight: 400;
+	line-height: 1.25;
+	color: var(--rz-cta-fg);
+}
+
+body.single-services .rz-callback__contact {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	/* min-width: 0 и max-width: 100% — та же семья, что minmax(0, …)
+	   у сеток (раздел 3.35). Без них колонка не сжимается ниже
+	   min-content, и при 200 % кегля номер в 64 px распирал полосу. */
+	min-width: 0;
+	max-width: 100%;
+}
+
+/* Каждый ребёнок колонки тоже обязан уметь сжиматься. Кнопку
+   шорткода WordPress заворачивает в свой <p> (wpautop), и это
+   именно он упирался в min-content: max-width у самой кнопки
+   не помогал, потому что ограничивала обёртка. */
+body.single-services .rz-callback__contact > * {
+	min-width: 0;
+	max-width: 100%;
+}
+
+body.single-services .rz-callback__phone {
+	margin: 0;
+}
+
+body.single-services .rz-callback__phone a {
+	display: inline-block;
+	max-width: 100%;
+	/* Номер переносится, если иначе не помещается. Это то же решение
+	   18 отчёта от 19.09: неразрывный номер шире окна уводит вбок
+	   всю страницу, и разорванный номер — меньшее зло. */
+	overflow-wrap: anywhere;
+	font-size: 2rem;
+	font-weight: 700;
+	line-height: 1.2;
+	color: var(--rz-cta-fg);
+	text-decoration: none;
+}
+
+/* Подпись под номером. Прозрачность 80 % — как просит спецификация,
+   но проверена, а не принята на веру: #FBFAF6 при 0.8 над #233D31
+   даёт #D0D4CF, контраст 7.85:1 при пороге 4.5. Считано, число
+   в отчёте. */
+body.single-services .rz-callback__hours {
+	margin: 0.25rem 0 0;
+	max-width: none;
+	font-size: 1rem;
+	line-height: 1.4;
+	color: color-mix(in srgb, var(--rz-cta-fg) 80%, transparent);
+}
+
+/* Кнопка в инверсии: светлая на тёмном. Модификатором, а не правкой
+   общей кнопки — на других страницах она остаётся прежней. */
+body.single-services .rz-callback__button {
+	margin-top: 1.25rem;
+	/* Кнопка не шире своей колонки. Подпись при нужде переносится
+	   в две строки: при 200 % кегля «Перезвоните мне» с полями 2rem
+	   требовала 332 px в колонке 292 — замер давал прокрутку
+	   на всех пяти страницах услуг. */
+	max-width: 100%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 3.5rem;
+	padding: 0 2rem;
+	font-family: var(--wp--preset--font-family--pt-sans);
+	font-size: 1.125rem;
+	font-weight: 700;
+	line-height: 1.2;
+	border: 0;
+	border-radius: var(--rz-radius-button);
+	background-color: var(--rz-cta-fg);
+	color: var(--rz-cta-bg);
+	cursor: pointer;
+	transition: background-color 160ms ease, color 160ms ease;
+}
+
+body.single-services .rz-callback__button:hover {
+	background-color: color-mix(in srgb, var(--rz-cta-fg) 88%, var(--rz-cta-bg));
+	color: var(--rz-cta-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.single-services .rz-callback__button {
+		transition: none;
+	}
+}
+
+/* Фокус на тёмном фоне — светлая рамка. Обычная --rz-action-focus
+   (тёплый коричневый) на тёмно-зелёном даёт 2.1:1 и теряется. */
+body.single-services .rz-callback a:focus-visible,
+body.single-services .rz-callback button:focus-visible {
+	outline: 2px solid var(--rz-cta-fg);
+	outline-offset: 3px;
+}
+
+@media (max-width: 47.5rem) {
+	body.single-services .rz-callback {
+		padding-block: 3.5rem;
+	}
+
+	body.single-services .rz-callback__lead {
+		font-size: 1.625rem;
+	}
+}
+
+/* --- Висящая кнопка молчит, пока призыв в кадре ---
+
+   Правило стоит ПОСЛЕ .rz-sticky-call.is-visible намеренно: вес
+   у обоих (0,2,0), и при равном весе решает порядок. Класс ставит
+   header.js по пересечению с .rz-cta и .rz-callback.
+
+   pointer-events: none обязателен отдельно от visibility: пока идёт
+   переход, элемент ещё виден для событий, и палец мог бы попасть
+   в исчезающую кнопку вместо кнопки заявки под ней. */
+.rz-sticky-call.is-hushed {
+	transform: scale(0.8);
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
 }

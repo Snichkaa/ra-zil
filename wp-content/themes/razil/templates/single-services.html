@@ -22,8 +22,8 @@
      Верхнее поле у оболочки не задано намеренно: его держит .rz-svc-head,
      и в задаче 13, когда заголовок с отрывком уйдут из шаблона, первый
      экран встанет вплотную к крошкам без правки этого блока. -->
-<!-- wp:group {"className":"rz-svc-shell","style":{"color":{"background":"var(\u002d\u002drz-bg)"},"spacing":{"padding":{"top":"0","right":"0","bottom":"3rem","left":"0"}}},"layout":{"type":"default"}} -->
-<div class="wp-block-group rz-svc-shell has-background" style="background-color:var(--rz-bg);padding-top:0;padding-right:0;padding-bottom:3rem;padding-left:0">
+<!-- wp:group {"className":"rz-svc-shell","style":{"color":{"background":"var(\u002d\u002drz-bg)"},"spacing":{"padding":{"top":"0","right":"0","bottom":"0","left":"0"}}},"layout":{"type":"default"}} -->
+<div class="wp-block-group rz-svc-shell has-background" style="background-color:var(--rz-bg);padding-top:0;padding-right:0;padding-bottom:0;padding-left:0">
 	<!-- Заголовок и отрывок. Оба уходят в задаче 13 вместе с этой
 	     группой: их печатает паттерн первого экрана. До тех пор
 	     на странице два H1 — это ожидаемо и записано в отчёте.
@@ -51,15 +51,45 @@
 	     а обычный блок — ширину контейнера 72.5rem по центру. -->
 	<!-- wp:post-content {"layout":{"type":"constrained"}} /-->
 
-	<!-- wp:group {"className":"rz-callback","layout":{"type":"constrained"}} -->
-	<div class="wp-block-group rz-callback">
+</div>
+<!-- /wp:group -->
+
+<!-- ФИНАЛЬНЫЙ БЛОК ЗАЯВКИ.
+
+     Стоит СНАРУЖИ оболочки, прямым ребёнком .wp-site-blocks, и это
+     не перестановка ради порядка: только так полоса доходит до края
+     окна и смыкается с подвалом без шва. Внутри оболочки у неё были бы
+     боковые поля оболочки, а снизу — её нижний отступ.
+
+     Фраза оставлена дословно той, что стояла здесь до правки.
+
+     Номер — резервное написание, как в шапке: подменяется буфером
+     вывода из «Настройки → Организация». Ссылка НЕ внутри
+     .wp-block-button намеренно — окно подтверждения звонка положено
+     кнопке, а номер текстом на компьютере звонит сам (header.js:216). -->
+<!-- wp:group {"className":"rz-callback","layout":{"type":"default"}} -->
+<div class="wp-block-group rz-callback">
+	<!-- wp:group {"className":"rz-callback__inner","layout":{"type":"default"}} -->
+	<div class="wp-block-group rz-callback__inner">
 		<!-- wp:paragraph {"className":"rz-callback__lead"} -->
 		<p class="rz-callback__lead">Остались вопросы — оставьте заявку, и специалист перезвонит сам.</p>
 		<!-- /wp:paragraph -->
 
-		<!-- wp:shortcode -->
-		[razil_callback_button]
-		<!-- /wp:shortcode -->
+		<!-- wp:group {"className":"rz-callback__contact","layout":{"type":"default"}} -->
+		<div class="wp-block-group rz-callback__contact">
+			<!-- wp:paragraph {"className":"rz-callback__phone"} -->
+			<p class="rz-callback__phone"><a href="tel:+74212605290">+7 (4212) 60-52-90</a></p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph {"className":"rz-callback__hours"} -->
+			<p class="rz-callback__hours">Круглосуточно, без выходных</p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:shortcode -->
+			[razil_callback_button class="rz-callback__button"]
+			<!-- /wp:shortcode -->
+		</div>
+		<!-- /wp:group -->
 	</div>
 	<!-- /wp:group -->
 </div>
