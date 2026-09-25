@@ -6263,3 +6263,173 @@ body.single-services .rz-svc-gallery figcaption {
 		min-height: 220px;
 	}
 }
+
+/* ------------------------------------------------------------------
+   7. СРОКИ (паттерн razil/service-timeline)
+   ------------------------------------------------------------------ */
+
+/* Шкала — список, и остаётся списком для экранного диктора.
+   list-style: none снимает только маркеры; роль списка у ul/li
+   от этого не пропадает ни в одном из браузеров, кроме Safari,
+   где VoiceOver теряет её при снятых маркерах. Там остаётся
+   перечисление «Значение — пояснение», то есть тот же смысл
+   без объявленного числа пунктов. Ради него ставить role="list"
+   руками нельзя: произвольный атрибут делает блок ядра невалидным
+   в редакторе (ровно так сломан аккордеон, см. П-5). */
+body.single-services .rz-svc-sec__inner > ul.rz-svc-timeline__list {
+	/* Шире меры строки намеренно: шкала — сетка точек, а не бегущий
+	   текст. Общее правило раздела 3 сужает прямые списки контейнера
+	   до 40rem, и без этой строки четыре точки ложились в 640 px
+	   при контейнере 1160 — замер дал колонки по 142 px. */
+	max-width: none;
+}
+
+body.single-services .rz-svc-timeline__list {
+	margin-block: 3rem 0;
+	padding: 0;
+	list-style: none;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1.5rem;
+}
+
+body.single-services .rz-svc-timeline__list > li {
+	position: relative;
+	margin: 0;
+}
+
+/* Значение и пояснение — строчные элементы внутри пункта, показанные
+   блоками. В разметке они span, потому что пункт списка ядра держит
+   только строчное содержимое: абзац внутрь li не вложить, не заведя
+   блок, которого у ядра нет. */
+body.single-services .rz-svc-timeline__term {
+	display: block;
+	font-family: var(--wp--preset--font-family--pt-serif);
+	font-size: 1.875rem;
+	font-weight: 400;
+	line-height: 1.2;
+	color: var(--rz-ink);
+}
+
+body.single-services .rz-svc-timeline__exp {
+	display: block;
+	margin-top: 0.625rem;
+	font-size: 1.0625rem;
+	line-height: 1.5;
+	color: var(--rz-ink);
+}
+
+/* --- Круг и линия --- */
+
+/* Круг рисуется всегда, линия — у всех, кроме последней точки.
+   Линия идёт от круга вправо и ПЕРЕКРЫВАЕТ зазор сетки
+   (right: -1.5rem), поэтому доходит ровно до круга следующей точки.
+
+   Так число точек ни на что не влияет. Прежний компонент .rz-timeline
+   рисовал одну линию на всю шкалу с right: calc(25% - 2.375rem) —
+   арифметика, верная ровно для четырёх пунктов и ни для какого
+   другого числа. */
+body.single-services .rz-svc-timeline__list > li::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 0.75rem;
+	height: 0.75rem;
+	border-radius: 50%;
+	background-color: var(--rz-action);
+}
+
+body.single-services .rz-svc-timeline__list > li.is-style-delay::before {
+	background-color: var(--rz-fact);
+}
+
+/* Телефон: шкала вертикальная. Круг слева, линия вниз, текст справа
+   с отступом 1.5rem. */
+body.single-services .rz-svc-timeline__list > li {
+	padding-left: 1.5rem;
+}
+
+body.single-services .rz-svc-timeline__list > li::before {
+	top: 0.45em;
+}
+
+body.single-services .rz-svc-timeline__list > li::after {
+	content: "";
+	position: absolute;
+	left: 0.3125rem;
+	top: 1.45em;
+	bottom: -1.5rem;
+	width: 2px;
+	background-color: var(--rz-line);
+}
+
+body.single-services .rz-svc-timeline__list > li:last-child::after {
+	content: none;
+}
+
+body.single-services .rz-svc-timeline__term {
+	font-size: 1.5rem;
+}
+
+/* 48–64rem: две колонки, линии между рядами нет. Линия рисуется
+   только у нечётных пунктов — тех, что стоят слева в своём ряду. */
+@media (min-width: 48rem) {
+	body.single-services .rz-svc-timeline__list {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	body.single-services .rz-svc-timeline__list > li {
+		padding-left: 0;
+		padding-top: 2rem;
+	}
+
+	body.single-services .rz-svc-timeline__term {
+		font-size: 1.875rem;
+	}
+
+	body.single-services .rz-svc-timeline__list > li::before {
+		top: 0;
+	}
+
+	body.single-services .rz-svc-timeline__list > li::after {
+		left: 0.75rem;
+		right: -1.5rem;
+		top: 0.3125rem;
+		bottom: auto;
+		width: auto;
+		height: 2px;
+	}
+
+	body.single-services .rz-svc-timeline__list > li:nth-child(even)::after {
+		content: none;
+	}
+}
+
+/* С 64rem — сколько точек, столько колонок. grid-auto-flow: column
+   создаёт колонку на каждый пункт, поэтому три точки дают три
+   колонки, а четыре — четыре, без правил на каждое число. */
+@media (min-width: 64rem) {
+	body.single-services .rz-svc-timeline__list {
+		grid-template-columns: none;
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(0, 1fr);
+	}
+
+	body.single-services .rz-svc-timeline__list > li:nth-child(even)::after {
+		content: "";
+	}
+
+	body.single-services .rz-svc-timeline__list > li:last-child::after {
+		content: none;
+	}
+}
+
+/* Примечание под шкалой. Мера строки приходит от общего правила
+   раздела 3 — это прямой ребёнок контейнера секции. */
+body.single-services .rz-svc-timeline__note {
+	margin-block: 2.5rem 0;
+	font-size: 1.0625rem;
+	line-height: 1.6;
+	color: var(--rz-ink-soft);
+}

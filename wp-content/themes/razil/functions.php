@@ -113,6 +113,19 @@ function razil_register_block_styles() {
 			'label' => 'Заметка',
 		)
 	);
+
+	/*
+	 * Отклонение на шкале сроков. Стиль пункта списка, а не всей
+	 * шкалы: отклоняется одна точка из четырёх, остальные —
+	 * обычные шаги.
+	 */
+	register_block_style(
+		'core/list-item',
+		array(
+			'name'  => 'delay',
+			'label' => 'Отклонение',
+		)
+	);
 }
 add_action( 'init', 'razil_register_block_styles' );
 
