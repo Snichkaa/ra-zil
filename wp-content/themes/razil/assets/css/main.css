@@ -6921,6 +6921,17 @@ body.single-services .rz-svc-faq__list > .wp-block-details:first-child {
    при кегле 20 px вопрос в две строки подходил к стрелке вплотную. */
 body.single-services .rz-svc-faq__list > .wp-block-details > summary {
 	gap: 1.5rem;
+	/* Длинное слово в вопросе разрывается, если иначе не помещается.
+	   Текст вопроса — анонимный флекс-элемент, и его минимальная
+	   ширина равна самому длинному слову; при 200 % кегля
+	   «благоустройство» в 36 px не влезало в 254 px, доступные
+	   на 320 px, и страница получала горизонтальную прокрутку.
+	   Замер: 385 px при окне 320.
+
+	   anywhere, а не break-word: только anywhere уменьшает
+	   min-content, а break-word переносит уже после того,
+	   как ширина посчитана, и на раскладку не влияет. */
+	overflow-wrap: anywhere;
 	padding-block: 1.5rem;
 	font-family: var(--wp--preset--font-family--pt-sans);
 	font-size: 1.25rem;
