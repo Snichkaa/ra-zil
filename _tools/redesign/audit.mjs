@@ -19,6 +19,7 @@
  * Запуск:
  *   node _tools/redesign/audit.mjs --out <файл.json>
  *        [--widths 375,768,1024,1366,1920] [--zoom 200] [--only slug,...]
+ *        [--dark]
  */
 
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -75,6 +76,9 @@ if (!out) {
 const widths = arg('widths', '375,768,1024,1366,1920').split(',').map(Number)
 const zoom = Number(arg('zoom', '100'))
 const only = arg('only', '')
+// Тёмная тема на сайте включается медиавыражением, поэтому
+// эмулируется схемой цвета контекста, а не классом на теле.
+const dark = process.argv.includes('--dark')
 const pages = only ? PAGES.filter(([k]) => only.split(',').includes(k)) : PAGES
 
 /** Всё, что собирается внутри страницы. */
@@ -299,7 +303,11 @@ const report = []
 
 for (const [key, url] of pages) {
   for (const width of widths) {
-    const ctx = await browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: 1 })
+    const ctx = await browser.newContext({
+      viewport: { width, height: 900 },
+      deviceScaleFactor: 1,
+      colorScheme: dark ? 'dark' : 'light',
+    })
     const tab = await ctx.newPage()
     const consoleErrors = []
     const pageErrors = []
