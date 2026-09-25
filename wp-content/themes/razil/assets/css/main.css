@@ -5464,6 +5464,26 @@ body.single-services .rz-svc-sec h2 {
 }
 
 /* ------------------------------------------------------------------
+   3.35 ПОЧЕМУ ВСЕ ДОРОЖКИ СЕТОК ОБЁРНУТЫ В minmax(0, …)
+   ------------------------------------------------------------------
+
+   У дорожки `1fr` минимум равен min-content, а не нулю. Пока текста
+   немного, это незаметно; при 200 % кегля самое длинное слово
+   в колонке перестаёт помещаться в свою долю, дорожка отказывается
+   сжиматься, и сетка распирает контейнер.
+
+   Замер на тестовой записи, 768 px при 200 %: у блока документов
+   колонки 294.7 и 465.8 при зазоре 128 — сумма 888.6 при доступных
+   736, и правый край карточки уезжал на 856 при окне 768.
+
+   То же самое тема уже знает про таблицу цен — комментарий
+   в main.css:1717, — но правило общее и относится ко всем сеткам
+   этого раздела: первый экран, вступление, документы, стоимость.
+
+   minmax(0, Nfr) снимает минимум, и колонка сжимается до нуля,
+   а слово переносится или обрезается по своим правилам. */
+
+/* ------------------------------------------------------------------
    3.4 КАРТОЧКА
    ------------------------------------------------------------------
 
@@ -5556,7 +5576,7 @@ body.single-services .rz-svc-hero__grid {
    места, чем строке карточки. */
 @media (min-width: 48rem) {
 	body.single-services .rz-svc-hero__grid {
-		grid-template-columns: 1.12fr 1fr;
+		grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
 		gap: 4rem;
 	}
 }
@@ -5852,7 +5872,7 @@ body.single-services .rz-svc-intro__grid {
 
 @media (min-width: 48rem) {
 	body.single-services .rz-svc-intro__grid {
-		grid-template-columns: 1.4fr 1fr;
+		grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
 		gap: 4rem;
 	}
 
@@ -6078,13 +6098,28 @@ body.single-services .rz-svc-stages__card {
    кегль, и тёплый тон полной насыщенности на нём не проходит AA
    (И21, решение 3 от 19.09). Обводка круга при этом --rz-fact:
    она нетекстовая, для неё порог 3.0. */
+/* Сетка, а не флекс, и это не вкусовщина.
+
+   Заголовку нужно стоять по центру круга 36 px, то есть выравниваться
+   по вертикали внутри min-height. У флекса для этого есть align-items,
+   но у флекс-элемента минимальная ширина равна min-content, и анонимный
+   текстовый элемент отказывается сжиматься ниже самого длинного слова.
+   При 200 % кегля на 375 px «Четвёртая» переставала помещаться в свою
+   колонку, заголовок распирал карточку, и страница получала
+   горизонтальную прокрутку в 7 px.
+
+   Сетка с дорожкой minmax(0, 1fr) снимает этот минимум — то же
+   средство, что у сеток секций (раздел 3.35). align-content
+   центрирует ряд внутри min-height ровно так же, как align-items
+   во флексе. */
 body.single-services .rz-svc-stages__card > h3 {
 	counter-increment: rz-stage;
 	position: relative;
 	padding-left: 3.125rem;
 	min-height: 2.25rem;
-	display: flex;
-	align-items: center;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	align-content: center;
 	margin-block: 0;
 }
 
@@ -6452,7 +6487,7 @@ body.single-services .rz-svc-docs__grid {
    в две строки; замер по обеим ширинам — в отчёте. */
 @media (min-width: 48rem) {
 	body.single-services .rz-svc-docs__grid {
-		grid-template-columns: 5fr 7fr;
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
 		gap: 4rem;
 	}
 }
@@ -6559,4 +6594,294 @@ body.single-services .rz-svc-docs__group > ul.is-style-extra > li::before {
 body.single-services .rz-svc-docs__group > ul.is-style-extra > li strong {
 	font-weight: 700;
 	color: var(--rz-ink);
+}
+
+/* ------------------------------------------------------------------
+   9. СТОИМОСТЬ (razil/service-packages, razil/service-pricelist)
+   ------------------------------------------------------------------ */
+
+/* Шапка раздела: заголовок с пояснением слева, плашка-оговорка справа.
+   Выравнивание по НИЗУ, а не по верху: плашка короткая, заголовок
+   высокий, и по верху плашка висела бы в воздухе. */
+body.single-services .rz-svc-price__head {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1.5rem;
+	align-items: end;
+}
+
+@media (min-width: 48rem) {
+	body.single-services .rz-svc-price__head {
+		grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+		gap: 4rem;
+	}
+}
+
+body.single-services .rz-svc-price__text > h2 {
+	margin-block: 0;
+}
+
+body.single-services .rz-svc-price__text > * + * {
+	margin-block-start: 1rem;
+}
+
+/* Плашка. Ряд без неё не ломается: сетка с одним ребёнком отдаёт ему
+   первую колонку, а вторая просто остаётся пустой — это поле, а не
+   дыра, потому что заголовок и так не шире своей колонки. */
+body.single-services .rz-svc-price__head > p.is-style-panel {
+	margin-block: 0;
+	max-width: none;
+	padding: 1.5rem 1.75rem;
+	background-color: var(--rz-bg);
+	border-radius: var(--rz-radius-card);
+	font-size: 1.0625rem;
+	line-height: 1.55;
+}
+
+/* --- Комплексы --- */
+body.single-services .rz-svc-price__cards {
+	margin-block: 3rem 0;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1.5rem;
+}
+
+body.single-services .rz-svc-price__cards > * {
+	margin-block: 0;
+}
+
+@media (min-width: 48rem) {
+	body.single-services .rz-svc-price__cards {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 64rem) {
+	body.single-services .rz-svc-price__cards {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}
+
+body.single-services .rz-svc-pack {
+	display: flex;
+	flex-direction: column;
+}
+
+/* Две строки высоты у названия — ради того, чтобы цены в ряду стояли
+   на одной линии. min-height, а не height: название в три слова
+   вырастет и утянет за собой соседей по ряду, и это правильнее,
+   чем обрезать его. */
+body.single-services .rz-svc-sec .rz-svc-pack__name {
+	margin-block: 0;
+	font-family: var(--wp--preset--font-family--pt-serif);
+	font-size: 1.375rem;
+	font-weight: 400;
+	line-height: 1.3;
+	min-height: 2.6em;
+}
+
+body.single-services .rz-svc-pack__price {
+	margin-block: 0.75rem 0;
+	font-size: 1.625rem;
+	font-weight: 700;
+	line-height: 1.2;
+	color: var(--rz-action);
+}
+
+/* Линия между ценой и составом — единственная черта в карточке.
+   Она отделяет «сколько» от «что за это», и без неё список
+   читался бы продолжением цены. */
+body.single-services .rz-svc-pack__list {
+	list-style: none;
+	margin: 1.25rem 0 0;
+	padding: 1.25rem 0 0;
+	border-top: 1px solid var(--rz-line);
+	max-width: none;
+}
+
+body.single-services .rz-svc-pack__list > li {
+	position: relative;
+	margin: 0;
+	padding-left: 1.125rem;
+	font-size: 1rem;
+	line-height: 1.5;
+	color: var(--rz-ink-soft);
+}
+
+body.single-services .rz-svc-pack__list > li + li {
+	margin-top: 0.5rem;
+}
+
+body.single-services .rz-svc-pack__list > li::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0.62em;
+	width: 0.375rem;
+	height: 0.375rem;
+	border-radius: 50%;
+	background-color: var(--rz-fact);
+}
+
+/* --- Прайс --- */
+
+/* Стиль перебивает общий вид таблиц темы (строки-карточки со своим
+   фоном и радиусом). Общий вид не трогается: таблицы встречаются
+   и вне услуг, и переверстать их все разом задание не поручало.
+   Проверено поиском по базе: wp:table сейчас стоит только на пяти
+   страницах услуг, но правило общее и переживёт появление шестой. */
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist {
+	margin: 3rem 0 0;
+	max-width: 50rem;
+	overflow-x: visible;
+}
+
+/* Таблица возвращается в табличную раскладку целиком. Тема делает
+   из таблицы столбик блоков: table, thead, tbody, th и td объявлены
+   display: block (main.css:1646–1670), а строку превращает в сетку.
+   Прайсу нужна настоящая таблица: два столбца, выровненные по всем
+   строкам разом. Сброшено поимённо каждое из пяти объявлений —
+   недосброшенный th/td оставлял шапку «УСЛУГА» и «СТОИМОСТЬ»
+   двумя строками одна под другой, что и показал снимок. */
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist table {
+	display: table;
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	table-layout: auto;
+}
+
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist thead {
+	display: table-header-group;
+}
+
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody {
+	display: table-row-group;
+}
+
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist th,
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist td {
+	display: table-cell;
+}
+
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist thead th {
+	padding: 0 0 0.75rem;
+	border: 0;
+	background: none;
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1.3;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--rz-ink-soft);
+	text-align: left;
+}
+
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist thead th:last-child,
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody td:last-child {
+	text-align: right;
+}
+
+/* Общий вид таблиц темы — строки-карточки: каждая tr сделана сеткой
+   со своим фоном, рамкой, радиусом и полями 0.75rem 0.875rem
+   (main.css:1704). Для прайса всё это снимается поимённо, а не
+   «заодно»: недосброшенное поле 0.875rem давало таблице отступ
+   в 15 px от края контейнера — замер показал имя на x=31 при
+   контейнере с x=16. */
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist thead tr,
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody tr {
+	display: table-row;
+	gap: 0;
+	margin: 0;
+	padding: 0;
+	background: none;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+}
+
+/* Итоговая строка общего вида («Кремация под ключ») в прайсе
+   не выделяется чертой сверху: черта там уже есть у каждой строки,
+   и вторая читалась бы как ошибка вёрстки. */
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody tr:has(strong)::before {
+	content: none;
+}
+
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody td {
+	padding: 1rem 0;
+	border: 0;
+	border-top: 1px solid var(--rz-line);
+	background: none;
+	font-size: 1.125rem;
+	line-height: 1.5;
+	vertical-align: top;
+}
+
+body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody td:last-child {
+	font-weight: 700;
+	color: var(--rz-action);
+	padding-left: 1.5rem;
+	/* Перенос РАЗРЕШЁН по умолчанию. Общее правило темы
+	   (.entry-content .wp-block-table tbody td:last-child) ставит
+	   nowrap без всяких условий, и на 375 px цена оставалась
+	   неразрывной — замер это и показал. Ниже 760 px перенос нужен:
+	   решение 18 отчёта от 19.09. */
+	white-space: normal;
+}
+
+/* НИЖЕ 760 px ПРАЙС РАСКЛАДЫВАЕТСЯ СТОЛБИКОМ: цена уходит под
+   название. Так требует спецификация, и так же снимается
+   горизонтальная прокрутка.
+
+   Почему её иначе не избежать. У таблицы с table-layout: auto
+   минимальная ширина равна сумме min-content колонок. При 200 %
+   кегля «Стоимость» в шапке занимает около 160 px, «Название»
+   не переносится ниже 150 — вместе 310 при доступных 288.
+   Замер на 320 px при 200 %: таблица 32..359 в окне 320.
+   Ни nowrap, ни ширины дорожек тут не помогают — помогает только
+   отказ от двух колонок.
+
+   Шапка при этом прячется. Без неё ячейки теряют привязку
+   к столбцу, но в столбике привязка и не нужна: название работы
+   говорит само за себя, а цена под ним выделена цветом и жирным.
+   Тот же приём и по той же причине уже применён к трёхколоночной
+   таблице темы (main.css, медиазапрос 47.99rem). */
+@media (max-width: 47.5rem) {
+	body.single-services .rz-svc-price .wp-block-table.is-style-pricelist thead {
+		display: none;
+	}
+
+	body.single-services .rz-svc-price .wp-block-table.is-style-pricelist table,
+	body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody,
+	body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody tr,
+	body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody td {
+		display: block;
+	}
+
+	body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody tr {
+		padding: 1rem 0;
+		border-top: 1px solid var(--rz-line);
+	}
+
+	body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody td {
+		padding: 0;
+		border: 0;
+		text-align: left;
+	}
+
+	body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody td:last-child {
+		margin-top: 0.25rem;
+		padding-left: 0;
+		text-align: left;
+	}
+}
+
+/* Неразрывная цена — только от 760 px. Решение 18 отчёта от 19.09:
+   при 200 % текста nowrap уводит страницу вбок, и ради неразрывного
+   числа ломается вся раскладка. Ниже порога цена переносится под
+   название — некрасиво, но читаемо и без горизонтальной прокрутки. */
+@media (min-width: 47.5rem) {
+	body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody td:last-child {
+		white-space: nowrap;
+	}
 }
