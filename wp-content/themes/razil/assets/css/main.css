@@ -6433,3 +6433,130 @@ body.single-services .rz-svc-timeline__note {
 	line-height: 1.6;
 	color: var(--rz-ink-soft);
 }
+
+/* ------------------------------------------------------------------
+   8. ДОКУМЕНТЫ (паттерн razil/service-documents)
+   ------------------------------------------------------------------ */
+
+body.single-services .rz-svc-docs__grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 2rem;
+	align-items: start;
+}
+
+/* 5fr / 7fr: карточка со списками шире пояснения. До 23 сентября
+   пропорция была обратной — заголовок стоял в колонке 400 px
+   из 1160, и «Какие документы нужны» разваливалось на три строки.
+   Теперь колонка 457 px при кегле 40 px, и заголовок ложится
+   в две строки; замер по обеим ширинам — в отчёте. */
+@media (min-width: 48rem) {
+	body.single-services .rz-svc-docs__grid {
+		grid-template-columns: 5fr 7fr;
+		gap: 4rem;
+	}
+}
+
+body.single-services .rz-svc-docs__text > * + * {
+	margin-block-start: 1.25rem;
+}
+
+body.single-services .rz-svc-docs__text > h2 {
+	margin-block: 0;
+}
+
+/* Карточка: поля 2rem, между группами 1.75rem. Расстояние — gap,
+   поэтому с одной группой лишнего места не остаётся вовсе. */
+body.single-services .rz-svc-docs__card {
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.75rem;
+}
+
+@media (max-width: 47.5rem) {
+	body.single-services .rz-svc-docs__card {
+		padding: 1.25rem;
+	}
+}
+
+/* --- Метка группы --- */
+body.single-services .rz-svc-docs__group > p.is-style-label {
+	margin-block: 0 0.75rem;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--rz-ink-soft);
+}
+
+/* --- Общее для обоих списков документов --- */
+body.single-services .rz-svc-docs__group > ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	max-width: none;
+}
+
+body.single-services .rz-svc-docs__group > ul > li {
+	position: relative;
+	margin: 0;
+	padding: 0.75rem 0 0.75rem 2.25rem;
+	font-size: 1.125rem;
+	line-height: 1.55;
+}
+
+/* Линия МЕЖДУ пунктами, а не под каждым: у последнего её нет,
+   иначе карточка заканчивалась бы чертой в пустоте.
+   color-mix разбавляет --rz-line фоном карточки — сплошная
+   волосяная линия через весь список читалась бы как таблица. */
+body.single-services .rz-svc-docs__group > ul > li + li {
+	border-top: 1px solid color-mix(in srgb, var(--rz-line) 65%, var(--rz-surface));
+}
+
+/* --- Галочки --- */
+
+/* Маска, а не <img> и не инлайновый SVG: внешний SVG не наследует
+   currentColor и не перевернётся в тёмной теме, а инлайновый внутри
+   пункта списка пришлось бы держать в тексте, где его сотрут
+   при первой правке.
+
+   top: 0.75rem + 0.1em — это верхнее поле пункта плюс поправка
+   на разницу высоты галочки и строки. Галочка встаёт против ПЕРВОЙ
+   строки, а не по центру пункта: пункты бывают в две и три строки,
+   и маркер, съехавший к их середине, перестаёт читаться как начало. */
+body.single-services .rz-svc-docs__group > ul.is-style-checks > li::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: calc(0.75rem + 0.1em);
+	width: 1.375rem;
+	height: 1.375rem;
+	background-color: var(--rz-action);
+	-webkit-mask-image: url("../icons/check.svg");
+	        mask-image: url("../icons/check.svg");
+	-webkit-mask-repeat: no-repeat;
+	        mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	        mask-position: center;
+	-webkit-mask-size: contain;
+	        mask-size: contain;
+}
+
+/* --- Дополнительные --- */
+body.single-services .rz-svc-docs__group > ul.is-style-extra > li::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: calc(0.75rem + 0.72em);
+	width: 0.5rem;
+	height: 2px;
+	background-color: var(--rz-fact);
+}
+
+/* Жирное начало приходит тегом <strong> из разметки. Здесь только
+   тон: условие — не крик, а ориентир. */
+body.single-services .rz-svc-docs__group > ul.is-style-extra > li strong {
+	font-weight: 700;
+	color: var(--rz-ink);
+}
