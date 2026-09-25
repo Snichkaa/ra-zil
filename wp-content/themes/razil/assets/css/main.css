@@ -6885,3 +6885,77 @@ body.single-services .rz-svc-price .wp-block-table.is-style-pricelist tbody td:l
 		white-space: nowrap;
 	}
 }
+
+/* ------------------------------------------------------------------
+   10. ЧАСТЫЕ ВОПРОСЫ (паттерн razil/service-faq)
+   ------------------------------------------------------------------
+
+   Правила ДОПОЛНЯЮТ существующий .entry-content .wp-block-details,
+   а не повторяют его. Оттуда берутся: стрелка справа
+   (::after с поворотом), её анимация вместе с классом is-closing,
+   снятие родного треугольника в Firefox и Safari, видимая обводка
+   фокуса. Здесь только то, что для этого раздела другое: кегль,
+   поля, линии и ширина ответа. */
+
+body.single-services .rz-svc-faq__list {
+	margin-block: 2.5rem 0;
+}
+
+/* Линия сверху у первого и снизу у каждого. Базовое правило темы
+   рисует линию сверху у каждого; здесь она снимается и ставится
+   снизу — набор линий тот же, но последний вопрос закрыт чертой,
+   и раздел не обрывается в воздухе. */
+body.single-services .rz-svc-faq__list > .wp-block-details {
+	margin: 0;
+	padding: 0;
+	border-top: 0;
+	border-bottom: 1px solid var(--rz-line);
+}
+
+body.single-services .rz-svc-faq__list > .wp-block-details:first-child {
+	border-top: 1px solid var(--rz-line);
+}
+
+/* Вопрос. Зазор до стрелки 1.5rem, а не 1rem базового правила:
+   при кегле 20 px вопрос в две строки подходил к стрелке вплотную. */
+body.single-services .rz-svc-faq__list > .wp-block-details > summary {
+	gap: 1.5rem;
+	padding-block: 1.5rem;
+	font-family: var(--wp--preset--font-family--pt-sans);
+	font-size: 1.25rem;
+	font-weight: 700;
+	line-height: 1.3;
+	color: var(--rz-action);
+	/* Минимум строки — 44 px по И11. У вопроса в одну строку при 20 px
+	   и межстрочном 1.3 выходит 26 px текста плюс 48 px полей, то есть
+	   запас есть и на телефоне. Свойство оставлено явным: поля когда-нибудь
+	   уменьшат, и тогда минимум удержит зону нажатия. */
+	min-height: 2.75rem;
+	box-sizing: border-box;
+}
+
+/* Стрелка не сжимается. flex: none у неё уже есть в базовом правиле,
+   здесь только размер: при кегле 20 px прежние 0.55rem терялись. */
+body.single-services .rz-svc-faq__list > .wp-block-details > summary::after {
+	width: 0.625rem;
+	height: 0.625rem;
+	margin-top: 0.35rem;
+}
+
+/* Ответ. 50rem, а не общая мера строки 40rem: ответ в аккордеоне
+   читают сразу после вопроса и целиком, а не бегло — здесь важнее
+   уместить мысль без лишних переносов. */
+body.single-services .rz-svc-faq__list > .wp-block-details > p {
+	max-width: 50rem;
+	margin-block: 0 1.5rem;
+	font-size: 1.125rem;
+	line-height: 1.6;
+	color: var(--rz-ink);
+}
+
+@media (max-width: 47.5rem) {
+	body.single-services .rz-svc-faq__list > .wp-block-details > summary {
+		font-size: 1.125rem;
+		padding-block: 1.125rem;
+	}
+}
