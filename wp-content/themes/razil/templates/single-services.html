@@ -1,27 +1,88 @@
 <!-- wp:template-part {"slug":"header","theme":"razil"} /-->
 
-<!-- wp:group {"style":{"color":{"background":"var(\u002d\u002drz-bg)"},"spacing":{"padding":{"top":"3rem","right":"1rem","bottom":"3rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group has-background" style="background-color:var(--rz-bg);padding-top:3rem;padding-right:1rem;padding-bottom:3rem;padding-left:1rem">
-	<!-- wp:group {"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group">
-		<!-- Размер задан в main.css: .single-services .wp-block-post-title.
-		     fontSize здесь намеренно не указан — класс пресета
-		     has-heading-l-font-size выводится с !important и перебивает
-		     любое авторское правило. Не выставляйте размер в редакторе. -->
-		<!-- wp:post-title {"level":1} /-->
+<!-- ОБОЛОЧКА СТРАНИЦЫ УСЛУГИ.
 
-		<!-- wp:post-excerpt {"fontSize":"lead"} /-->
+     Раскладка «поток», а не «ограниченная», и БЕЗ боковых полей —
+     это и есть условие того, чтобы секция с align: full легла от края
+     до края окна. Раньше здесь стояла ограниченная группа с инлайновым
+     padding-inline: 1rem, и полноширинность приходилось подделывать
+     тенью в 100vmax: заливка растягивалась, а сама коробка секции
+     оставалась в контейнере, и фотография до края окна не доходила.
 
-		<!-- wp:post-content /-->
+     Боковые поля теперь у каждого потомка свои, задаются в main.css
+     разделом «Страницы услуг — редизайн 2026-09». Там же полноширинные
+     секции вытягиваются обратно на эти поля.
 
-		<!-- wp:group {"className":"rz-callback","layout":{"type":"constrained"}} -->
-		<div class="wp-block-group rz-callback">
-			<!-- wp:paragraph {"className":"rz-callback__lead"} -->
-			<p class="rz-callback__lead">Остались вопросы — оставьте заявку, и специалист перезвонит сам.</p>
+     Боковые нули заданы ЯВНО и не лишние: правило
+     .wp-block-group.has-background в main.css:274 даёт группе с заливкой
+     padding: 2rem со всех сторон. Без нулей оболочка съедала бы по 2rem
+     с каждого края, и полноширинная секция на 375 px не доходила бы
+     до края окна на 32 px — замерено.
+
+     Поля у оболочки нулевые со всех сторон. Сверху воздух даёт
+     правило main.css:2219 (0.5rem под крошками) и собственное поле
+     первого экрана, снизу к ней вплотную примыкает полоса заявки.
+
+     ЗАГОЛОВКА И ОТРЫВКА ВНУТРИ БОЛЬШЕ НЕТ. Их печатает паттерн первого
+     экрана (razil/service-hero) — core/post-title и core/post-excerpt
+     внутри самой секции. Пока они стояли и тут, и там, на каждой
+     переделанной странице было по два H1; обход это и показывал
+     строкой «H1=2». Вместе с ними ушла и обёртка .rz-svc-head:
+     держать её было нечего, а её боковое поле теперь задаёт себе
+     каждая секция.
+
+     РАСКЛАДКА «ОГРАНИЧЕННАЯ» стоит у самого содержимого, а не у обёртки.
+     Только так потомок с align: full получает от ядра max-width: none,
+     а обычный блок — ширину контейнера 72.5rem по центру.
+
+     ПОЧЕМУ ЭТИ ПОЯСНЕНИЯ СНАРУЖИ ГРУППЫ, А НЕ ВНУТРИ НЕЁ. HTML-комментарий
+     внутри содержимого блока ломает проверку блока в редакторе: save()
+     группы печатает пустой <div>, а из разметки приходит <div> с текстом
+     комментария, и редактор говорит «Блок содержит неожиданное
+     содержимое». Замерено 25 сентября: в консоли редактора на каждой
+     из пяти страниц висело по три таких сообщения про core/group,
+     и все три снялись переносом комментариев наружу. Снаружи блока
+     комментарий безопасен — он не попадает ни в один innerContent. -->
+<!-- wp:group {"className":"rz-svc-shell","style":{"color":{"background":"var(\u002d\u002drz-bg)"},"spacing":{"padding":{"top":"0","right":"0","bottom":"0","left":"0"}}},"layout":{"type":"default"}} -->
+<div class="wp-block-group rz-svc-shell has-background" style="background-color:var(--rz-bg);padding-top:0;padding-right:0;padding-bottom:0;padding-left:0">
+	<!-- wp:post-content {"layout":{"type":"constrained"}} /-->
+
+</div>
+<!-- /wp:group -->
+
+<!-- ФИНАЛЬНЫЙ БЛОК ЗАЯВКИ.
+
+     Стоит СНАРУЖИ оболочки, прямым ребёнком .wp-site-blocks, и это
+     не перестановка ради порядка: только так полоса доходит до края
+     окна и смыкается с подвалом без шва. Внутри оболочки у неё были бы
+     боковые поля оболочки, а снизу — её нижний отступ.
+
+     Фраза оставлена дословно той, что стояла здесь до правки.
+
+     Номер — резервное написание, как в шапке: подменяется буфером
+     вывода из «Настройки → Организация». Ссылка НЕ внутри
+     .wp-block-button намеренно — окно подтверждения звонка положено
+     кнопке, а номер текстом на компьютере звонит сам (header.js:216). -->
+<!-- wp:group {"className":"rz-callback","layout":{"type":"default"}} -->
+<div class="wp-block-group rz-callback">
+	<!-- wp:group {"className":"rz-callback__inner","layout":{"type":"default"}} -->
+	<div class="wp-block-group rz-callback__inner">
+		<!-- wp:paragraph {"className":"rz-callback__lead"} -->
+		<p class="rz-callback__lead">Остались вопросы — оставьте заявку, и специалист перезвонит сам.</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:group {"className":"rz-callback__contact","layout":{"type":"default"}} -->
+		<div class="wp-block-group rz-callback__contact">
+			<!-- wp:paragraph {"className":"rz-callback__phone"} -->
+			<p class="rz-callback__phone"><a href="tel:+74212605290">+7 (4212) 60-52-90</a></p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph {"className":"rz-callback__hours"} -->
+			<p class="rz-callback__hours">Круглосуточно, без выходных</p>
 			<!-- /wp:paragraph -->
 
 			<!-- wp:shortcode -->
-			[razil_callback_button]
+			[razil_callback_button class="rz-callback__button"]
 			<!-- /wp:shortcode -->
 		</div>
 		<!-- /wp:group -->

@@ -18,7 +18,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Локально (WP_DEBUG включён) берём время изменения файла, чтобы правки в CSS
  * были видны без Ctrl+F5. На продакшене — фиксированная строка.
  */
-define( 'RAZIL_VERSION', '1.0.0' );
+define( 'RAZIL_VERSION', '1.1.0' );
+
+require_once get_theme_file_path( 'inc/site-pages.php' );
 
 /**
  * Версия конкретного файла темы для аргумента $ver.
@@ -53,6 +55,144 @@ function razil_register_blocks() {
 	}
 }
 add_action( 'init', 'razil_register_blocks' );
+
+/**
+ * Категория паттернов «Услуга».
+ *
+ * Без регистрации категория всё равно «работает» — паттерн с неизвестной
+ * категорией не пропадает, — но в боковой панели вставки он попадает
+ * в общий список без заголовка, и найти нужный можно только поиском.
+ * Паттернов услуги семь, поэтому своя вкладка им нужна.
+ *
+ * Имя razil-service, а не razil: категория razil уже стоит у старого
+ * patterns/service-page.php, и класть рядом семь новых паттернов в ту же
+ * кучу — значит потерять разницу между «вся страница одним куском»
+ * и «одна секция».
+ */
+function razil_register_pattern_categories() {
+	register_block_pattern_category(
+		'razil-service',
+		array(
+			'label'       => 'Услуга',
+			'description' => 'Секции страницы услуги: первый экран, вступление, что входит, сроки, документы, стоимость, вопросы.',
+		)
+	);
+}
+add_action( 'init', 'razil_register_pattern_categories' );
+
+/**
+ * Стили блоков для страниц услуг.
+ *
+ * Регистрируются из PHP, без сборки. Собранного JavaScript у темы нет
+ * вовсе — все семнадцать её блоков серверные, в build/blocks/* лежат
+ * только block.json и render.php, — и заводить ради пяти вариантов
+ * оформления клиентский код было бы несоразмерно. WordPress сам
+ * отдаёт зарегистрированные стили редактору через реестр типов блоков,
+ * и в панели блока они появляются списком «Стили».
+ *
+ * Класс у стиля с именем foo — is-style-foo. Именно он и стоит
+ * в правилах main.css.
+ *
+ * Стили заведены ТОЛЬКО для тех ролей, где вариантов два и оба
+ * осмысленны: список с номерами и без, обычный абзац и заметка.
+ * Там, где вариант один, класс пишется в паттерне напрямую —
+ * лишняя запись в панели блока сбивает с толку не меньше, чем
+ * её отсутствие.
+ */
+function razil_register_block_styles() {
+	register_block_style(
+		'core/group',
+		array(
+			'name'  => 'no-numbers',
+			'label' => 'Без номеров',
+		)
+	);
+
+	register_block_style(
+		'core/paragraph',
+		array(
+			'name'  => 'note',
+			'label' => 'Заметка',
+		)
+	);
+
+	/*
+	 * Отклонение на шкале сроков. Стиль пункта списка, а не всей
+	 * шкалы: отклоняется одна точка из четырёх, остальные —
+	 * обычные шаги.
+	 */
+	register_block_style(
+		'core/list-item',
+		array(
+			'name'  => 'delay',
+			'label' => 'Отклонение',
+		)
+	);
+
+	/*
+	 * Подпись группы в карточке документов. Абзац, а не заголовок:
+	 * «Основные документы» — не раздел страницы, а ярлык списка,
+	 * и H4 между H2 и содержимым создал бы уровень, которого
+	 * в структуре нет.
+	 */
+	register_block_style(
+		'core/paragraph',
+		array(
+			'name'  => 'label',
+			'label' => 'Метка',
+		)
+	);
+
+	/*
+	 * Два вида списка документов. «Галочки» — то, что нужно всем;
+	 * «Дополнительные» — то, что нужно в отдельных случаях. Разница
+	 * видна маркером, а не подписью «необязательно» у каждого пункта.
+	 */
+	register_block_style(
+		'core/list',
+		array(
+			'name'  => 'checks',
+			'label' => 'Галочки',
+		)
+	);
+
+	register_block_style(
+		'core/list',
+		array(
+			'name'  => 'extra',
+			'label' => 'Дополнительные',
+		)
+	);
+
+	/*
+	 * Плашка рядом с заголовком стоимости: оговорка, которая относится
+	 * ко всему разделу, но не является его частью — «социальная
+	 * кремация», «смета после замера», «авиаперевозка считается
+	 * отдельно».
+	 */
+	register_block_style(
+		'core/paragraph',
+		array(
+			'name'  => 'panel',
+			'label' => 'Плашка',
+		)
+	);
+
+	/*
+	 * Прайс: таблица без рамок и заливок, название слева, цена справа.
+	 * Отдельный стиль, а не замена общего вида таблиц: таблицы
+	 * встречаются и вне услуг, и переверстать их все разом задание
+	 * не поручало.
+	 */
+	register_block_style(
+		'core/table',
+		array(
+			'name'  => 'pricelist',
+			'label' => 'Прайс',
+		)
+	);
+}
+add_action( 'init', 'razil_register_block_styles' );
 
 /**
  * Категория для блоков темы.
@@ -180,7 +320,25 @@ function razil_enqueue_styles() {
 		array( 'razil-tokens' ),
 		razil_asset_version( 'assets/css/main.css' )
 	);
+
+	if ( is_singular( 'services' ) ) {
+		wp_enqueue_style(
+			'razil-service-details',
+			get_theme_file_uri( 'assets/css/service-details.css' ),
+			array( 'razil-main' ),
+			razil_asset_version( 'assets/css/service-details.css' )
+		);
+	}
 }
+
+/** Scope the shared detail layout to services, leaving archives and other pages intact. */
+function razil_service_body_class( $classes ) {
+	if ( is_singular( 'services' ) ) {
+		$classes[] = 'rz-svc-layout';
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'razil_service_body_class' );
 add_action( 'wp_enqueue_scripts', 'razil_enqueue_styles' );
 
 /**
@@ -324,34 +482,55 @@ add_filter( 'get_the_excerpt', 'razil_no_auto_excerpt', 10, 2 );
  * идёт без них намеренно: у <source> один адрес без srcset, повторять
  * там нечего.
  *
- * Номера вложений берутся из констант RAZIL_HERO_IMAGE_DESKTOP
- * и RAZIL_HERO_IMAGE_MOBILE плагина razil-core — там же, где их читает
- * фильтр, собирающий <picture>. Запасные значения на случай выключенного
- * плагина зашиты здесь: без них предзагрузка молча исчезла бы.
+ * Номера вложений даёт razil_hero_attachment_id() плагина razil-core:
+ * функция ищет их по пути файла в медиатеке, а сами пути лежат в
+ * константах RAZIL_HERO_FILE_DESKTOP и RAZIL_HERO_FILE_MOBILE — там же,
+ * где их читает фильтр, собирающий <picture>. Номер вложению выдаётся
+ * при загрузке и на другом сайте будет другим; путь файла перенос
+ * переживает.
+ *
+ * Запасных числовых номеров на случай выключенного плагина здесь нет, и
+ * это выбор, а не упущение. Без плагина <picture> не соберётся, в
+ * разметке останется обычный img из шаблона, и предзагрузка по зашитому
+ * номеру тянула бы файл, которого на странице нет. Поэтому, не найдя
+ * функции, предзагрузка тихо выключается.
  *
  * Печатается только если в разметке текущего шаблона найден класс
- * wp-image-<номер десктопного вложения>. Без этой проверки смена
- * фотографии героя ломала бы страницу молча: у новой картинки будет
- * свой номер, предзагрузка продолжила бы тянуть старую, и браузер качал
- * бы лишний файл, который нигде не показывается. Источник — глобальная
- * переменная ядра с содержимым текущего шаблона: она заполняется при
- * подборе шаблона, то есть до вывода head, и учитывает копию из базы,
- * если шаблон когда-нибудь сохранят в редакторе сайта.
+ * rz-hero__photo. Без этой проверки перевёрстка первого экрана ломала бы
+ * страницу молча: предзагрузка продолжила бы тянуть фотографию, которую
+ * на странице уже никто не показывает. Источник — глобальная переменная
+ * ядра с содержимым текущего шаблона: она заполняется при подборе
+ * шаблона, то есть до вывода head, и учитывает копию из базы, если
+ * шаблон когда-нибудь сохранят в редакторе сайта.
  */
 function razil_preload_hero_image() {
 	if ( ! is_front_page() ) {
 		return;
 	}
-	$desktop_id = defined( 'RAZIL_HERO_IMAGE_DESKTOP' ) ? RAZIL_HERO_IMAGE_DESKTOP : 241;
-	$mobile_id  = defined( 'RAZIL_HERO_IMAGE_MOBILE' ) ? RAZIL_HERO_IMAGE_MOBILE : 242;
 
-	$tpl = isset( $GLOBALS['_wp_current_template_content'] ) ? $GLOBALS['_wp_current_template_content'] : '';
-	if ( ! preg_match( '/\bwp-image-' . $desktop_id . '\b/', $tpl ) ) {
+	// Номера вложений выдаёт резолвер плагина razil-core по пути файла.
+	// Плагина нет — нет и резолвера: выходим тихо. Предзагружать кадр,
+	// который без плагина в разметку не попадёт, значило бы качать
+	// лишний файл, а разбирать отсутствие плагина ошибкой — ронять шапку.
+	if ( ! function_exists( 'razil_hero_attachment_id' )
+		|| ! defined( 'RAZIL_HERO_FILE_DESKTOP' )
+		|| ! defined( 'RAZIL_HERO_FILE_MOBILE' ) ) {
 		return;
 	}
 
-	$desktop_src = wp_get_attachment_image_url( $desktop_id, 'full' );
-	$mobile_src  = wp_get_attachment_image_url( $mobile_id, 'full' );
+	// Сторож узнаёт героя по классу блока, а не по номеру вложения:
+	// номер выдаётся при загрузке и на другом сайте будет другим,
+	// класс переживает и перенос, и замену самой фотографии.
+	$tpl = isset( $GLOBALS['_wp_current_template_content'] ) ? $GLOBALS['_wp_current_template_content'] : '';
+	if ( false === strpos( $tpl, 'rz-hero__photo' ) ) {
+		return;
+	}
+
+	$desktop_id = razil_hero_attachment_id( RAZIL_HERO_FILE_DESKTOP );
+	$mobile_id  = razil_hero_attachment_id( RAZIL_HERO_FILE_MOBILE );
+
+	$desktop_src = $desktop_id ? wp_get_attachment_image_url( $desktop_id, 'full' ) : '';
+	$mobile_src  = $mobile_id ? wp_get_attachment_image_url( $mobile_id, 'full' ) : '';
 	if ( ! $desktop_src || ! $mobile_src ) {
 		return;
 	}

@@ -27,6 +27,15 @@
 </div>
 <!-- /wp:group -->
 
+<!-- Запас снизу под висящую кнопку звонка (§25: «фиксированная
+     кнопка не должна перекрывать последний пункт FAQ или элементы
+     подвала») переехал в main.css и действует только ниже 760 px —
+     там, где кнопка теперь и показывается. Здесь остаётся
+     собственный отступ подвала, 2rem, каким он был до того.
+
+     Инлайновый стиль правилом из таблицы не перебить, поэтому
+     в CSS запас поставлен через !important — случай, оговорённый
+     в задании. -->
 <!-- wp:group {"className":"rz-footer","align":"full","style":{"color":{"background":"var(\u002d\u002drz-ink)","text":"var(\u002d\u002drz-surface)"},"spacing":{"padding":{"top":"3rem","right":"1rem","bottom":"2rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull rz-footer has-text-color has-background" style="background-color:var(--rz-ink);color:var(--rz-surface);padding-top:3rem;padding-right:1rem;padding-bottom:2rem;padding-left:1rem">
 

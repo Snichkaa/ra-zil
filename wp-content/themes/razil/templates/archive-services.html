@@ -1,52 +1,39 @@
 <!-- wp:template-part {"slug":"header","theme":"razil"} /-->
 
 <!-- wp:group {"style":{"color":{"background":"var(\u002d\u002drz-bg)"},"spacing":{"padding":{"top":"3rem","right":"1rem","bottom":"3rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group has-background" style="background-color:var(--rz-bg);padding-top:3rem;padding-right:1rem;padding-bottom:3rem;padding-left:1rem">
-	<!-- wp:group {"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group">
-		<!-- wp:heading {"level":1} -->
-		<h1>Все услуги</h1>
-		<!-- /wp:heading -->
+<div class="wp-block-group has-background" style="background-color:var(--rz-bg);padding-top:3rem;padding-right:1rem;padding-bottom:3rem;padding-left:1rem"><!-- wp:group {"layout":{"type":"constrained"}} -->
+<div class="wp-block-group"><!-- wp:heading {"level":1} -->
+<h1 class="wp-block-heading">Услуги агентства «Земля и Люди»</h1>
+<!-- /wp:heading -->
 
-		<!-- wp:paragraph {"fontSize":"body","style":{"spacing":{"margin":{"top":"1rem"}}}} -->
-		<p class="has-body-font-size" style="margin-top:1rem">Полный спектр услуг организации похорон и поминовения</p>
-		<!-- /wp:paragraph -->
+<!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"1rem"}}},"fontSize":"body"} -->
+<p class="has-body-font-size" style="margin-top:1rem">Полный спектр услуг организации похорон и поминовения</p>
+<!-- /wp:paragraph -->
 
-		<!-- wp:query {"queryId":2,"query":{"perPage":9,"pages":0,"offset":0,"postType":"services","order":"asc","orderBy":"menu_order","author":"","search":"","exclude":[],"sticky":"","inherit":false}} -->
-		<div class="wp-block-query">
-			<!-- wp:post-template {"layout":{"type":"default"}} -->
-			<div class="wp-block-post-template is-layout-flow">
-				<!-- wp:group {"className":"rz-service-card"} -->
-				<div class="wp-block-group rz-service-card">
-					<!-- wp:group {"className":"rz-service-card__body"} -->
-					<div class="wp-block-group rz-service-card__body">
-						<!-- wp:post-title {"isLink":true,"fontSize":"heading-s"} /-->
-						<!-- wp:post-excerpt {"fontSize":"body"} /-->
-					</div>
-					<!-- /wp:group -->
+<!-- wp:query {"queryId":2,"query":{"perPage":9,"pages":0,"offset":0,"postType":"services","order":"asc","orderBy":"menu_order","author":"","search":"","exclude":[],"sticky":"","inherit":false}} -->
+<div class="wp-block-query"><!-- wp:post-template {"className":"rz-services-grid","layout":{"type":"default"}} -->
+<!-- wp:group {"className":"rz-service-card rz-service-card\u002d\u002dflat"} -->
+<div class="wp-block-group rz-service-card rz-service-card--flat"><!-- wp:group {"className":"rz-service-card__body"} -->
+<div class="wp-block-group rz-service-card__body"><!-- wp:post-title {"isLink":true,"fontSize":"heading-s"} /-->
 
-					<!-- wp:read-more {"content":"Узнать подробнее","textColor":"surface","style":{"border":{"radius":"4px"},"spacing":{"padding":{"top":"0","right":"1.5rem","bottom":"0","left":"1.5rem"}}}} /-->
-				</div>
-				<!-- /wp:group -->
-			</div>
-			<!-- /wp:post-template -->
-		</div>
-		<!-- /wp:query -->
+<!-- wp:post-excerpt {"fontSize":"body"} /-->
 
-		<!-- wp:group {"className":"rz-callback","layout":{"type":"constrained"}} -->
-		<div class="wp-block-group rz-callback">
-			<!-- wp:paragraph {"className":"rz-callback__lead"} -->
-			<p class="rz-callback__lead">Остались вопросы — оставьте заявку, и специалист перезвонит сам.</p>
-			<!-- /wp:paragraph -->
+<!-- wp:read-more {"content":"Узнать подробнее","className":"rz-service-card__more","style":{"spacing":{"padding":{"top":"0","right":"1.5rem","bottom":"0","left":"1.5rem"}}},"textColor":"surface"} /--></div>
+<!-- /wp:group --></div>
+<!-- /wp:group -->
+<!-- /wp:post-template --></div>
+<!-- /wp:query -->
 
-			<!-- wp:shortcode -->
-			[razil_callback_button]
-			<!-- /wp:shortcode -->
-		</div>
-		<!-- /wp:group -->
-	</div>
-	<!-- /wp:group -->
-</div>
+<!-- wp:group {"className":"rz-callback","layout":{"type":"constrained"}} -->
+<div class="wp-block-group rz-callback"><!-- wp:paragraph {"className":"rz-callback__lead"} -->
+<p class="rz-callback__lead">Остались вопросы — оставьте заявку, и специалист перезвонит сам.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:shortcode -->
+[razil_callback_button]
+<!-- /wp:shortcode --></div>
+<!-- /wp:group --></div>
+<!-- /wp:group --></div>
 <!-- /wp:group -->
 
 <!-- wp:template-part {"slug":"sticky-call","theme":"razil"} /-->
