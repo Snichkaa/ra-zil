@@ -1,0 +1,562 @@
+/* Shared service detail layout, based on the approved cremation page.
+   Loaded only on single service pages. */
+
+body.single-services.rz-svc-layout .rz-svc-sec {
+	padding-block: clamp(2.5rem, 5vw, 4rem);
+	border-radius: 0;
+	scroll-margin-top: 1rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-sec h2 {
+	margin-block: 0 1.75rem;
+	font-size: clamp(1.75rem, 1.4rem + 1.3vw, 2.375rem);
+	text-wrap: balance;
+}
+
+/* First screen and section navigation. */
+body.single-services.rz-svc-layout .rz-svc-hero {
+	padding-block: 1.75rem 0;
+}
+
+body.single-services.rz-svc-layout .rz-svc-hero__grid {
+	grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+	gap: clamp(2rem, 4vw, 3.5rem);
+	align-items: center;
+}
+
+body.single-services.rz-svc-layout .rz-svc-hero__title {
+	max-width: 12em;
+}
+
+body.single-services.rz-svc-layout .rz-svc-hero__lead {
+	margin-top: 1.25rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-hero__actions {
+	margin-top: 1.75rem;
+	gap: 0.75rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-hero__call .wp-block-button__link,
+body.single-services.rz-svc-layout .rz-svc-hero__cta {
+	min-height: 3.25rem;
+	padding-inline: 1.25rem;
+	font-size: 1.0625rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-hero__facts {
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+	margin-top: 1.75rem;
+	padding-top: 1.25rem;
+	gap: 1.25rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-hero__fact {
+	margin: 0;
+}
+
+body.single-services.rz-svc-layout .rz-svc-hero__media {
+	margin: 0;
+}
+
+body.single-services.rz-svc-layout .rz-svc-nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem 2rem;
+	margin-top: 2.25rem;
+	padding-block: 0.625rem;
+	border-top: 1px solid var(--rz-line);
+}
+
+body.single-services.rz-svc-layout .rz-svc-nav a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.75rem;
+	font-size: 1rem;
+	font-weight: 700;
+	color: var(--rz-action);
+	text-decoration: none;
+	text-underline-offset: 0.3em;
+}
+
+body.single-services.rz-svc-layout .rz-svc-nav a:hover {
+	text-decoration: underline;
+}
+
+/* Quiet placeholders, ready to be replaced by photographs. */
+body.single-services.rz-svc-layout .rz-photo-slot {
+	display: flex;
+	min-width: 0;
+	width: 100%;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 1.5rem;
+	border: 1px solid var(--rz-line);
+	border-radius: var(--rz-radius-media);
+	background: color-mix(in srgb, var(--rz-line) 35%, var(--rz-bg));
+	color: var(--rz-ink-soft);
+	text-align: center;
+}
+
+body.single-services.rz-svc-layout .rz-photo-slot::before {
+	content: "";
+	width: 2.5rem;
+	height: 2.5rem;
+	margin-bottom: 0.5rem;
+	background: currentColor;
+	mask: url("../icons/service-photo.svg") center / contain no-repeat;
+}
+
+body.single-services.rz-svc-layout .rz-photo-slot__num {
+	font-family: var(--wp--preset--font-family--pt-sans);
+	font-size: 0.875rem;
+	font-weight: 400;
+	letter-spacing: 0;
+	text-transform: none;
+	color: color-mix(in srgb, var(--rz-ink-soft) 85%, var(--rz-ink));
+}
+
+body.single-services.rz-svc-layout .rz-photo-slot__hint {
+	max-width: 24rem;
+	font-family: var(--wp--preset--font-family--pt-serif);
+	font-size: 1.375rem;
+	font-style: normal;
+	line-height: 1.3;
+	color: var(--rz-ink);
+}
+
+body.single-services.rz-svc-layout .rz-svc-hero__media .rz-photo-slot {
+	min-height: 23rem;
+	height: auto;
+	aspect-ratio: 5 / 4;
+}
+
+/* Introduction, stages and gallery share the same alignment. */
+body.single-services.rz-svc-layout .rz-svc-intro-columns,
+body.single-services.rz-svc-layout .rz-svc-document-cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+	gap: 2.5rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-intro-columns > *,
+body.single-services.rz-svc-layout .rz-svc-document-cards > * {
+	margin: 0;
+}
+
+body.single-services.rz-svc-layout .rz-svc-intro__text > :first-child {
+	margin-top: 0;
+}
+
+body.single-services.rz-svc-layout .rz-svc-intro__text > :last-child {
+	margin-bottom: 0;
+}
+
+body.single-services.rz-svc-layout .rz-svc-stages__grid {
+	/* At most two cards per row; enlarged text can request a single column. */
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, max(22rem, calc((100% - 1rem) / 2))), 1fr));
+	margin-top: 0;
+	gap: 1rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-card {
+	padding: 1.5rem;
+	box-shadow: none;
+}
+
+body.single-services.rz-svc-layout .rz-svc-stages__card {
+	gap: 1.125rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-stages__card > p {
+	margin: 0;
+	font-size: 1.0625rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-stages__lead + .rz-svc-stages__grid {
+	margin-top: 1.75rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-sec__inner > .rz-svc-stages__lead {
+	max-width: none;
+}
+
+body.single-services.rz-svc-layout .rz-svc-stages__list > li + li {
+	margin-top: 0.5rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-sec__inner > p.is-style-note {
+	margin-top: 1.25rem;
+	padding: 0.25rem 0 0.25rem 1.25rem;
+	border: 0;
+	border-left: 2px solid var(--rz-fact);
+	border-radius: 0;
+	font-size: 1.0625rem;
+	color: var(--rz-ink-soft);
+}
+
+body.single-services.rz-svc-layout .rz-svc-gallery {
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, max(13rem, calc((100% - 2rem) / 3))), 1fr));
+	margin-top: 1.75rem;
+	gap: 1rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-gallery__slot {
+	min-height: 12rem;
+	aspect-ratio: 16 / 9;
+}
+
+/* Photographs follow the same proportions as the remaining placeholders. */
+body.single-services.rz-svc-layout .rz-svc-photo {
+	margin: 0;
+}
+
+body.single-services.rz-svc-layout .rz-svc-photo img {
+	display: block;
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+	border-radius: var(--rz-radius-media);
+}
+
+body.single-services.rz-svc-layout .rz-svc-hero__media .rz-svc-photo img {
+	aspect-ratio: 5 / 4;
+}
+
+body.single-services.rz-svc-layout .rz-svc-gallery .rz-svc-photo img {
+	min-height: 12rem;
+	aspect-ratio: 16 / 9;
+}
+
+body.single-services.rz-svc-layout .rz-svc-photo figcaption {
+	margin-block: 0.75rem 0;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	color: var(--rz-ink-soft);
+}
+
+/* Dates retain their four-step sequence, with the note using the full width. */
+body.single-services.rz-svc-layout .rz-svc-timeline__list {
+	margin-top: 2rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-timeline__term {
+	font-size: 1.625rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-sec__inner > .rz-svc-timeline__note {
+	max-width: none;
+	margin-top: 1.75rem;
+	font-size: 1.0625rem;
+}
+
+/* The heading and explanation span the document lists below. */
+body.single-services.rz-svc-layout .rz-svc-section-head {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1rem;
+	align-items: start;
+	margin-bottom: 1.75rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-section-head > * {
+	margin-block: 0;
+	max-width: none;
+}
+
+body.single-services.rz-svc-layout .rz-svc-section-head > h2 {
+	margin-bottom: 0;
+}
+
+body.single-services.rz-svc-layout .rz-svc-section-head > p {
+	color: var(--rz-ink-soft);
+}
+
+body.single-services.rz-svc-layout .rz-svc-document-cards {
+	gap: 1rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-docs__group > p.is-style-label {
+	font-size: 1.125rem;
+	font-weight: 700;
+	text-transform: none;
+	letter-spacing: 0;
+	color: var(--rz-action);
+	margin-bottom: 1rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-docs__group > ul > li {
+	font-size: 1.0625rem;
+}
+
+/* Cost: explanation and action on the left, a readable table on the right. */
+body.single-services.rz-svc-layout .rz-svc-price-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.35fr);
+	gap: 3.5rem;
+	align-items: start;
+}
+
+body.single-services.rz-svc-layout .rz-svc-price-layout__intro > .is-style-panel {
+	padding: 0;
+	margin: 0 0 1.5rem;
+	background: none;
+	font-size: 1.0625rem;
+	color: var(--rz-ink-soft);
+}
+
+body.single-services.rz-svc-layout .rz-svc-price .wp-block-table.is-style-pricelist {
+	margin: 0;
+	max-width: none;
+}
+
+body.single-services.rz-svc-layout .rz-svc-price .is-style-pricelist tbody td {
+	padding-block: 0.875rem;
+	font-size: 1.0625rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-price .is-style-pricelist tbody tr:has(strong) td {
+	border-top: 2px solid var(--rz-action);
+	color: var(--rz-action);
+}
+
+/* FAQ and final contact block follow the same vertical rhythm. */
+body.single-services.rz-svc-layout .rz-svc-faq__list {
+	margin-top: 0;
+}
+
+body.single-services.rz-svc-layout .rz-svc-faq__list > .wp-block-details > summary {
+	padding-block: 1.25rem;
+	font-size: 1.125rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-faq__list > .wp-block-details > p {
+	max-width: 62rem;
+	font-size: 1.0625rem;
+}
+
+body.single-services.rz-svc-layout .rz-callback {
+	padding-block: 3.5rem;
+}
+
+/* The funeral page retains its useful first-actions card. */
+body.single-services.rz-svc-layout .rz-svc-intro-with-card {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+	gap: 2.5rem;
+	align-items: center;
+}
+
+body.single-services.rz-svc-layout .rz-svc-intro-with-card > * {
+	margin: 0;
+}
+
+body.single-services.rz-svc-layout .rz-svc-intro__card .rz-svc-card__title {
+	font-size: 1.625rem;
+	margin: 0;
+}
+
+body.single-services.rz-svc-layout .rz-svc-section-note > p {
+	margin-top: 0;
+	font-size: 1.0625rem;
+	color: var(--rz-ink-soft);
+}
+
+body.single-services.rz-svc-layout .rz-svc-section-note > :last-child {
+	margin-bottom: 0;
+}
+
+/* Long checklists use the whole row; short exceptions sit below them. */
+body.single-services.rz-svc-layout .rz-svc-document-cards--stacked {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+body.single-services.rz-svc-layout .rz-svc-document-cards--stacked .rz-svc-docs__group > ul {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, max(22rem, calc((100% - 2.5rem) / 2))), 1fr));
+	gap: 0.5rem 2.5rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-document-cards--stacked .rz-svc-docs__group > ul > li {
+	border-top: 1px solid var(--rz-line);
+}
+
+body.single-services.rz-svc-layout .rz-svc-sec__inner > ul.rz-svc-timeline__note-list {
+	max-width: none;
+	margin-top: 1.75rem;
+	padding-left: 1.25rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-timeline__note-list > li {
+	font-size: 1.0625rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-timeline__note + .rz-svc-timeline__note {
+	margin-top: 1rem;
+}
+
+/* Packages keep their four options, including the unfilled prices and contents. */
+body.single-services.rz-svc-layout .rz-svc-price__head {
+	gap: 2.5rem;
+	align-items: start;
+}
+
+body.single-services.rz-svc-layout .rz-svc-price__head .rz-svc-price__text > h2 {
+	margin-bottom: 1rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-price__cards {
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, max(15rem, calc((100% - 3rem) / 4))), 1fr));
+	margin-top: 1.75rem;
+	gap: 1rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-price-layout__intro > p:not(.is-style-panel) {
+	font-size: 1.0625rem;
+	color: var(--rz-ink-soft);
+	margin-bottom: 1.5rem;
+}
+
+/* The line connects the centres of the columns, with equal space at both ends. */
+@media (min-width: 48rem) {
+	body.single-services.rz-svc-layout .rz-svc-timeline__list > li {
+		text-align: center;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-timeline__list > li::before {
+		left: calc(50% - 0.375rem);
+		z-index: 1;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-timeline__list > li::after {
+		left: 50%;
+		right: calc(-50% - 1.5rem);
+	}
+}
+
+@media (max-width: 63.99rem) {
+	body.single-services.rz-svc-layout .rz-svc-hero__grid {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 1.75rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-hero__title {
+		max-width: none;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-hero__media .rz-photo-slot {
+		min-height: 0;
+		aspect-ratio: auto;
+		height: 15rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-price-layout {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 2rem;
+	}
+}
+
+@media (max-width: 47.99rem) {
+	body.single-services.rz-svc-layout .rz-svc-sec h2 {
+		margin-bottom: 1.5rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-hero {
+		padding-top: 1rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-hero__facts {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+		gap: 1rem;
+		margin-top: 1.25rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--rz-line);
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-hero__fact {
+		padding-left: 0;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-hero__fact::before {
+		content: none;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-hero__fact > p {
+		font-size: 1rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-hero__fact > p + p {
+		font-size: 0.9375rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-hero__facts:has(> :nth-child(3):last-child) > :last-child {
+		grid-column: 1 / -1;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-hero__media .rz-photo-slot {
+		height: 11.5rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-nav {
+		gap: 0.125rem 1.5rem;
+		margin-top: 1.5rem;
+		padding-block: 0.5rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-nav a {
+		font-size: 0.9375rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-intro-columns,
+	body.single-services.rz-svc-layout .rz-svc-document-cards,
+	body.single-services.rz-svc-layout .rz-svc-section-head {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 1rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-section-head h2 {
+		margin-bottom: 0;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-card {
+		padding: 1.25rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-gallery {
+		gap: 0.75rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-gallery__slot {
+		min-height: 9.5rem;
+		aspect-ratio: auto;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-price .is-style-pricelist thead {
+		display: table-header-group;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-price .is-style-pricelist table {
+		display: table;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-price .is-style-pricelist tbody {
+		display: table-row-group;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-price .is-style-pricelist tbody tr {
+		display: table-row;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-price .is-style-pricelist tbody td {
+		display: table-cell;
+		border-top: 1px solid var(--rz-line);
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-price .is-style-pricelist tbody td:last-child {
+		padding-left: 1rem;
+		text-align: right;
+	}
+}

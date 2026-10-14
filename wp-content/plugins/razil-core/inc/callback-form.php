@@ -68,7 +68,7 @@ const RAZIL_CALLBACK_PHONE_MAX = 32;
  * Состояние страницы после редиректа.
  */
 function razil_callback_state(): string {
-	return razil_form_state( 'rzcb', array( 'err', 'captcha', 'captcha_expired' ) );
+	return razil_form_state( 'rzcb', array( 'err', 'captcha', 'captcha_expired', 'throttle' ) );
 }
 
 /**
@@ -113,6 +113,11 @@ function razil_callback_notice(): string {
 			'captcha' => 'Проверка не пройдена, заявка не отправлена. Попробуйте ещё раз. Введённое сохранено.',
 			'captcha_expired' => 'Страница была открыта слишком давно, и проверка устарела. Обновите страницу '
 				. 'и отправьте заявку ещё раз. Введённое сохранено.',
+			'throttle' => sprintf(
+				'Заявка недавно уже была отправлена. Повторить отправку можно через несколько минут. '
+					. 'Введённое сохранено. Если нужна срочная помощь, позвоните: %s.',
+				razil_org( 'phone' )
+			),
 		),
 		'ok',
 		array( 'rzcb', 'rzcbk' )
@@ -489,6 +494,11 @@ function razil_callback_handle(): void {
 	 */
 	if ( 'captcha' === $guard || 'captcha_expired' === $guard ) {
 		razil_callback_fail( $guard );
+	}
+
+	// Повтор ограничен по времени, а не из-за ошибки в заполненных полях.
+	if ( 'throttle' === $guard ) {
+		razil_callback_fail( 'throttle' );
 	}
 
 	if ( '' !== $guard ) {

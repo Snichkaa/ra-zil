@@ -145,6 +145,7 @@ function razil_review_state(): string {
 		array(
 			'ok',
 			'err',
+			'storage',
 			'captcha',
 			'captcha_expired',
 			'no_rating',
@@ -169,6 +170,7 @@ function razil_review_notice(): string {
 		array(
 			'ok'              => 'Спасибо. Отзыв отправлен и появится на сайте после проверки.',
 			'err'             => 'Не удалось отправить отзыв. Проверьте, что все поля заполнены, и попробуйте ещё раз. Написанное сохранено.',
+			'storage'         => 'Не удалось сохранить отзыв. Написанное сохранено в форме. Попробуйте отправить отзыв ещё раз через несколько минут.',
 			'captcha'         => 'Проверка не пройдена, отзыв не отправлен. Попробуйте отправить ещё раз. Написанное сохранено.',
 			'captcha_expired' => 'Страница была открыта слишком давно, и проверка устарела. Обновите страницу '
 				. 'и отправьте отзыв ещё раз. Написанное сохранено.',
@@ -484,7 +486,7 @@ function razil_review_handle(): void {
 	);
 
 	if ( is_wp_error( $post_id ) || ! $post_id ) {
-		razil_review_redirect( 'err' );
+		razil_review_redirect( 'storage', razil_review_stash() );
 	}
 
 	update_post_meta( $post_id, '_razil_rating', $rating );
@@ -494,7 +496,12 @@ function razil_review_handle(): void {
 	set_transient( $key, 1, RAZIL_REVIEW_THROTTLE );
 
 	// --- уведомление. Не удалось отправить — отзыв всё равно сохранён.
-	$edit = get_edit_post_link( $post_id, 'raw' );
+	// Отправитель анонимен, поэтому get_edit_post_link() не даёт ссылку.
+	// Адрес для администратора формируем напрямую; вход и права проверяет WP.
+	$edit = add_query_arg(
+		array( 'post' => $post_id, 'action' => 'edit' ),
+		admin_url( 'post.php' )
+	);
 	$body = "Имя: $name\n"
 		. "Оценка: $rating из 5\n\n"
 		. "Текст:\n$text\n\n"

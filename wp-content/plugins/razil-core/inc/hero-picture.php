@@ -13,8 +13,10 @@
  */
 defined( 'ABSPATH' ) || exit;
 
-const RAZIL_HERO_FILE_DESKTOP = '2026/09/ofis-ulica-panorama.webp';
-const RAZIL_HERO_FILE_MOBILE  = '2026/09/ofis-ulica-mobile.webp';
+const RAZIL_HERO_FILE_DESKTOP = '2026/10/kazarmenny-glavnyy-ekran.webp';
+// The new full-resolution photograph supports both layouts through CSS cropping.
+// Leave empty to use its responsive srcset instead of the previous mobile photo.
+const RAZIL_HERO_FILE_MOBILE  = '';
 const RAZIL_HERO_MOBILE_MEDIA = '(max-width: 47.99rem)';
 
 if ( ! function_exists( 'razil_hero_attachment_id' ) ) {

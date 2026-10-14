@@ -20,6 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 define( 'RAZIL_VERSION', '1.1.0' );
 
+require_once get_theme_file_path( 'inc/site-pages.php' );
+
 /**
  * Версия конкретного файла темы для аргумента $ver.
  *
@@ -318,7 +320,25 @@ function razil_enqueue_styles() {
 		array( 'razil-tokens' ),
 		razil_asset_version( 'assets/css/main.css' )
 	);
+
+	if ( is_singular( 'services' ) ) {
+		wp_enqueue_style(
+			'razil-service-details',
+			get_theme_file_uri( 'assets/css/service-details.css' ),
+			array( 'razil-main' ),
+			razil_asset_version( 'assets/css/service-details.css' )
+		);
+	}
 }
+
+/** Scope the shared detail layout to services, leaving archives and other pages intact. */
+function razil_service_body_class( $classes ) {
+	if ( is_singular( 'services' ) ) {
+		$classes[] = 'rz-svc-layout';
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'razil_service_body_class' );
 add_action( 'wp_enqueue_scripts', 'razil_enqueue_styles' );
 
 /**

@@ -1,55 +1,31 @@
 <!-- wp:template-part {"slug":"header","theme":"razil"} /-->
 
-<!-- wp:group {"style":{"color":{"background":"var(\u002d\u002drz-bg)"},"spacing":{"padding":{"top":"3rem","right":"1rem","bottom":"3rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group has-background" style="background-color:var(--rz-bg);padding-top:3rem;padding-right:1rem;padding-bottom:3rem;padding-left:1rem">
-	<!-- wp:group {"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group">
-		<!-- wp:post-title {"level":1} /-->
+<!-- wp:group {"tagName":"main","className":"rz-page-shell rz-reviews-page","layout":{"type":"default"}} -->
+<main class="wp-block-group rz-page-shell rz-reviews-page"><!-- wp:post-title {"level":1} /-->
 
-		<!-- wp:paragraph {"fontSize":"body","style":{"spacing":{"margin":{"top":"1rem"}}}} -->
-		<p class="has-body-font-size" style="margin-top:1rem">Что говорят семьи, которым мы помогали</p>
-		<!-- /wp:paragraph -->
+<!-- wp:paragraph {"className":"rz-page-lead"} -->
+<p class="rz-page-lead">Слова семей, которым мы помогали.</p>
+<!-- /wp:paragraph -->
 
-		<!-- Текст страницы редактируется клиентом из админки; список
-		     ниже берёт все опубликованные отзывы без ограничения. -->
-		<!-- wp:post-content /-->
+<!-- wp:paragraph {"className":"rz-reviews__link"} -->
+<p class="rz-reviews__link"><a href="https://2gis.ru/khabarovsk/firm/4926340373441419" target="_blank" rel="noopener">Читать отзывы в 2ГИС</a></p>
+<!-- /wp:paragraph -->
 
-		<!-- Переход в 2ГИС — основное действие раздела (§23.3): отзывы
-		     на сайте проверить нельзя, а во внешнем источнике можно.
-		     Ссылка и её текст те же, что в блоке отзывов на главной. -->
-		<!-- wp:paragraph {"className":"rz-reviews__link"} -->
-		<p class="rz-reviews__link"><a href="https://2gis.ru/khabarovsk/firm/4926340373441419" target="_blank" rel="noopener">Все 30 отзывов в 2ГИС</a></p>
-		<!-- /wp:paragraph -->
+<!-- wp:details {"className":"rz-review-compose"} -->
+<details class="wp-block-details rz-review-compose"><summary>Оставить отзыв</summary><!-- wp:group {"className":"rz-review-form-wrap","layout":{"type":"default"}} -->
+<div class="wp-block-group rz-review-form-wrap"><!-- wp:paragraph -->
+<p>Расскажите о вашем опыте обращения в агентство.</p>
+<!-- /wp:paragraph -->
 
-		<!-- wp:group {"className":"rz-otzyvy"} -->
-		<div class="wp-block-group rz-otzyvy">
-			<!-- wp:group {"className":"rz-otzyvy__list"} -->
-			<div class="wp-block-group rz-otzyvy__list">
-				<!-- wp:razil/reviews {"display":"list"} /-->
-			</div>
-			<!-- /wp:group -->
+<!-- wp:shortcode -->
+[razil_review_form]
+<!-- /wp:shortcode --></div>
+<!-- /wp:group --></details>
+<!-- /wp:details -->
 
-			<!-- Шорткод, а не wp:html: так форма останется живой, даже если
-			     клиент откроет шаблон в редакторе и сохранит его. -->
-			<!-- wp:group {"className":"rz-otzyvy__form"} -->
-			<div class="wp-block-group rz-otzyvy__form">
-				<!-- wp:group {"className":"rz-review-form-wrap"} -->
-				<div class="wp-block-group rz-review-form-wrap">
-					<!-- wp:heading {"level":2} -->
-					<h2>Оставить отзыв</h2>
-					<!-- /wp:heading -->
-					<!-- wp:shortcode -->
-					[razil_review_form]
-					<!-- /wp:shortcode -->
-				</div>
-				<!-- /wp:group -->
-			</div>
-			<!-- /wp:group -->
-		</div>
-		<!-- /wp:group -->
-	</div>
-	<!-- /wp:group -->
-</div>
+<!-- wp:post-content /-->
+
+<!-- wp:razil/reviews {"display":"list","step":6} /--></main>
 <!-- /wp:group -->
 
 <!-- wp:template-part {"slug":"sticky-call","theme":"razil"} /-->
