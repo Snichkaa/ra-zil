@@ -294,6 +294,12 @@
 			cbDialog.querySelector( '#rz-cb-dialog-title' ).textContent = topic === 'price'
 				? 'Обсудить стоимость по телефону' : topic === 'hall' ? 'Обсудить прощание в зале' : 'Заказать обратный звонок';
 		}
+		else {
+			// Restore the service-specific heading after a server-side error.
+			var restoredTopic = cbDialog.querySelector( '[name="rz_cb_topic"]' ).value;
+			cbDialog.querySelector( '#rz-cb-dialog-title' ).textContent = restoredTopic === 'price'
+				? 'Обсудить стоимость по телефону' : restoredTopic === 'hall' ? 'Обсудить прощание в зале' : 'Заказать обратный звонок';
+		}
 		cbDialog.showModal();
 
 		// Сообщение об ошибке важнее поля: если окно открылось само после
@@ -326,6 +332,7 @@
 
 		// Esc закрывает окно силами браузера, здесь только возврат фокуса.
 		cbDialog.addEventListener( 'close', function () {
+			if ( cbDialog.hasAttribute( 'data-rz-captcha-suspended' ) || cbDialog.open ) { return; }
 			if ( cbReturn && document.contains( cbReturn ) ) {
 				cbReturn.focus();
 			}
