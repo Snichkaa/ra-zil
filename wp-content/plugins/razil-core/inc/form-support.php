@@ -396,6 +396,37 @@ window.razilCaptchaInit = function () {
 
 		var sent = false;
 		var timer = null;
+		var waiting = false;
+		var dialog = form.closest( 'dialog' );
+		var suspended = false;
+		var btn = form.querySelector( '[type="submit"]' );
+		var note = null;
+
+		function stopTimer() {
+			if ( timer ) { window.clearTimeout( timer ); timer = null; }
+		}
+		function resumeForm() {
+			if ( ! suspended ) { return; }
+			suspended = false;
+			if ( ! sent && dialog && document.contains( dialog ) ) {
+				if ( ! dialog.open ) { dialog.showModal(); }
+				if ( btn ) { btn.focus(); }
+			}
+			if ( dialog ) { dialog.removeAttribute( 'data-rz-captcha-suspended' ); }
+		}
+		function showError( text ) {
+			if ( sent ) { return; }
+			stopTimer();
+			waiting = false;
+			if ( btn ) { btn.disabled = false; }
+			resumeForm();
+			if ( note ) { note.remove(); }
+			note = document.createElement( 'p' );
+			note.className = 'rz-form__note';
+			note.setAttribute( 'role', 'status' );
+			note.textContent = text;
+			form.appendChild( note );
+		}
 
 		var send = function () {
 			if ( sent ) {
@@ -403,10 +434,7 @@ window.razilCaptchaInit = function () {
 			}
 
 			sent = true;
-
-			if ( timer ) {
-				window.clearTimeout( timer );
-			}
+			stopTimer();
 
 			form.submit();
 		};
@@ -418,8 +446,32 @@ window.razilCaptchaInit = function () {
 			callback: send
 		} );
 
-		var btn = form.querySelector( '[type="submit"]' );
-		var note = null;
+		if ( typeof window.smartCaptcha.subscribe === 'function' ) {
+			window.smartCaptcha.subscribe( widget, 'challenge-visible', function () {
+				// The provider mounts its challenge outside the native dialog.
+				// Temporarily leave the top layer so the challenge is operable.
+				stopTimer();
+				if ( dialog && dialog.open ) {
+					suspended = true;
+					dialog.setAttribute( 'data-rz-captcha-suspended', '' );
+					dialog.close();
+				}
+			} );
+			window.smartCaptcha.subscribe( widget, 'challenge-hidden', function () {
+				// Success may arrive in the same SDK turn as challenge-hidden.
+				window.setTimeout( function () {
+					if ( ! sent ) {
+						showError( 'Проверка закрыта. Нажмите кнопку отправки, чтобы попробовать ещё раз.' );
+					}
+				}, 0 );
+			} );
+			window.smartCaptcha.subscribe( widget, 'network-error', function () {
+				showError( 'Не удалось связаться с сервисом проверки. Попробуйте ещё раз.' );
+			} );
+			window.smartCaptcha.subscribe( widget, 'javascript-error', function () {
+				showError( 'Не удалось запустить проверку. Обновите страницу или позвоните нам.' );
+			} );
+		}
 
 		form.addEventListener( 'submit', function ( event ) {
 			if ( sent ) {
@@ -427,6 +479,8 @@ window.razilCaptchaInit = function () {
 			}
 
 			event.preventDefault();
+			if ( waiting ) { return; }
+			waiting = true;
 
 			if ( btn ) {
 				btn.disabled = true;
@@ -448,18 +502,11 @@ window.razilCaptchaInit = function () {
 			 * кнопку и объясняем, что произошло.
 			 */
 			timer = window.setTimeout( function () {
-				if ( btn ) {
-					btn.disabled = false;
-				}
-
-				note = document.createElement( 'p' );
-				note.className = 'rz-form__note';
-				note.setAttribute( 'role', 'status' );
-				note.textContent = 'Проверка не отвечает. Попробуйте отправить ещё раз.';
-				form.appendChild( note );
+				showError( 'Проверка не отвечает. Попробуйте отправить ещё раз.' );
 			}, 10000 );
 
-			window.smartCaptcha.execute( widget );
+			try { window.smartCaptcha.execute( widget ); }
+			catch ( error ) { showError( 'Не удалось запустить проверку. Попробуйте ещё раз.' ); }
 		} );
 	} );
 };

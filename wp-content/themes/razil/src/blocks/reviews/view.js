@@ -1,429 +1,158 @@
-/**
- * Карусель отзывов — надстройка над CSS scroll-snap.
- *
- * Без этого файла карусель остаётся рабочей: трек прокручивается
- * пальцем, колесом и с клавиатуры. JS добавляет стрелки, счётчик,
- * автопрокрутку и бесконечную ленту.
- *
- * Модель данных:
- *   items — оригиналы, снимаются ОДИН раз при инициализации и никогда
- *           не пересобираются. По ним считаются счётчик, остаток в goTo
- *           и условие автопрокрутки.
- *   cells — актуальные дети трека, пересобираются при каждой сборке
- *           или разборке клонов. По ним считаются позиции прокрутки.
- *   current — индекс ОРИГИНАЛА, 0..items.length-1.
- * Перевод между списками: data-rz-index на каждой ячейке (обратно)
- * и cellIndexOf() (прямо).
- *
- * Видимостью навигации управляет класс на .rz-reviews__nav, а не атрибут
- * hidden: [hidden]{display:none} имеет нулевую специфичность и проигрывает
- * авторскому .rz-reviews__arrow{display:flex}.
- */
-
+/** Infinite review carousel. Complete neighbour sets prevent empty edges. */
 const AUTOPLAY_MS = 7000;
-
-/**
- * Клоны нужны только там, где видны соседние карточки. Ниже 48rem карточка
- * во всю ширину, подглядывания нет, и перепрыгивание дало бы лишь риск
- * подёргивания на тач-устройствах.
- */
-const CLONES_FROM = '(min-width: 48rem)';
-
-/** Пользователь просил меньше движения — уважаем на всех уровнях. */
 const reducedMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' );
 
 function initCarousel( root ) {
-	const track = root.querySelector( '[data-rz-track]' );
-	const prev = root.querySelector( '[data-rz-prev]' );
-	const next = root.querySelector( '[data-rz-next]' );
-	const counter = root.querySelector( '[data-rz-counter]' );
-	const nav = root.querySelector( '[data-rz-nav]' );
-
-	if ( ! track ) {
-		return;
-	}
-
-	/** Оригиналы. Снято до какого-либо клонирования, дальше неизменно. */
-	const items = Array.from( track.children );
-	if ( items.length === 0 ) {
-		return;
-	}
-
-	const wide = window.matchMedia( CLONES_FROM );
-
-	let cells = items.slice();
-	let cloned = false;
-	let current = 0;
-	let timer = null;
-	let paused = false;
-
-	/** Человек взялся листать сам — автопрокрутку больше не запускаем до перезагрузки. */
-	let userTookOver = false;
-
-	/**
-	 * Прокрутку начал код, а не человек. Обработчик scroll срабатывает и от
-	 * программной прокрутки, и без этого признака автопрокрутка остановила бы
-	 * сама себя после первого же слайда, а перепрыгивание с клона — сразу же.
-	 */
-	let isProgrammatic = false;
-
-	const smooth = () => ( reducedMotion.matches ? 'auto' : 'smooth' );
-
-	// --- клоны и перевод индексов
-
-	/**
-	 * Собирает или разбирает клоны и пересобирает cells.
-	 *
-	 * Клоны создаёт JS, а не render.php: без JS лента должна оставаться
-	 * корректной — три отзыва, без дубликатов.
-	 *
-	 * @param {boolean} shouldClone Нужны ли клоны на текущей ширине.
-	 */
-	function buildCells( shouldClone ) {
-		track.querySelectorAll( '[data-rz-clone]' ).forEach( ( el ) => el.remove() );
-
-		if ( shouldClone ) {
-			const head = items[ items.length - 1 ].cloneNode( true );
-			const tail = items[ 0 ].cloneNode( true );
-
-			[ head, tail ].forEach( ( clone ) => {
-				clone.setAttribute( 'aria-hidden', 'true' );
-				clone.setAttribute( 'data-rz-clone', '' );
-				clone.removeAttribute( 'id' );
-				clone
-					.querySelectorAll( '[id]' )
-					.forEach( ( el ) => el.removeAttribute( 'id' ) );
-			} );
-
-			track.insertBefore( head, items[ 0 ] );
-			track.appendChild( tail );
-		}
-
-		cloned = shouldClone;
-		cells = Array.from( track.children );
-
-		cells.forEach( ( cell, i ) => {
-			let originalIndex = i;
-
-			if ( cloned ) {
-				if ( i === 0 ) {
-					originalIndex = items.length - 1;
-				} else if ( i === cells.length - 1 ) {
-					originalIndex = 0;
-				} else {
-					originalIndex = i - 1;
-				}
-			}
-
-			cell.setAttribute( 'data-rz-index', String( originalIndex ) );
-		} );
-	}
-
-	/** Оригинал -> ячейка. С клонами всё сдвинуто вправо на один. */
-	function cellIndexOf( originalIndex ) {
-		return cloned ? originalIndex + 1 : originalIndex;
-	}
-
-	/** Ячейка -> оригинал, по атрибуту, проставленному при сборке. */
-	function originalIndexOf( cellIndex ) {
-		return Number( cells[ cellIndex ].dataset.rzIndex );
-	}
-
-	// --- позиции
-
-	/**
-	 * Позиция ячейки: центрируем её в треке. Индексация по cells.
-	 * scroll-snap-align: center доводит до точной позиции.
-	 */
-	function offsetOf( cellIndex ) {
-		const cell = cells[ cellIndex ];
-		const centered =
-			cell.offsetLeft - ( track.clientWidth - cell.offsetWidth ) / 2;
-
-		return Math.max(
-			0,
-			Math.min( centered, track.scrollWidth - track.clientWidth )
-		);
-	}
-
-	/** Индекс ЯЧЕЙКИ, чей центр ближе к центру трека. */
-	function nearestSlide() {
-		const viewCenter = track.scrollLeft + track.clientWidth / 2;
-		let best = 0;
-		let bestDistance = Infinity;
-
-		cells.forEach( ( cell, i ) => {
-			const cellCenter = cell.offsetLeft + cell.offsetWidth / 2;
-			const distance = Math.abs( cellCenter - viewCenter );
-			if ( distance < bestDistance ) {
-				bestDistance = distance;
-				best = i;
-			}
-		} );
-
-		return best;
-	}
-
-	/** Плавная прокрутка к ячейке. Адресует cells напрямую. */
-	function scrollToCell( cellIndex, behavior ) {
-		const left = offsetOf( cellIndex );
-
-		// Признак ставим только если прокрутка реально произойдёт, иначе он
-		// остался бы висеть и следующий свайп человека прочитался бы как код.
-		isProgrammatic = Math.abs( track.scrollLeft - left ) > 1;
-
-		track.scrollTo( {
-			left,
-			behavior: behavior || smooth(),
-		} );
-	}
-
-	/**
-	 * Мгновенная установка позиции.
-	 *
-	 * Порядок операций обязателен именно такой: сохранить scroll-behavior,
-	 * поставить auto, изменить scrollLeft, вернуть сохранённое. Без последнего
-	 * шага плавная прокрутка пропадёт до перезагрузки страницы.
-	 *
-	 * behavior: 'auto' в scrollTo() здесь не годится — по спецификации это
-	 * «взять значение из CSS», то есть smooth, а не «мгновенно».
-	 */
-	function jumpToCell( cellIndex ) {
-		const saved = track.style.scrollBehavior;
-		const left = offsetOf( cellIndex );
-
-		track.style.scrollBehavior = 'auto';
-		// Признак ставим непосредственно перед сдвигом: общий дебаунс на 120 мс
-		// мог успеть его сбросить, и тогда прыжок засчитался бы за ручное
-		// вмешательство и остановил автопрокрутку.
-		isProgrammatic = true;
-		track.scrollLeft = left;
-		track.style.scrollBehavior = saved;
-	}
-
-	// --- состояние
-
-	/**
-	 * Счётчик показывает номер оригинала, клоны в знаменатель не входят.
-	 * is-current ставится по совпадению data-rz-index, поэтому оригинал
-	 * и его клон подсвечиваются одновременно — подглядывающая копия
-	 * не оказывается приглушённой не в такт.
-	 */
-	function sync() {
-		if ( counter ) {
-			counter.textContent = `${ current + 1 } из ${ items.length }`;
-		}
-
-		cells.forEach( ( cell ) => {
-			cell.classList.toggle(
-				'is-current',
-				Number( cell.dataset.rzIndex ) === current
-			);
-		} );
-	}
-
-	/**
-	 * Переход к оригиналу. Снаружи принимает индекс оригинала, внутри
-	 * переводит в индекс ячейки.
-	 *
-	 * Выход за диапазон адресует клон, а не настоящий крайний слайд: клон
-	 * стоит рядом, поэтому прокрутка короткая и идёт в ту же сторону, куда
-	 * человек нажал. Прыжок на оригинал произойдёт потом, после остановки.
-	 */
-	function goTo( originalIndex, behavior ) {
-		const total = items.length;
-		const wrapped = ( ( originalIndex % total ) + total ) % total;
-
-		let cellIndex = cellIndexOf( wrapped );
-
-		if ( cloned ) {
-			if ( originalIndex >= total ) {
-				cellIndex = cells.length - 1;
-			} else if ( originalIndex < 0 ) {
-				cellIndex = 0;
-			}
-		}
-
-		current = wrapped;
-		scrollToCell( cellIndex, behavior );
-		sync();
-	}
-
-	/**
-	 * Если прокрутка остановилась на клоне — мгновенно переставляем её
-	 * на оригинал. Идёт своим путём, отдельно от дебаунса, который считает
-	 * текущий слайд: там 120 мс, и сосед справа появлялся с заметной задержкой.
-	 *
-	 * Вызывается из двух источников — scrollend и короткого таймера, — поэтому
-	 * защищён от повторного срабатывания: после прыжка ближайшей становится
-	 * ячейка-оригинал, и следующий вызов выходит по проверке ниже.
-	 */
-	function hopFromClone() {
-		if ( ! cloned ) {
-			return;
-		}
-
-		const cellIndex = nearestSlide();
-		const isHead = cellIndex === 0;
-		const isTail = cellIndex === cells.length - 1;
-
-		if ( ! isHead && ! isTail ) {
-			return;
-		}
-
-		jumpToCell( cellIndexOf( isHead ? items.length - 1 : 0 ) );
-		sync();
-	}
-
-	/** Пересборка ленты: клоны по текущей ширине, позиция на текущем оригинале. */
-	function rebuild() {
-		buildCells( items.length > 1 && wide.matches );
-
-		if ( nav ) {
-			nav.classList.toggle( 'rz-reviews__nav--hidden', items.length < 2 );
-		}
-
-		jumpToCell( cellIndexOf( current ) );
-		sync();
-	}
-
-	/** Ширина слайда поменялась — текущую карточку надо снова центрировать. */
-	function layout() {
-		jumpToCell( cellIndexOf( current ) );
-		sync();
-	}
-
-	// --- автопрокрутка
-
-	function stop() {
-		if ( timer ) {
-			window.clearInterval( timer );
-			timer = null;
-		}
-	}
-
-	function start() {
-		stop();
-		if (
-			paused ||
-			userTookOver ||
-			items.length < 2 ||
-			reducedMotion.matches
-		) {
-			return;
-		}
-		timer = window.setInterval( () => goTo( current + 1 ), AUTOPLAY_MS );
-	}
-
-	function pause() {
-		paused = true;
-		stop();
-	}
-
-	function resume() {
-		paused = false;
-		start();
-	}
-
-	/** Человек взялся листать сам — двигать страницу под ним нельзя. */
-	function takeOver() {
-		userTookOver = true;
-		stop();
-	}
-
-	// --- события
-
-	if ( prev ) {
-		prev.addEventListener( 'click', () => {
-			takeOver();
-			goTo( current - 1 );
-		} );
-	}
-	if ( next ) {
-		next.addEventListener( 'click', () => {
-			takeOver();
-			goTo( current + 1 );
-		} );
-	}
-
-	root.addEventListener( 'mouseenter', pause );
-	root.addEventListener( 'mouseleave', resume );
-	root.addEventListener( 'focusin', pause );
-	root.addEventListener( 'focusout', ( e ) => {
-		if ( ! root.contains( e.relatedTarget ) ) {
-			resume();
-		}
-	} );
-
-	/**
-	 * Перепрыгивание отдельно от определения текущего слайда.
-	 *
-	 * scrollend приходит ровно в момент остановки прокрутки — это и есть
-	 * самый ранний корректный момент. Где события нет, берём короткий таймер
-	 * на 40 мс: прыжок успевает произойти до того, как глаз заметит край ленты.
-	 */
-	const HOP_FALLBACK_MS = 40;
-	const hasScrollEnd = 'onscrollend' in window;
-
-	let hopTick = null;
-	if ( hasScrollEnd ) {
-		track.addEventListener( 'scrollend', hopFromClone, { passive: true } );
-	}
-
-	// Свайп и прокрутка ведут трек сами — только подхватываем позицию.
-	let scrollTick = null;
-	track.addEventListener(
-		'scroll',
-		() => {
-			if ( ! hasScrollEnd ) {
-				window.clearTimeout( hopTick );
-				hopTick = window.setTimeout( hopFromClone, HOP_FALLBACK_MS );
-			}
-
-			window.clearTimeout( scrollTick );
-			scrollTick = window.setTimeout( () => {
-				const wasProgrammatic = isProgrammatic;
-				isProgrammatic = false;
-
-				if ( ! wasProgrammatic ) {
-					takeOver();
-				}
-
-				current = originalIndexOf( nearestSlide() );
-				sync();
-			}, 120 );
-		},
-		{ passive: true }
-	);
-
-	// Вкладка не видна — не крутим впустую.
-	document.addEventListener( 'visibilitychange', () => {
-		if ( document.hidden ) {
-			stop();
-		} else {
-			start();
-		}
-	} );
-
-	let resizeTick = null;
-	window.addEventListener( 'resize', () => {
-		window.clearTimeout( resizeTick );
-		resizeTick = window.setTimeout( layout, 150 );
-	} );
-
-	// Пересечение 48rem — собрать или разобрать клоны.
-	if ( typeof wide.addEventListener === 'function' ) {
-		wide.addEventListener( 'change', rebuild );
-	}
-
-	if ( typeof reducedMotion.addEventListener === 'function' ) {
-		reducedMotion.addEventListener( 'change', start );
-	}
-
-	// Стартовая позиция — первый оригинал, мгновенно: иначе лента
-	// откроется на клоне последнего отзыва.
-	rebuild();
-	start();
+ const track = root.querySelector( '[data-rz-track]' );
+ if ( ! track ) { return; }
+ const items = Array.from( track.children );
+ const total = items.length;
+ const counter = root.querySelector( '[data-rz-counter]' );
+ const nav = root.querySelector( '[data-rz-nav]' );
+ if ( ! total ) { return; }
+ if ( nav ) { nav.classList.toggle( 'rz-reviews__nav--hidden', total < 2 ); }
+ if ( total < 2 ) { return; }
+
+ // Originals occupy the middle set on both desktop and touch screens.
+ function copy( item, index ) {
+  const clone = item.cloneNode( true );
+  clone.dataset.rzClone = '';
+  clone.dataset.rzIndex = String( index );
+  clone.setAttribute( 'aria-hidden', 'true' );
+  clone.inert = true;
+  clone.removeAttribute( 'id' );
+  clone.querySelectorAll( '[id]' ).forEach( ( el ) => el.removeAttribute( 'id' ) );
+  return clone;
+ }
+ const before = document.createDocumentFragment();
+ const after = document.createDocumentFragment();
+ items.forEach( ( item, i ) => {
+  item.dataset.rzIndex = String( i );
+  before.appendChild( copy( item, i ) );
+  after.appendChild( copy( item, i ) );
+ } );
+ track.prepend( before );
+ track.append( after );
+ const cells = Array.from( track.children );
+ let target = total;
+ let current = 0;
+ let moving = false;
+ let userTookOver = false;
+ let paused = false;
+ let timer;
+ let settleTimer;
+ let frame = null;
+ const wrap = ( n ) => ( ( n % total ) + total ) % total;
+ function offset( i ) {
+  return cells[i].offsetLeft - ( track.clientWidth - cells[i].offsetWidth ) / 2;
+ }
+ function nearest() {
+  return cells.reduce( ( best, cell, i ) =>
+   Math.abs( offset( i ) - track.scrollLeft ) < Math.abs( offset( best ) - track.scrollLeft ) ? i : best, 0 );
+ }
+ function sync() {
+  if ( counter ) { counter.textContent = ( current + 1 ) + ' из ' + total; }
+  cells.forEach( ( cell ) => cell.classList.toggle( 'is-current', Number( cell.dataset.rzIndex ) === current ) );
+ }
+ function jump( left ) {
+  // Explicit instant overrides CSS smooth scrolling; no delayed clone reset.
+  track.scrollTo( { left, behavior: 'instant' } );
+ }
+ function rebase() {
+  const canonical = total + wrap( target );
+  if ( target !== canonical ) {
+   const delta = offset( canonical ) - offset( target );
+   target = canonical;
+   jump( track.scrollLeft + delta );
+  }
+ }
+ function settle() {
+  if ( frame !== null ) { return; }
+  if ( moving && Math.abs( track.scrollLeft - offset( target ) ) > 2 ) { return; }
+  moving = false;
+  target = nearest();
+  current = wrap( target );
+  rebase();
+  sync();
+ }
+ function step( direction ) {
+  window.cancelAnimationFrame( frame );
+  frame = null;
+  // Keep the requested index while animation runs: fast repeated clicks count.
+  if ( ! moving ) { target = nearest(); }
+  if ( target + direction < 1 || target + direction > cells.length - 2 ) { rebase(); }
+  target += direction;
+  current = wrap( target );
+  moving = true;
+  sync();
+  const from = track.scrollLeft;
+  const destination = offset( target );
+  if ( reducedMotion.matches ) { jump( destination ); settle(); return; }
+  // A fixed short transition responds immediately, even after rapid clicks.
+  // Native smooth scrolling otherwise spends over a second on a long retarget.
+  track.style.scrollSnapType = 'none';
+  const started = performance.now();
+  function tick( now ) {
+   const progress = Math.min( 1, ( now - started ) / 260 );
+   jump( from + ( destination - from ) * ( 1 - Math.pow( 1 - progress, 3 ) ) );
+   if ( progress < 1 ) { frame = window.requestAnimationFrame( tick ); }
+   else {
+    frame = null;
+    track.style.scrollSnapType = '';
+    settle();
+   }
+  }
+  frame = window.requestAnimationFrame( tick );
+ }
+ function stop() { window.clearInterval( timer ); }
+ function start() {
+  stop();
+  if ( ! userTookOver && ! paused && ! document.hidden && ! reducedMotion.matches ) {
+   timer = window.setInterval( () => step( 1 ), AUTOPLAY_MS );
+  }
+ }
+ function takeOver() { userTookOver = true; stop(); }
+ for ( const [ selector, direction ] of [ [ '[data-rz-prev]', -1 ], [ '[data-rz-next]', 1 ] ] ) {
+  root.querySelector( selector )?.addEventListener( 'click', () => { takeOver(); step( direction ); } );
+ }
+ for ( const event of [ 'pointerdown', 'wheel', 'keydown' ] ) {
+  track.addEventListener( event, () => {
+   takeOver();
+   window.cancelAnimationFrame( frame );
+   frame = null;
+   moving = false;
+   track.style.scrollSnapType = '';
+  }, { passive: true } );
+ }
+ // scrollend has no extra debounce. The fallback is only for older browsers.
+ track.addEventListener( 'scrollend', settle );
+ track.addEventListener( 'scroll', () => {
+  if ( ! moving ) { current = wrap( nearest() ); sync(); }
+  if ( !( 'onscrollend' in track ) ) {
+   window.clearTimeout( settleTimer );
+   settleTimer = window.setTimeout( settle, 80 );
+  }
+ }, { passive: true } );
+ root.addEventListener( 'mouseenter', () => { paused = true; stop(); } );
+ root.addEventListener( 'mouseleave', () => { paused = false; start(); } );
+ root.addEventListener( 'focusin', () => { paused = true; stop(); } );
+ root.addEventListener( 'focusout', ( event ) => {
+  if ( !root.contains( event.relatedTarget ) ) { paused = false; start(); }
+ } );
+ document.addEventListener( 'visibilitychange', start );
+ reducedMotion.addEventListener( 'change', start );
+ function layout() {
+  window.cancelAnimationFrame( frame );
+  frame = null;
+  track.style.scrollSnapType = '';
+  moving = false;
+  target = total + current;
+  jump( offset( target ) );
+  sync();
+ }
+ new ResizeObserver( layout ).observe( track );
+ layout();
+ start();
 }
 
 /**

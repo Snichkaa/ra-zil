@@ -27,6 +27,15 @@
 </div>
 <!-- /wp:group -->
 
+<!-- Запас снизу под висящую кнопку звонка (§25: «фиксированная
+     кнопка не должна перекрывать последний пункт FAQ или элементы
+     подвала») переехал в main.css и действует только ниже 760 px —
+     там, где кнопка теперь и показывается. Здесь остаётся
+     собственный отступ подвала, 2rem, каким он был до того.
+
+     Инлайновый стиль правилом из таблицы не перебить, поэтому
+     в CSS запас поставлен через !important — случай, оговорённый
+     в задании. -->
 <!-- wp:group {"className":"rz-footer","align":"full","style":{"color":{"background":"var(\u002d\u002drz-ink)","text":"var(\u002d\u002drz-surface)"},"spacing":{"padding":{"top":"3rem","right":"1rem","bottom":"2rem","left":"1rem"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull rz-footer has-text-color has-background" style="background-color:var(--rz-ink);color:var(--rz-surface);padding-top:3rem;padding-right:1rem;padding-bottom:2rem;padding-left:1rem">
 
@@ -48,7 +57,7 @@
 			<!-- /wp:paragraph -->
 
 			<!-- wp:paragraph -->
-			<p>Офис: пн–сб 9:00–17:00, вс 9:00–16:00</p>
+			<p>Офис: ежедневно 9:00–17:00</p>
 			<!-- /wp:paragraph -->
 
 			<!-- wp:paragraph -->
@@ -80,7 +89,7 @@
 			<p><a href="/uslugi/blagoustroystvo/">Благоустройство мест захоронения</a></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:paragraph -->
-			<p><a href="/uslugi/yuridicheskaya-pomoshch/">Юридическая помощь</a></p>
+			<p><a href="/uslugi/yuridicheskaya-pomoshch/">Помощь с документами</a></p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:group -->

@@ -294,7 +294,6 @@ function razil_schema_add_faq( array $graph, $context ): array {
 		$graph[] = array(
 			'@type'          => 'Question',
 			'@id'            => $id,
-			'position'       => $index + 1,
 			'name'           => $pair['вопрос'],
 			'answerCount'    => 1,
 			'acceptedAnswer' => array(
@@ -437,12 +436,12 @@ function razil_schema_enrich_org( array $graph ): array {
 	 * Поле необязательное.
 	 */
 	$node['legalName'] = 'ООО «Земля и Люди»';
-	$node['telephone'] = '+74212605290';
+	$node['telephone'] = str_replace( 'tel:', '', razil_org_tel() );
 	$node['email']     = 'Zil@ra-zil.ru';
 
 	$node['description'] = 'Ритуальное агентство «Земля и Люди» в Хабаровске. '
 		. 'Организация похорон, кремация, транспортировка, благоустройство '
-		. 'мест захоронения, юридическая помощь. Приём звонков круглосуточно.';
+		. 'мест захоронения, помощь с документами. Приём звонков круглосуточно.';
 
 	$node['address'] = array(
 		'@type'           => 'PostalAddress',
@@ -464,27 +463,17 @@ function razil_schema_enrich_org( array $graph ): array {
 		'name'  => 'Хабаровск',
 	);
 
-	// Часы приёма в офисе. Спецификаций две, потому что воскресенье
-	// на час короче: закрытие в 16:00 против 17:00 в остальные дни.
-	// Одна запись на семь дней утверждала бы, что в воскресенье
-	// работают до семи, и расходилась бы с подвалом и «Контактами».
-	//
-	// Телефон работает дольше офиса - см. contactPoint ниже.
+	// Office hours confirmed by the owner on 19.11.2026; maps are not authoritative.
+	// Телефон дежурного специалиста — см. contactPoint ниже.
 	$node['openingHoursSpecification'] = array(
 		array(
 			'@type'     => 'OpeningHoursSpecification',
 			'dayOfWeek' => array(
 				'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-				'Friday', 'Saturday',
+				'Friday', 'Saturday', 'Sunday',
 			),
 			'opens'     => '09:00',
 			'closes'    => '17:00',
-		),
-		array(
-			'@type'     => 'OpeningHoursSpecification',
-			'dayOfWeek' => 'Sunday',
-			'opens'     => '09:00',
-			'closes'    => '16:00',
 		),
 	);
 
@@ -492,7 +481,7 @@ function razil_schema_enrich_org( array $graph ): array {
 		array(
 			'@type'             => 'ContactPoint',
 			'contactType'       => 'customer service',
-			'telephone'         => '+74212605290',
+			'telephone'         => str_replace( 'tel:', '', razil_org_tel() ),
 			'areaServed'        => 'RU',
 			'availableLanguage' => 'Russian',
 			'hoursAvailable'    => array(
@@ -529,6 +518,8 @@ function razil_schema_enrich_org( array $graph ): array {
 		),
 	);
 
+	$node['contactPoint'][] = array( '@type' => 'ContactPoint', 'contactType' => 'Помощь с документами', 'telephone' => str_replace( 'tel:', '', razil_org_tel( 'phone_legal' ) ), 'availableLanguage' => 'Russian', 'hoursAvailable' => $node['openingHoursSpecification'][0] );
+	$node['contactPoint'][] = array( '@type' => 'ContactPoint', 'contactType' => 'Офис', 'telephone' => str_replace( 'tel:', '', razil_org_tel( 'phone_office' ) ), 'availableLanguage' => 'Russian', 'hoursAvailable' => $node['openingHoursSpecification'][0] );
 	$graph[ $key ] = $node;
 
 	return $graph;
