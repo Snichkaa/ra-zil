@@ -1,6 +1,8 @@
 <!-- Телефон резервный: фактический задаётся в Настройки → Организация. -->
 
 <!-- wp:template-part {"slug":"header","theme":"razil"} /-->
+<!-- wp:group {"tagName":"main","anchor":"main-content","className":"rz-main","layout":{"type":"default"}} -->
+<main id="main-content" class="wp-block-group rz-main">
 
 <!-- wp:group {"className":"rz-hero rz-section","layout":{"type":"constrained"}} -->
 <div class="wp-block-group rz-hero rz-section"><!-- wp:image {"id":444,"sizeSlug":"full","linkDestination":"none","align":"full","className":"rz-hero__photo"} -->
@@ -27,8 +29,7 @@
 
 <!-- wp:html -->
 <div class="wp-block-button">
-				<a class="wp-block-button__link has-surface-color wp-element-button rz-button--icon" href="tel:+74212605290"><svg class="rz-button__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7.5 10 a4 4 0 0 1 6 -3 l4 4 a3 3 0 0 1 0 4 l-2 2 a15 15 0 0 0 9 9 l2 -2 a3 3 0 0 1 4 0 l4 4 a4 4 0 0 1 -3 6 c-13 1 -25 -12 -24 -24 z"/></svg><span>Позвоните нам в любое время дня и ночи</span></a>
-			</div>
+				<a class="wp-block-button__link has-surface-color wp-element-button rz-button--icon" href="tel:+74212605290"><svg class="rz-button__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7.5 10 a4 4 0 0 1 6 -3 l4 4 a3 3 0 0 1 0 4 l-2 2 a15 15 0 0 0 9 9 l2 -2 a3 3 0 0 1 4 0 l4 4 a4 4 0 0 1 -3 6 c-13 1 -25 -12 -24 -24 z"/></svg><span>Позвоните нам в любое время дня и ночи</span></a></div><nav class="rz-hero-shortcuts" aria-label="Быстрые переходы"><a href="/uslugi/">Услуги и стоимость</a><a href="#chto-delat">Что делать сейчас</a></nav>
 <!-- /wp:html -->
 
 </div>
@@ -36,8 +37,8 @@
 <!-- /wp:group --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"className":"rz-first-aid rz-section","layout":{"type":"constrained"}} -->
-<div class="wp-block-group rz-first-aid rz-section"><!-- wp:heading -->
+<!-- wp:group {"anchor":"chto-delat","className":"rz-first-aid rz-section","layout":{"type":"constrained"}} -->
+<div id="chto-delat" class="wp-block-group rz-first-aid rz-section"><!-- wp:heading -->
 <h2 class="wp-block-heading">Что делать, если уход из жизни близкого вам человека наступил дома</h2>
 <!-- /wp:heading -->
 
@@ -50,24 +51,15 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:group {"className":"rz-first-aid__body"} -->
-<div class="wp-block-group rz-first-aid__body"><!-- wp:list {"ordered":true,"className":"rz-first-aid__steps"} -->
-<ol class="wp-block-list rz-first-aid__steps"><!-- wp:list-item -->
-<li><strong>Позвоните нам:</strong> <a class="rz-emergency-tel" href="tel:+74212605290">+7 (4212) 60-52-90</a>. Мы подробно проконсультируем вас о дальнейших действиях, организуем перевозку усопшего в морг и возьмём на себя всё остальное. Спросите фамилию агента, который к вам приедет.</li>
-<!-- /wp:list-item -->
-
-<!-- wp:list-item -->
-<li><strong>Вызовите скорую помощь.</strong> С мобильного — <a class="rz-emergency-tel" href="tel:103">103</a>, со стационарного — <a class="rz-emergency-tel" href="tel:03">03</a>. Врач констатирует смерть и выдаст документ, без которого дальнейшие действия невозможны.</li>
-<!-- /wp:list-item -->
-
-<!-- wp:list-item -->
-<li><strong>Вызовите полицию.</strong> С мобильного — <a class="rz-emergency-tel" href="tel:102">102</a>, со стационарного — <a class="rz-emergency-tel" href="tel:02">02</a>. Сотрудник оформит протокол осмотра. Это обязательная процедура при смерти вне медицинского учреждения.</li>
-<!-- /wp:list-item --></ol>
-<!-- /wp:list -->
+<div class="wp-block-group rz-first-aid__body"><!-- wp:list {"ordered":true,"className":"rz-first-aid__steps"} --><ol class="wp-block-list rz-first-aid__steps"><!-- wp:list-item --><li><strong>Обратитесь за медицинской помощью.</strong> Если человек без сознания или вы не уверены, что наступила смерть, звоните <a href="tel:103">103</a> или <a href="tel:112">112</a>. Следуйте указаниям диспетчера.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>Уточните дальнейший порядок действий.</strong> Действуйте по указаниям медицинского работника. Если требуется участие полиции, звоните <a href="tel:102">102</a> или <a href="tel:112">112</a>.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>Согласуйте организационную помощь.</strong> После обращения в необходимые службы можно позвонить нам: <a href="tel:+74212605290">+7 (4212) 60-52-90</a>. Подскажем порядок подготовки документов и организации похорон. Уточните имя согласованного специалиста.</li><!-- /wp:list-item --></ol><!-- /wp:list -->
 
 <!-- wp:group {"className":"rz-first-aid__aside"} -->
 <div class="wp-block-group rz-first-aid__aside"><!-- wp:group {"className":"rz-first-aid__note-card"} -->
 <div class="wp-block-group rz-first-aid__note-card"><!-- wp:paragraph {"className":"rz-first-aid__note"} -->
-<p class="rz-first-aid__note">Если растерялись или забыли номера — звоните на <a href="tel:112">112</a>. Единый номер работает всегда, даже при нулевом балансе и заблокированной сим-карте, и оператор соединит с нужной службой.</p>
+<p class="rz-first-aid__note">Для экстренной помощи используйте <a href="tel:112">112</a>. По вопросам оформления документов и похорон можно обратиться к специалисту агентства. Экстренный вызов и обращение в агентство — разные действия.</p>
+<!-- /wp:paragraph -->
+<!-- wp:paragraph {"className":"rz-source-note"} -->
+<p class="rz-source-note">Порядок экстренного вызова сверен 19.11.2026 с <a href="https://mchs.gov.ru/deyatelnost/bezopasnost-grazhdan/kak-pravilno-vyzvat-skoruyu_5" rel="noopener" target="_blank">памяткой МЧС</a>. Следуйте указаниям диспетчера.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -103,7 +95,7 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"className":"rz-service-card__price","fontSize":"label"} -->
-<p class="rz-service-card__price has-label-font-size">от …</p>
+<p class="rz-service-card__price has-label-font-size">Комплексы от 50 000 ₽</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>
@@ -125,7 +117,7 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"className":"rz-service-card__price","fontSize":"label"} -->
-<p class="rz-service-card__price has-label-font-size">от …</p>
+<p class="rz-service-card__price has-label-font-size">Расчёт по составу услуги</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>
@@ -147,7 +139,7 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"className":"rz-service-card__price","fontSize":"label"} -->
-<p class="rz-service-card__price has-label-font-size">от …</p>
+<p class="rz-service-card__price has-label-font-size">Расчёт по составу услуги</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>
@@ -347,6 +339,8 @@
 <!-- /wp:group --></div>
 <!-- /wp:group -->
 
+</main>
+<!-- /wp:group -->
 <!-- wp:template-part {"slug":"sticky-call","theme":"razil"} /-->
 
 <!-- wp:template-part {"slug":"footer","theme":"razil"} /-->

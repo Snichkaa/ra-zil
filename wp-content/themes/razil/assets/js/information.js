@@ -1,6 +1,13 @@
 /* Information pages: on-demand panoramas, document outline and public details. */
 (() => {
   'use strict';
+  document.querySelectorAll('[data-copy-address]').forEach(button => {
+    button.addEventListener('click', async () => {
+      const status = button.parentElement.querySelector('[data-copy-status]');
+      try { await navigator.clipboard.writeText(button.dataset.copyAddress); status.textContent = 'Адрес скопирован.'; }
+      catch (_) { status.textContent = 'Адрес: ' + button.dataset.copyAddress; }
+    });
+  });
   document.querySelectorAll('[data-rz-tour]').forEach(tour => {
     const start = tour.querySelector('[data-tour-start]');
     const cover = tour.querySelector('.rz-tour__cover');

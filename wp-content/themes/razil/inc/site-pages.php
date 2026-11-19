@@ -12,7 +12,7 @@ function razil_information_assets() {
 	if ( ! ( is_front_page() || is_post_type_archive( 'services' ) || is_page( array( 'o-kompanii', 'kontakty', 'otzyvy', 'rekvizity', 'spasibo' ) ) || razil_is_document_page() ) ) {
 		return;
 	}
-	wp_enqueue_style( 'razil-information', get_theme_file_uri( 'assets/css/information.css' ), array( 'razil-main' ), razil_asset_version( 'assets/css/information.css' ) );
+	wp_enqueue_style( 'razil-information', get_theme_file_uri( 'assets/css/information.min.css' ), array( 'razil-main' ), razil_asset_version( 'assets/css/information.min.css' ) );
 	wp_enqueue_script( 'razil-information', get_theme_file_uri( 'assets/js/information.js' ), array(), razil_asset_version( 'assets/js/information.js' ), true );
 }
 add_action( 'wp_enqueue_scripts', 'razil_information_assets', 15 );

@@ -14,9 +14,8 @@
 defined( 'ABSPATH' ) || exit;
 
 const RAZIL_HERO_FILE_DESKTOP = '2026/11/kazarmenny-glavnyy-ekran-20261116.webp';
-// The new full-resolution photograph supports both layouts through CSS cropping.
-// Leave empty to use its responsive srcset instead of the previous mobile photo.
-const RAZIL_HERO_FILE_MOBILE  = '';
+// A portrait derivative keeps the visible part sharp without downloading the landscape original.
+const RAZIL_HERO_FILE_MOBILE  = '2026/11/kazarmenny-mobile-20261119.webp';
 const RAZIL_HERO_MOBILE_MEDIA = '(max-width: 47.99rem)';
 // A 3:2 photograph covers a full-height hero. In portrait orientation the
 // rendered photograph is wider than the viewport; 100vw picked a blurry thumbnail.

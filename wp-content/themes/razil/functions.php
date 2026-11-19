@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Локально (WP_DEBUG включён) берём время изменения файла, чтобы правки в CSS
  * были видны без Ctrl+F5. На продакшене — фиксированная строка.
  */
-define( 'RAZIL_VERSION', '1.2.15' );
+define( 'RAZIL_VERSION', '1.3.1' );
 
 require_once get_theme_file_path( 'inc/site-pages.php' );
 require_once get_theme_file_path( 'inc/site-icon.php' );
@@ -308,6 +308,7 @@ add_action( 'admin_notices', 'razil_debug_blocks_notice' );
  * из блока fontFace в theme.json.
  */
 function razil_enqueue_styles() {
+	wp_enqueue_style( 'razil-prelaunch', get_theme_file_uri( 'assets/css/prelaunch.css' ), array( 'razil-main' ), razil_asset_version( 'assets/css/prelaunch.css' ) );
 	wp_enqueue_style(
 		'razil-tokens',
 		get_theme_file_uri( 'assets/css/tokens.css' ),
@@ -317,17 +318,17 @@ function razil_enqueue_styles() {
 
 	wp_enqueue_style(
 		'razil-main',
-		get_theme_file_uri( 'assets/css/main.css' ),
+		get_theme_file_uri( 'assets/css/main.min.css' ),
 		array( 'razil-tokens' ),
-		razil_asset_version( 'assets/css/main.css' )
+		razil_asset_version( 'assets/css/main.min.css' )
 	);
 
 	if ( is_singular( 'services' ) ) {
 		wp_enqueue_style(
 			'razil-service-details',
-			get_theme_file_uri( 'assets/css/service-details.css' ),
+			get_theme_file_uri( 'assets/css/service-details.min.css' ),
 			array( 'razil-main' ),
-			razil_asset_version( 'assets/css/service-details.css' )
+			razil_asset_version( 'assets/css/service-details.min.css' )
 		);
 	}
 }

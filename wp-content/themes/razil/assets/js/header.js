@@ -284,6 +284,16 @@
 		}
 
 		cbReturn = opener || null;
+		if ( opener ) {
+			var topic = opener.getAttribute( 'data-rz-cb-topic' ) || 'general';
+			var service = opener.getAttribute( 'data-rz-cb-service' ) || '0';
+			var label = opener.getAttribute( 'data-rz-cb-service-label' ) || '';
+			cbDialog.querySelector( '[name="rz_cb_topic"]' ).value = topic;
+			cbDialog.querySelector( '[name="rz_cb_service"]' ).value = service;
+			cbDialog.querySelector( '[data-rz-cb-context]' ).textContent = label;
+			cbDialog.querySelector( '#rz-cb-dialog-title' ).textContent = topic === 'price'
+				? 'Обсудить стоимость по телефону' : topic === 'hall' ? 'Обсудить прощание в зале' : 'Заказать обратный звонок';
+		}
 		cbDialog.showModal();
 
 		// Сообщение об ошибке важнее поля: если окно открылось само после
@@ -351,6 +361,8 @@
 
 	// Validate before CAPTCHA/network submission, without restricting country codes.
 	document.querySelectorAll( '.rz-cb-form' ).forEach( function ( form ) {
+		var request = form.querySelector( '[name="rz_cb_request"]' );
+		if ( request && window.crypto && window.crypto.randomUUID ) { request.value = window.crypto.randomUUID(); }
 		var phone = form.querySelector( 'input[type="tel"]' );
 		var error = form.querySelector( '.rz-form__error' );
 		if ( ! phone || ! error ) { return; }
@@ -385,7 +397,7 @@
 					photoWatch.unobserve( entry.target );
 				}
 			} );
-		}, { rootMargin: '2000px 0px' } );
+		}, { rootMargin: '300px 0px' } );
 		document.querySelectorAll( 'img[loading="lazy"]' ).forEach( function ( img ) { photoWatch.observe( img ); } );
 	}
 
@@ -867,5 +879,11 @@
 
 	// Состояние тени при загрузке страницы с уже прокрученной позицией
 	// (возврат назад, переход по якорю).
+	document.addEventListener( 'click', function ( event ) {
+		var link = event.target.closest && event.target.closest( '.skip-link' );
+		if ( ! link ) { return; }
+		var main = document.querySelector( 'main' );
+		if ( main ) { main.tabIndex = -1; main.focus(); }
+	} );
 	onFrame();
 }() );
