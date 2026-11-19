@@ -108,7 +108,7 @@ function razil_callback_notice(): string {
 	$out = razil_form_notice(
 		razil_callback_state(),
 		array(
-			'err' => 'Не удалось отправить заявку. Проверьте имя, телефон и согласие на обработку данных, '
+			'err' => 'Не удалось отправить заявку. Проверьте телефон и согласие на обработку данных, '
 				. 'и попробуйте ещё раз. Введённое сохранено.',
 			'captcha' => 'Проверка не пройдена, заявка не отправлена. Попробуйте ещё раз. Введённое сохранено.',
 			'captcha_expired' => 'Страница была открыта слишком давно, и проверка устарела. Обновите страницу '
@@ -146,10 +146,15 @@ function razil_callback_form_markup( string $uid ): string {
 	$id_name    = 'rz-cb-name-' . $uid;
 	$id_phone   = 'rz-cb-phone-' . $uid;
 	$id_consent = 'rz-cb-consent-' . $uid;
+	$id_hint    = 'rz-cb-phone-hint-' . $uid;
+	$id_error   = 'rz-cb-phone-error-' . $uid;
 
 	$out = '<form class="rz-form rz-cb-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 	$out .= razil_form_hidden_fields( RAZIL_CALLBACK_ACTION, $p );
 	$out .= razil_form_honeypot( 'rz-cb-website-' . $uid, $p . 'website' );
+	$out .= '<p class="rz-cb-form__schedule">' . esc_html( razil_callback_note() ) . '</p>';
+	$out .= '<p class="rz-cb-form__urgent">Нужна помощь сейчас? <a href="' . esc_url( razil_org_tel_from( razil_org( 'phone' ) ) ) . '">'
+		. esc_html( razil_org( 'phone' ) ) . '</a> — круглосуточно.</p>';
 
 	/*
 	 * Страница, с которой пришла заявка. Нужна агенту: по ней видно,
@@ -160,11 +165,11 @@ function razil_callback_form_markup( string $uid ): string {
 
 	// --- имя
 	$out .= '<p class="rz-form__row">'
-		. '<label class="rz-form__label" for="' . esc_attr( $id_name ) . '">Как к вам обращаться</label>'
+		. '<label class="rz-form__label" for="' . esc_attr( $id_name ) . '">Как к вам обращаться <span class="rz-form__optional">(необязательно)</span></label>'
 		. '<input class="rz-form__input" type="text" id="' . esc_attr( $id_name ) . '"'
 		. ' name="' . esc_attr( $p . 'name' ) . '" maxlength="' . esc_attr( (string) RAZIL_CALLBACK_NAME_MAX ) . '"'
 		. ' autocomplete="name"'
-		. ' value="' . esc_attr( (string) $was['name'] ) . '" required />'
+		. ' value="' . esc_attr( (string) $was['name'] ) . '" />'
 		. '</p>';
 
 	/*
@@ -172,15 +177,19 @@ function razil_callback_form_markup( string $uid ): string {
 	 *
 	 * type="tel", а не number: номер — не число, и у number ломается ввод
 	 * плюса и скобок. inputmode подсказывает телефонную клавиатуру.
-	 * Никакого pattern: проверку делает сервер, а строгий шаблон в браузере
-	 * отказал бы человеку из-за лишнего пробела.
+	 * Шаблон допускает местные и международные номера, пробелы и скобки.
+	 * Сервер независимо проверяет тот же диапазон 6–15 цифр.
 	 */
 	$out .= '<p class="rz-form__row">'
 		. '<label class="rz-form__label" for="' . esc_attr( $id_phone ) . '">Телефон</label>'
 		. '<input class="rz-form__input" type="tel" id="' . esc_attr( $id_phone ) . '"'
 		. ' name="' . esc_attr( $p . 'phone' ) . '" maxlength="' . esc_attr( (string) RAZIL_CALLBACK_PHONE_MAX ) . '"'
 		. ' inputmode="tel" autocomplete="tel"'
+		. ' pattern="\s*\+?(?:[\s\(\)\.\-]*[0-9]){6,15}[\s\(\)\.\-]*"'
+		. ' aria-describedby="' . esc_attr( $id_hint . ' ' . $id_error ) . '"'
 		. ' value="' . esc_attr( (string) $was['phone'] ) . '" required />'
+		. '<span class="rz-form__hint" id="' . esc_attr( $id_hint ) . '">Можно указать российский или международный номер с кодом страны.</span>'
+		. '<span class="rz-form__error" id="' . esc_attr( $id_error ) . '" aria-live="polite"></span>'
 		. '</p>';
 
 	// --- согласие, разметка общая с формой отзывов
@@ -190,14 +199,8 @@ function razil_callback_form_markup( string $uid ): string {
 	$out .= razil_captcha_widget( $uid );
 
 	$out .= '<p class="rz-form__row">'
-		. '<button type="submit" class="wp-element-button rz-form__submit">Жду звонка</button>'
+		. '<button type="submit" class="wp-element-button rz-form__submit">Заказать звонок</button>'
 		. '</p>';
-
-	$note = razil_callback_note();
-
-	if ( '' !== $note ) {
-		$out .= '<p class="rz-cb-form__note">' . esc_html( $note ) . '</p>';
-	}
 
 	$out .= '</form>';
 
@@ -220,7 +223,13 @@ function razil_callback_current_url(): string {
  * Поясняющая строка из настроек.
  */
 function razil_callback_note(): string {
-	return function_exists( 'razil_org' ) ? razil_org( 'callback_note' ) : '';
+	$note = function_exists( 'razil_org' ) ? razil_org( 'callback_note' ) : '';
+	$previous_default = 'Перезвоним в рабочее время офиса, обычно в течение часа. Если нужно срочно — звоните, телефон работает круглосуточно.';
+	// Upgrade the old default without replacing a deliberately customized note.
+	if ( '' === $note || $previous_default === $note ) {
+		return 'Перезвоним в часы работы офиса: ежедневно 9:00–17:00 (Хабаровск).';
+	}
+	return $note;
 }
 
 /**
@@ -283,7 +292,7 @@ function razil_callback_button_shortcode( $atts = array() ): string {
 
 	$out .= '<dialog class="rz-cb-dialog" id="rz-cb-dialog" aria-labelledby="rz-cb-dialog-title"' . $autoopen . '>'
 		. '<div class="rz-cb-dialog__box">'
-		. '<p class="rz-cb-dialog__title" id="rz-cb-dialog-title">Перезвоните мне</p>'
+		. '<p class="rz-cb-dialog__title" id="rz-cb-dialog-title">Заказать обратный звонок</p>'
 		. razil_callback_notice()
 		. razil_callback_form_markup( 'dialog' )
 		. '<button type="button" class="rz-cb-dialog__cancel" data-rz-cb-close>Закрыть</button>'
@@ -298,7 +307,7 @@ add_shortcode( 'razil_callback_button', 'razil_callback_button_shortcode' );
  * Минимум и максимум цифр в номере.
  *
  * Нижняя граница — короткий городской номер вроде 60-52-90: в Хабаровске
- * их семь знаков, и человек вполне может набрать только его. Верхняя — предел
+ * их шесть знаков, и человек вполне может набрать только его. Верхняя — предел
  * международного формата E.164. Между ними не придираемся: форма не должна
  * спорить с человеком, которому сейчас не до неё.
  */
@@ -318,7 +327,7 @@ const RAZIL_CALLBACK_NOTIFY = 'naumova@ra-zil.ru';
  * чтобы две заявки с одного номера выглядели одинаково и в списке,
  * и в ссылке для набора.
  *
- * Всё, что на номер не похоже совсем, отсекаем — но только по числу цифр.
+ * Проверяем число цифр и допустимые разделители; буквы не отбрасываем молча.
  * Проверять оператора, коды регионов и прочее нельзя: любая такая проверка
  * рано или поздно откажет живому человеку с непривычным номером.
  *
@@ -328,6 +337,9 @@ const RAZIL_CALLBACK_NOTIFY = 'naumova@ra-zil.ru';
  */
 function razil_callback_normalize_phone( string $raw ): string {
 	$raw    = trim( $raw );
+	if ( ! preg_match( '/^\+?[0-9\s().-]+$/u', $raw ) ) {
+		return '';
+	}
 	$plus   = str_starts_with( $raw, '+' );
 	$digits = (string) preg_replace( '/\D+/', '', $raw );
 	$len    = strlen( $digits );
@@ -524,8 +536,11 @@ function razil_callback_handle(): void {
 
 	$page = razil_callback_back_url();
 
-	if ( '' === $name || '' === $phone || ! $consent ) {
+	if ( '' === $phone || ! $consent ) {
 		razil_callback_fail();
+	}
+	if ( '' === $name ) {
+		$name = 'Имя не указано';
 	}
 
 	$id = wp_insert_post(

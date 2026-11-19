@@ -13,11 +13,14 @@
  */
 defined( 'ABSPATH' ) || exit;
 
-const RAZIL_HERO_FILE_DESKTOP = '2026/10/kazarmenny-glavnyy-ekran.webp';
+const RAZIL_HERO_FILE_DESKTOP = '2026/11/kazarmenny-glavnyy-ekran-20261116.webp';
 // The new full-resolution photograph supports both layouts through CSS cropping.
 // Leave empty to use its responsive srcset instead of the previous mobile photo.
 const RAZIL_HERO_FILE_MOBILE  = '';
 const RAZIL_HERO_MOBILE_MEDIA = '(max-width: 47.99rem)';
+// A 3:2 photograph covers a full-height hero. In portrait orientation the
+// rendered photograph is wider than the viewport; 100vw picked a blurry thumbnail.
+const RAZIL_HERO_IMAGE_SIZES = 'max(100vw, 150vh)';
 
 if ( ! function_exists( 'razil_hero_attachment_id' ) ) {
 	/**
@@ -84,7 +87,7 @@ function razil_hero_picture( $block_content, $block ) {
 		false,
 		array(
 			'class'         => 'wp-image-' . $desktop_id,
-			'sizes'         => '100vw',
+			'sizes'         => RAZIL_HERO_IMAGE_SIZES,
 			'loading'       => 'eager',
 			'fetchpriority' => 'high',
 			'decoding'      => 'async',

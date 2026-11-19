@@ -349,6 +349,46 @@
 		}
 	}
 
+	// Validate before CAPTCHA/network submission, without restricting country codes.
+	document.querySelectorAll( '.rz-cb-form' ).forEach( function ( form ) {
+		var phone = form.querySelector( 'input[type="tel"]' );
+		var error = form.querySelector( '.rz-form__error' );
+		if ( ! phone || ! error ) { return; }
+		function message() {
+			var value = phone.value.trim();
+			var digits = value.replace( /\D/g, '' ).length;
+			if ( ! value ) { return 'Укажите телефон, по которому мы сможем вам позвонить.'; }
+			return /^\+?[0-9\s().-]+$/.test( value ) && digits >= 6 && digits <= 15
+				? '' : 'Проверьте номер: от 6 до 15 цифр. Можно использовать +, пробелы, скобки и дефисы.';
+		}
+		function validate( show ) {
+			var text = message();
+			phone.setCustomValidity( text );
+			if ( show ) {
+				error.textContent = text;
+				phone.setAttribute( 'aria-invalid', text ? 'true' : 'false' );
+			}
+		}
+		phone.addEventListener( 'input', function () { validate( phone.hasAttribute( 'aria-invalid' ) ); } );
+		phone.addEventListener( 'blur', function () { if ( phone.value ) { validate( true ); } } );
+		phone.addEventListener( 'invalid', function () { validate( true ); } );
+		// Restored form values need the same validation as freshly typed ones.
+		if ( phone.value ) { validate( false ); }
+	} );
+
+	// Start near-page photographs ahead of a fast scroll. Distant images stay lazy.
+	if ( 'IntersectionObserver' in window ) {
+		var photoWatch = new IntersectionObserver( function ( entries ) {
+			entries.forEach( function ( entry ) {
+				if ( entry.isIntersecting ) {
+					entry.target.loading = 'eager';
+					photoWatch.unobserve( entry.target );
+				}
+			} );
+		}, { rootMargin: '2000px 0px' } );
+		document.querySelectorAll( 'img[loading="lazy"]' ).forEach( function ( img ) { photoWatch.observe( img ); } );
+	}
+
 	/* ==================================================== ВОПРОСЫ И ОТВЕТЫ */
 
 	/**

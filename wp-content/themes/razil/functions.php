@@ -18,9 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Локально (WP_DEBUG включён) берём время изменения файла, чтобы правки в CSS
  * были видны без Ctrl+F5. На продакшене — фиксированная строка.
  */
-define( 'RAZIL_VERSION', '1.1.0' );
+define( 'RAZIL_VERSION', '1.2.15' );
 
 require_once get_theme_file_path( 'inc/site-pages.php' );
+require_once get_theme_file_path( 'inc/site-icon.php' );
 
 /**
  * Версия конкретного файла темы для аргумента $ver.
@@ -396,6 +397,7 @@ function razil_setup() {
 	// Обрезка изображений под пропорции из макета.
 	add_image_size( 'razil-product', 800, 800, true );   // товар, 1:1
 	add_image_size( 'razil-branch', 1200, 800, true );   // филиал, 3:2
+	add_image_size( 'razil-card', 480, 0, false );      // карточки: небольшой файл без обрезки
 }
 add_action( 'after_setup_theme', 'razil_setup' );
 
@@ -531,10 +533,19 @@ function razil_preload_hero_image() {
 
 	$desktop_src = $desktop_id ? wp_get_attachment_image_url( $desktop_id, 'full' ) : '';
 	$mobile_src  = $mobile_id ? wp_get_attachment_image_url( $mobile_id, 'full' ) : '';
-	if ( ! $desktop_src || ! $mobile_src ) {
+	if ( ! $desktop_src ) {
 		return;
 	}
 	$desktop_srcset = wp_get_attachment_image_srcset( $desktop_id, 'full' );
+	if ( ! $mobile_src ) {
+		printf(
+			'<link rel="preload" as="image" href="%s"%s imagesizes="%s" fetchpriority="high" />' . "\n",
+			esc_url( $desktop_src ),
+			$desktop_srcset ? ' imagesrcset="' . esc_attr( $desktop_srcset ) . '"' : '',
+			esc_attr( defined( 'RAZIL_HERO_IMAGE_SIZES' ) ? RAZIL_HERO_IMAGE_SIZES : '100vw' )
+		);
+		return;
+	}
 
 	printf(
 		'<link rel="preload" as="image" media="(max-width: 47.99rem)" href="%s" fetchpriority="high" />' . "\n",

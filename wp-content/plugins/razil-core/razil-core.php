@@ -35,6 +35,7 @@ define( 'RAZIL_CORE_PATH', plugin_dir_path( __FILE__ ) );
 require_once RAZIL_CORE_PATH . 'inc/org-settings.php';
 require_once RAZIL_CORE_PATH . 'inc/post-types.php';
 require_once RAZIL_CORE_PATH . 'inc/review-meta.php';
+require_once RAZIL_CORE_PATH . 'inc/review-selection.php';
 require_once RAZIL_CORE_PATH . 'inc/form-support.php';
 require_once RAZIL_CORE_PATH . 'inc/review-form.php';
 require_once RAZIL_CORE_PATH . 'inc/callback-type.php';
@@ -47,6 +48,8 @@ require_once RAZIL_CORE_PATH . 'inc/breadcrumbs.php';
 require_once RAZIL_CORE_PATH . 'inc/schema.php';
 require_once RAZIL_CORE_PATH . 'inc/hero-picture.php';
 require_once RAZIL_CORE_PATH . 'inc/first-image.php';
+require_once RAZIL_CORE_PATH . 'inc/responsive-images.php';
+require_once RAZIL_CORE_PATH . 'inc/catalog-retired.php';
 require_once RAZIL_CORE_PATH . 'inc/hardening.php';
 require_once RAZIL_CORE_PATH . 'inc/setup.php';
 

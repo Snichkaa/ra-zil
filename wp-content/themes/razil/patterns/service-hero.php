@@ -69,7 +69,7 @@ defined( 'ABSPATH' ) || exit;
 <!-- /wp:buttons -->
 
 <!-- wp:shortcode -->
-[razil_callback_button label="Вызвать специалиста" class="rz-svc-hero__cta"]
+[razil_callback_button label="Заказать обратный звонок" class="rz-svc-hero__cta"]
 <!-- /wp:shortcode --></div>
 <!-- /wp:group -->
 

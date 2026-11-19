@@ -52,6 +52,23 @@
 .rz-info-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.25rem; margin-top: 1.5rem; }
 .rz-info-actions > * { margin: 0; }
 .rz-info-actions a { min-height: 2.75rem; display: inline-flex; align-items: center; }
+/* Tour links need their own foreground in every link state. Otherwise a
+   generic/visited-link colour can equal the filled button's background. */
+:is(.rz-info-actions, .rz-tour-preview__text) a.wp-element-button,
+:is(.rz-info-actions, .rz-tour-preview__text) a.wp-element-button:visited {
+  color: var(--rz-surface);
+  background-color: var(--rz-action);
+  text-decoration: none;
+}
+:is(.rz-info-actions, .rz-tour-preview__text) a.wp-element-button:is(:hover, :focus-visible, :active) {
+  color: var(--rz-surface);
+  background-color: var(--rz-action);
+  text-decoration: none;
+}
+:is(.rz-info-actions, .rz-tour-preview__text) a.wp-element-button:focus-visible {
+  outline: 2px solid var(--rz-action);
+  outline-offset: 4px;
+}
 .rz-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); border-block: 1px solid var(--rz-line); gap: 1.5rem; padding-block: 1.5rem; }
 .rz-facts strong { display: block; font-family: var(--wp--preset--font-family--heading, 'PT Serif', serif); font-size: 1.75rem; font-weight: 400; color: var(--rz-action); }
 .rz-facts p { font-size: 1rem; color: var(--rz-ink-soft); }
@@ -66,6 +83,26 @@
 .rz-about-principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 1rem; }
 .rz-about-principles > * { margin: 0; }
 .rz-about-principles h3 { font-size: 1.3rem; }
+
+/* Real fleet photograph keeps the vehicles fully in frame. */
+.rz-about-fleet .rz-info-grid { align-items: center; }
+.rz-about-fleet__photo { margin: 0; }
+.rz-about-fleet__photo img { display: block; width: 100%; height: auto; }
+.rz-about-fleet__photo figcaption { font-size: .875rem; color: var(--rz-ink-soft); margin-top: .75rem; }
+
+/* Client photographs and a short introduction to memorial meals. */
+.rz-home-cafe { background: var(--rz-surface); }
+.rz-cafe { max-width: 72.5rem; margin-inline: auto; }
+.rz-cafe__text { max-width: 48rem; }
+.rz-cafe__text h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.2; margin: 0 0 1.25rem; }
+.rz-cafe__text p { margin: 0; line-height: 1.65; }
+.rz-cafe__text .wp-block-buttons { margin-top: 1.5rem; }
+.rz-cafe__photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+.rz-cafe__photos > .rz-cafe__photo { min-width: 0; margin: 0; }
+.rz-cafe__photo img { display: block; width: 100%; height: auto; border-radius: var(--rz-radius-media); }
+@media (max-width: 37.5rem) {
+  .rz-cafe__photos { grid-template-columns: 1fr; gap: 1rem; }
+}
 
 /* The tour is absent from the network until the visitor starts it. */
 .rz-tour { margin-top: 1.5rem; }
@@ -192,3 +229,7 @@ body.rz-thanks-page .rz-screen-center .entry-content { max-width: 45rem; margin-
   .rz-document-text { max-width: none; }
   .rz-details-row { break-inside: avoid; }
 }
+
+/* The full call invitation stays inside one accessible, wrapping home button. */
+.home .rz-hero .rz-button--icon { max-width: 100%; white-space: normal; box-sizing: border-box; text-align: left; }
+.home .rz-hero .rz-button--icon span { min-width: 0; text-wrap: balance; }

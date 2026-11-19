@@ -48,13 +48,21 @@ defined( 'ABSPATH' ) || exit;
 <h2 class="wp-block-heading rz-svc-card__title">Если уход наступил дома</h2>
 <!-- /wp:heading -->
 
+<!-- wp:paragraph {"className":"rz-emergency-note"} -->
+<p class="rz-emergency-note">Если человек без сознания или вы не уверены, что наступила смерть, сразу звоните <a href="tel:103">103</a> или <a href="tel:112">112</a> и следуйте указаниям диспетчера.</p>
+<!-- /wp:paragraph -->
+
 <!-- wp:list {"ordered":true,"className":"rz-svc-steps"} -->
 <ol class="wp-block-list rz-svc-steps"><!-- wp:list-item -->
-<li>Позвоните в агентство.</li>
+<li><strong>Позвоните нам:</strong> <a href="tel:+74212605290">+7 (4212) 60-52-90</a>. Специалист объяснит порядок действий и поможет с организацией.</li>
 <!-- /wp:list-item -->
 
 <!-- wp:list-item -->
-<li>Дождитесь специалиста.</li>
+<li><strong>Вызовите скорую помощь — <a href="tel:103">103</a>.</strong> Сообщите диспетчеру, что произошло, и следуйте его указаниям.</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li><strong>Вызовите полицию — <a href="tel:102">102</a>.</strong> Сотрудник оформит необходимые документы.</li>
 <!-- /wp:list-item --></ol>
 <!-- /wp:list -->
 

@@ -88,9 +88,9 @@ rz-tmp-*
 /_reports/shots/
 /_reports/text-*.txt
 
-# Рабочие Excel-таблицы сохраняются локально. Карта страниц в JSON,
-# её генератор и текстовые отчёты остаются в репозитории.
-/_reports/*.xlsx
+# Отчёты, документы проекта и результаты проверок остаются локально.
+/_reports/
+/_docs/
 
 # Сборка для переноса: дампы базы, архивы, wp-config с паролями и солями.
 # В git не попадает ничего из этого — там пароли доступа к серверу.
@@ -105,20 +105,22 @@ rz-tmp-*
 # содержимое страниц хранится в базе WordPress.
 /_import/
 
-# Скрипты и промежуточные данные завершённых этапов разработки.
-# Они остаются на диске для справки; повторно применять их к текущей
-# базе без проверки нельзя. Общие инструменты _tools/redesign остаются в Git.
-/_tools/t[0-9]*/
-/_tools/redesign/*-content/
-/_tools/redesign/cremation-2026-10.*
-/_tools/redesign/services-2026-10.php
-/_tools/redesign/pages-tour-2026-10.py
-/_tools/redesign/prepare-*.mjs
-/_tools/redesign/build-14.py
-/_tools/redesign/restyle-service.php
-/_tools/redesign/main-order.txt
+# Разовые скрипты импорта, исправлений, аудита и локальные заготовки.
+# Работа сайта и сборка блоков не зависят от этих каталогов.
+/_tools/
+/_scripts/
 
-# Отчёты и дампы страниц от служебных скриптов в _scripts/.
-# Сами скрипты остаются под версионным контролем.
-_scripts/*.html
-_scripts/*.txt
+# Старые инструкции и загрузчик шрифтов: сами шрифты уже в assets/fonts/.
+/wp-content/themes/razil/FONTS_SETUP.md
+/wp-content/themes/razil/README.md
+/wp-content/themes/razil/download-fonts.ps1
+
+# Локальные настройки помощников и файлы доступа.
+/.claude/
+access.md
+credentials.json
+.npmrc
+*.pem
+*.key
+*.p12
+*.pfx
