@@ -2,13 +2,22 @@
    Loaded only on single service pages. */
 
 body.single-services.rz-svc-layout .rz-svc-sec {
-	padding-block: clamp(2.5rem, 5vw, 4rem);
+	padding-block: var(--rz-section-inset);
 	border-radius: 0;
 	scroll-margin-top: 1rem;
 }
 
+/* Saved WordPress groups may have inline colours. Alternate the outer sections
+   in reading order, counting only service sections in the page content. */
+body.single-services.rz-svc-layout .entry-content > .rz-svc-sec {
+	background-color: var(--rz-section-background, var(--rz-bg)) !important;
+}
+body.single-services.rz-svc-layout .entry-content > :nth-child(even of .rz-svc-sec:not([hidden])) {
+	--rz-section-background: var(--rz-surface);
+}
+
 body.single-services.rz-svc-layout .rz-svc-sec h2 {
-	margin-block: 0 1.75rem;
+	margin-block: 0 var(--rz-heading-gap);
 	font-size: clamp(1.75rem, 1.4rem + 1.3vw, 2.375rem);
 	text-wrap: balance;
 }
@@ -19,10 +28,12 @@ body.single-services.rz-svc-layout .rz-svc-hero {
 }
 
 body.single-services.rz-svc-layout .rz-svc-hero__grid {
-	grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-	gap: clamp(1.5rem, 3vw, 2.5rem);
-	align-items: start;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--rz-heading-gap) clamp(1.5rem, 3vw, 2.5rem);
+	align-items: center;
 }
+
+body.single-services.rz-svc-layout .rz-svc-hero__grid > * { min-width: 0; margin-block: 0; }
 
 body.single-services.rz-svc-layout .rz-svc-hero__title {
 	max-width: 12em;
@@ -44,22 +55,6 @@ body.single-services.rz-svc-layout .rz-svc-hero__cta {
 	font-size: 1.0625rem;
 }
 
-body.single-services.rz-svc-layout .rz-svc-hero__facts {
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
-	margin-top: 1.25rem;
-	padding-top: 0;
-	border-top: 0;
-	gap: 0.75rem;
-}
-
-body.single-services.rz-svc-layout .rz-svc-hero__fact {
-	margin: 0;
-	padding: 0.875rem 1rem;
-	border-left: 3px solid var(--rz-fact);
-	border-radius: 0 0.5rem 0.5rem 0;
-	background: var(--rz-surface);
-}
-
 body.single-services.rz-svc-layout .rz-svc-hero__media {
 	margin: 0;
 }
@@ -67,32 +62,37 @@ body.single-services.rz-svc-layout .rz-svc-hero__media {
 body.single-services.rz-svc-layout .rz-svc-nav {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0 1.5rem;
-	margin-top: 1rem;
-	margin-bottom: 0.75rem;
-	padding: 0;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0 1.25rem;
+	margin-block: 1rem .25rem;
+	padding-block: .375rem 0;
+	border-block-start: 1px solid var(--rz-line);
 }
 
 body.single-services.rz-svc-layout .rz-svc-nav__label {
-	display: none;
+	font-weight: 700;
+	color: var(--rz-ink);
 }
 
 body.single-services.rz-svc-layout .rz-svc-nav a {
 	display: inline-flex;
 	align-items: center;
 	min-height: 2.75rem;
-	padding: 0.5rem 0;
 	font-size: 1rem;
-	font-weight: 400;
-	color: var(--rz-ink-soft);
-	text-decoration: none;
-	text-underline-offset: 0.3em;
-}
-
-body.single-services.rz-svc-layout .rz-svc-nav a:hover,
-body.single-services.rz-svc-layout .rz-svc-nav a:focus-visible {
 	color: var(--rz-action);
 	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: .22em;
+}
+
+body.single-services.rz-svc-layout .rz-svc-nav a:is(:hover, :focus-visible, :active) {
+	text-decoration-thickness: 2px;
+}
+
+body.single-services.rz-svc-layout .rz-svc-nav a:focus-visible {
+	outline: 2px solid var(--rz-action-focus);
+	outline-offset: 2px;
 }
 
 /* Quiet placeholders, ready to be replaced by photographs. */
@@ -146,7 +146,16 @@ body.single-services.rz-svc-layout .rz-svc-hero__media .rz-photo-slot {
 }
 
 /* Introduction, stages and gallery share the same alignment. */
-body.single-services.rz-svc-layout .rz-svc-intro-columns,
+body.single-services.rz-svc-layout .rz-svc-intro-columns {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1rem;
+}
+
+body.single-services.rz-svc-layout .rz-svc-intro-columns .rz-svc-intro__text > p + p {
+	margin-block-start: 1rem;
+}
+
 body.single-services.rz-svc-layout .rz-svc-document-cards {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
@@ -234,7 +243,12 @@ body.single-services.rz-svc-layout .rz-svc-photo img {
 }
 
 body.single-services.rz-svc-layout .rz-svc-hero__media .rz-svc-photo img {
-	aspect-ratio: 3 / 2;
+	aspect-ratio: 16 / 9;
+}
+body.single-services.rz-svc-layout .rz-svc-hero__media figcaption a {
+	display: inline-block;
+	text-decoration: underline;
+	text-underline-offset: .18em;
 }
 
 /* Keep the supplied wide photograph of the vehicle visible in full. */
@@ -255,19 +269,18 @@ body.single-services.rz-svc-layout .rz-svc-photo figcaption {
 	color: var(--rz-ink-soft);
 }
 
-/* Dates retain their four-step sequence, with the note using the full width. */
-body.single-services.rz-svc-layout .rz-svc-timeline__list {
-	margin-top: 2rem;
-}
-
-body.single-services.rz-svc-layout .rz-svc-timeline__term {
-	font-size: 1.625rem;
-}
-
 body.single-services.rz-svc-layout .rz-svc-sec__inner > .rz-svc-timeline__note {
 	max-width: none;
-	margin-top: 1.75rem;
+	margin-top: 1rem;
 	font-size: 1.0625rem;
+}
+
+/* Keep the gap compact where the photo captions lead into the timing section. */
+body.single-services.rz-svc-layout .rz-svc-sec:has(.rz-svc-gallery:last-child):has(+ .rz-svc-timeline) {
+	padding-block-end: .75rem;
+}
+body.single-services.rz-svc-layout .rz-svc-sec:has(.rz-svc-gallery:last-child) + .rz-svc-timeline {
+	padding-block-start: var(--rz-heading-gap);
 }
 
 /* Landscaping: short introduction, clear topics and compact timing notes. */
@@ -352,22 +365,48 @@ body.single-services.rz-svc-layout .rz-landscape-duration__description p {
 body.single-services.rz-svc-layout .rz-landscape-timing-notes {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
-	gap: 1.5rem 2.5rem;
-	margin-top: 1.75rem;
+	gap: 1rem;
+	margin-top: 1.25rem;
 }
 
 body.single-services.rz-svc-layout .rz-landscape-timing-note {
 	margin: 0;
 }
 
-body.single-services.rz-svc-layout .rz-landscape-stages > :last-child {
-	grid-column: 1 / -1;
+body.single-services.rz-svc-layout .rz-landscape-timing .rz-svc-sec__inner > .rz-landscape-timing__disclaimer {
+	max-width: none;
+	margin: 0 0 1rem;
 }
 
-body.single-services.rz-svc-layout .rz-landscape-timing__disclaimer {
-	padding-left: 1.25rem;
-	border-left: 2px solid var(--rz-fact);
-	color: var(--rz-ink-soft);
+body.single-services.rz-svc-layout .rz-landscape-timing .rz-landscape-schedule {
+	max-width: none;
+	margin: 0;
+	padding-block: .375rem;
+	list-style-type: "";
+}
+
+body.single-services.rz-svc-layout .rz-landscape-schedule > li {
+	display: grid;
+	grid-template-columns: minmax(12rem, 24%) minmax(0, 1fr);
+	gap: .1875rem 1.5rem;
+	align-items: baseline;
+	margin: 0;
+	padding-block: .625rem;
+	border-block-start: 1px solid var(--rz-line);
+	font-size: 1.0625rem;
+	line-height: 1.45;
+}
+
+body.single-services.rz-svc-layout .rz-landscape-schedule strong {
+	color: var(--rz-action);
+}
+
+body.single-services.rz-svc-layout .rz-landscape-schedule > li:first-child {
+	border-block-start: 0;
+}
+
+body.single-services.rz-svc-layout .rz-landscape-timing-note h3 {
+	margin-bottom: .25rem;
 }
 
 body.single-services.rz-svc-layout .rz-landscape-installments {
@@ -425,9 +464,9 @@ body.single-services.rz-svc-layout .rz-landscape-gallery .rz-svc-photo img {
 	}
 }
 
-@media (min-width: 48rem) {
-	body.single-services.rz-svc-layout .rz-landscape-timing-notes {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (max-width: 38rem) {
+	body.single-services.rz-svc-layout .rz-landscape-schedule > li {
+		grid-template-columns: minmax(0, 1fr);
 	}
 }
 
@@ -477,27 +516,45 @@ body.single-services.rz-svc-layout .rz-svc-docs__group > ul > li {
 	font-size: 1.0625rem;
 }
 
-/* Cost: explanation and action on the left, a readable table on the right. */
-/* Individual estimates replace empty price tables (16 November 2026). */
+body.single-services.rz-svc-layout .rz-svc-price {
+	container: rz-service-price / inline-size;
+}
+
 body.single-services.rz-svc-layout .rz-svc-price-summary {
 	display: grid;
-	grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-	gap: clamp(1.5rem, 4vw, 4rem);
+	grid-template-columns: minmax(0, 1fr);
+	gap: var(--rz-heading-gap);
 	align-items: start;
 }
 body.single-services.rz-svc-layout .rz-svc-price-summary > h2 {
 	margin: 0;
 }
-body.single-services.rz-svc-layout .rz-svc-price-summary__body > p:first-child {
-	margin-top: 0;
+body.single-services.rz-svc-layout .rz-svc-price-summary__body {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1rem;
+	margin: 0;
 }
-body.single-services.rz-svc-layout .rz-svc-price-summary__body > p {
-	margin-bottom: 1.25rem;
+body.single-services.rz-svc-layout .rz-svc-price-summary__body > * {
+	margin-block: 0;
 }
-@media (max-width: 47.99rem) {
-	body.single-services.rz-svc-layout .rz-svc-price-summary {
-		grid-template-columns: minmax(0, 1fr);
+body.single-services.rz-svc-layout .rz-svc-price-summary [data-rz-cb-open] {
+	justify-self: start;
+	max-width: 100%;
+	margin-block: 0;
+}
+
+@container rz-service-price (min-width: 48rem) {
+	body.single-services.rz-svc-layout .rz-svc-price-summary:has(> [data-rz-cb-open]) {
+		grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+		grid-template-rows: auto 1fr;
+		grid-template-areas: "heading description" "action description";
+		column-gap: clamp(2rem, 4vw, 3.5rem);
 	}
+
+	.rz-svc-price-summary:has(> [data-rz-cb-open]) > h2 { grid-area: heading; }
+	.rz-svc-price-summary:has(> [data-rz-cb-open]) > .rz-svc-price-summary__body { grid-area: description; }
+	.rz-svc-price-summary > [data-rz-cb-open] { grid-area: action; }
 }
 
 body.single-services.rz-svc-layout .rz-svc-price-layout {
@@ -543,7 +600,7 @@ body.single-services.rz-svc-layout .rz-svc-faq__list > .wp-block-details > summa
 }
 
 body.single-services.rz-svc-layout .rz-svc-faq__list > .wp-block-details > p {
-	max-width: 62rem;
+	max-width: none;
 	font-size: 1.0625rem;
 }
 
@@ -619,31 +676,29 @@ body.single-services.rz-svc-layout .rz-svc-price__head .rz-svc-price__text > h2 
 
 body.single-services.rz-svc-layout .rz-svc-price__cards {
 	grid-template-columns: repeat(auto-fit, minmax(min(100%, max(15rem, calc((100% - 2rem) / 3))), 1fr));
-	margin-top: 1.75rem;
+	margin-top: var(--rz-heading-gap);
 	gap: 1rem;
+}
+
+/* Shared rows align prices when one package name wraps at a larger text size. */
+@supports (grid-template-rows: subgrid) {
+	body.single-services.rz-svc-layout .rz-svc-pack {
+		display: grid;
+		grid-row: span 3;
+		grid-template-rows: subgrid;
+		row-gap: .5rem;
+	}
+	body.single-services.rz-svc-layout .rz-svc-pack__price { margin: 0; }
+	body.single-services.rz-svc-layout .rz-svc-pack__list {
+		margin-block-start: .375rem;
+		padding-block-start: .875rem;
+	}
 }
 
 body.single-services.rz-svc-layout .rz-svc-price-layout__intro > p:not(.is-style-panel) {
 	font-size: 1.0625rem;
 	color: var(--rz-ink-soft);
 	margin-bottom: 1.5rem;
-}
-
-/* The line connects the centres of the columns, with equal space at both ends. */
-@media (min-width: 48rem) {
-	body.single-services.rz-svc-layout .rz-svc-timeline__list > li {
-		text-align: center;
-	}
-
-	body.single-services.rz-svc-layout .rz-svc-timeline__list > li::before {
-		left: calc(50% - 0.375rem);
-		z-index: 1;
-	}
-
-	body.single-services.rz-svc-layout .rz-svc-timeline__list > li::after {
-		left: 50%;
-		right: calc(-50% - 1.5rem);
-	}
 }
 
 @media (max-width: 63.99rem) {
@@ -670,40 +725,11 @@ body.single-services.rz-svc-layout .rz-svc-price-layout__intro > p:not(.is-style
 
 @media (max-width: 47.99rem) {
 	body.single-services.rz-svc-layout .rz-svc-sec h2 {
-		margin-bottom: 1.5rem;
+		margin-bottom: var(--rz-heading-gap);
 	}
 
 	body.single-services.rz-svc-layout .rz-svc-hero {
 		padding-top: 1rem;
-	}
-
-	body.single-services.rz-svc-layout .rz-svc-hero__facts {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr);
-		gap: 0.625rem;
-		margin-top: 1.25rem;
-		padding-top: 0;
-		border-top: 0;
-	}
-
-	body.single-services.rz-svc-layout .rz-svc-hero__fact {
-		padding-left: 1rem;
-	}
-
-	body.single-services.rz-svc-layout .rz-svc-hero__fact::before {
-		content: none;
-	}
-
-	body.single-services.rz-svc-layout .rz-svc-hero__fact > p {
-		font-size: 1rem;
-	}
-
-	body.single-services.rz-svc-layout .rz-svc-hero__fact > p + p {
-		font-size: 0.9375rem;
-	}
-
-	body.single-services.rz-svc-layout .rz-svc-hero__facts:has(> :nth-child(3):last-child) > :last-child {
-		grid-column: 1 / -1;
 	}
 
 	body.single-services.rz-svc-layout .rz-svc-hero__media .rz-photo-slot {
@@ -711,7 +737,12 @@ body.single-services.rz-svc-layout .rz-svc-price-layout__intro > p:not(.is-style
 	}
 
 	body.single-services.rz-svc-layout .rz-svc-nav {
+		justify-content: flex-start;
 		column-gap: 1.25rem;
+	}
+
+	body.single-services.rz-svc-layout .rz-svc-nav__label {
+		flex-basis: 100%;
 	}
 
 	body.single-services.rz-svc-layout .rz-svc-nav a {

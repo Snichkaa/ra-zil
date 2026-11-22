@@ -366,7 +366,30 @@
 		}
 	}
 
-	// Validate before CAPTCHA/network submission, without restricting country codes.
+	// Format the default +7 number while preserving other explicit country codes.
+	function formatCallbackPhone( value, completeNumber ) {
+		if ( ! /^\+?[\d\s().-]+$/.test( value ) ) { return value; }
+		var digits = value.replace( /\D/g, '' );
+		var national;
+		if ( value[0] === '+' && digits[0] === '7' ) {
+			national = digits.slice( 1 );
+		} else if ( completeNumber && value[0] !== '+' && digits.length === 10 ) {
+			national = digits;
+		} else if ( completeNumber && value[0] !== '+' && /^[78]\d{10}$/.test( digits ) ) {
+			national = digits.slice( 1 );
+		} else {
+			return value;
+		}
+		// Keep an overlong pasted number visible so the visitor can correct it.
+		if ( national.length > 10 ) { return value; }
+		var formatted = '+7';
+		if ( national.length ) { formatted += ' (' + national.slice( 0, 3 ); }
+		if ( national.length > 3 ) { formatted += ') ' + national.slice( 3, 6 ); }
+		if ( national.length > 6 ) { formatted += '-' + national.slice( 6, 8 ); }
+		if ( national.length > 8 ) { formatted += '-' + national.slice( 8 ); }
+		return formatted;
+	}
+
 	document.querySelectorAll( '.rz-cb-form' ).forEach( function ( form ) {
 		var request = form.querySelector( '[name="rz_cb_request"]' );
 		if ( request && window.crypto && window.crypto.randomUUID ) { request.value = window.crypto.randomUUID(); }
@@ -375,10 +398,11 @@
 		if ( ! phone || ! error ) { return; }
 		function message() {
 			var value = phone.value.trim();
-			var digits = value.replace( /\D/g, '' ).length;
-			if ( ! value ) { return 'Укажите телефон, по которому мы сможем вам позвонить.'; }
-			return /^\+?[0-9\s().-]+$/.test( value ) && digits >= 6 && digits <= 15
-				? '' : 'Проверьте номер: от 6 до 15 цифр. Можно использовать +, пробелы, скобки и дефисы.';
+			if ( ! value || value === '+7' ) { return 'Укажите телефон, по которому мы сможем вам позвонить.'; }
+			if ( ! phone.validity.patternMismatch ) { return ''; }
+			return /^\+[^7]/.test( value )
+				? 'Проверьте код страны и номер телефона.'
+				: 'Для российского номера введите 10 цифр после +7.';
 		}
 		function validate( show ) {
 			var text = message();
@@ -388,11 +412,59 @@
 				phone.setAttribute( 'aria-invalid', text ? 'true' : 'false' );
 			}
 		}
-		phone.addEventListener( 'input', function () { validate( phone.hasAttribute( 'aria-invalid' ) ); } );
-		phone.addEventListener( 'blur', function () { if ( phone.value ) { validate( true ); } } );
+		function formatField( completeNumber ) {
+			var previous = phone.value;
+			var formatted = formatCallbackPhone( previous.trim(), completeNumber );
+			if ( formatted === previous ) { return; }
+			var cursor = phone.selectionStart;
+			var digitsBefore = previous.slice( 0, cursor ).replace( /\D/g, '' ).length;
+			phone.value = formatted;
+			if ( cursor === previous.length ) { return; }
+			// Map the caret by digits, so adding brackets or a dash does not move it to the end.
+			var next = 0;
+			while ( next < formatted.length && digitsBefore > 0 ) {
+				if ( /\d/.test( formatted[next] ) ) { digitsBefore--; }
+				next++;
+			}
+			phone.setSelectionRange( next, next );
+		}
+		phone.addEventListener( 'paste', function ( event ) {
+			if ( ! event.clipboardData ) { return; }
+			var remainder = phone.value.slice( 0, phone.selectionStart ) + phone.value.slice( phone.selectionEnd );
+			var pasted = event.clipboardData.getData( 'text' ).trim();
+			// A complete number pasted into a fresh field replaces its default prefix.
+			if ( ! /^(?:\+7)?\s*$/.test( remainder ) || ! /^(?:\+|[\d\s().-]{10})/.test( pasted ) ) { return; }
+			event.preventDefault();
+			phone.value = formatCallbackPhone( pasted, true );
+			phone.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+		} );
+		phone.addEventListener( 'beforeinput', function ( event ) {
+			var cursor = phone.selectionStart;
+			if ( phone.selectionEnd !== cursor || cursor < 2 || ! phone.value.startsWith( '+7' ) ) { return; }
+			var adjacent;
+			if ( event.inputType === 'deleteContentForward' ) {
+				adjacent = phone.value.slice( cursor ).match( /^\D+\d/ );
+				if ( adjacent ) { phone.setSelectionRange( cursor, cursor + adjacent[0].length ); }
+			} else if ( event.inputType === 'deleteContentBackward' ) {
+				adjacent = phone.value.slice( 2, cursor ).match( /\d\D+$/ );
+				if ( adjacent ) { phone.setSelectionRange( cursor - adjacent[0].length, cursor ); }
+			}
+		} );
+		phone.addEventListener( 'focus', function () {
+			if ( ! phone.value ) { phone.value = '+7'; validate( false ); }
+		} );
+		phone.addEventListener( 'input', function () {
+			formatField( false );
+			validate( phone.hasAttribute( 'aria-invalid' ) || ( phone.value.startsWith( '+7' ) && phone.value.replace( /\D/g, '' ).length > 11 ) );
+		} );
+		phone.addEventListener( 'blur', function () {
+			formatField( true );
+			validate( !! phone.value && phone.value !== '+7' );
+		} );
 		phone.addEventListener( 'invalid', function () { validate( true ); } );
 		// Restored form values need the same validation as freshly typed ones.
-		if ( phone.value ) { validate( false ); }
+		formatField( true );
+		validate( false );
 	} );
 
 	// Start near-page photographs ahead of a fast scroll. Distant images stay lazy.

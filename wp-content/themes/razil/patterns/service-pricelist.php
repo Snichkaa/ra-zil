@@ -24,20 +24,24 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <!-- wp:group {"align":"full","className":"rz-svc-sec rz-svc-price","style":{"color":{"background":"var(\u002d\u002drz-surface)"}},"layout":{"type":"default"}} -->
 <div class="wp-block-group alignfull rz-svc-sec rz-svc-price has-background" style="background-color:var(--rz-surface)"><!-- wp:group {"className":"rz-svc-sec__inner","layout":{"type":"default"}} -->
-<div class="wp-block-group rz-svc-sec__inner"><!-- wp:group {"className":"rz-svc-price__head","layout":{"type":"default"}} -->
-<div class="wp-block-group rz-svc-price__head"><!-- wp:group {"className":"rz-svc-price__text","layout":{"type":"default"}} -->
-<div class="wp-block-group rz-svc-price__text"><!-- wp:heading -->
+<div class="wp-block-group rz-svc-sec__inner"><!-- wp:group {"className":"rz-svc-price-summary","layout":{"type":"default"}} -->
+<div class="wp-block-group rz-svc-price-summary"><!-- wp:heading -->
 <h2 class="wp-block-heading">Сколько стоит услуга</h2>
 <!-- /wp:heading -->
 
-<!-- wp:paragraph -->
+<!-- wp:group {"className":"rz-svc-price-summary__body","layout":{"type":"default"}} -->
+<div class="wp-block-group rz-svc-price-summary__body"><!-- wp:paragraph -->
 <p>Пояснение к стоимости.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:group -->
+<!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"className":"is-style-panel"} -->
 <p class="is-style-panel">Оговорка, относящаяся ко всему разделу.</p>
 <!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:shortcode -->
+[razil_callback_button label="Обсудить стоимость по телефону" topic="price" class="rz-svc-hero__cta"]
+<!-- /wp:shortcode --></div>
 <!-- /wp:group -->
 
 <!-- wp:table {"hasFixedLayout":false,"className":"is-style-pricelist"} -->

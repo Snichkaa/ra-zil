@@ -222,9 +222,9 @@ h1.has-heading-l-font-size {
    из блока выше по файлу: (0,1,1) против (0,1,0). */
 .entry-content h2 {
 	font-size: var(--wp--preset--font-size--heading-m);
-	margin-top: 3rem;
+	margin-top: var(--rz-section-inset);
 	margin-bottom: 0.75rem;
-	padding-top: 1.375rem;
+	padding-top: .75rem;
 	border-top: 1px solid var(--rz-line);
 }
 
@@ -238,7 +238,7 @@ h1.has-heading-l-font-size {
    заголовки лежат в содержимом без обёрток; там их оформление
    не менялось. */
 .entry-content > h2:first-of-type {
-	margin-top: 2rem;
+	margin-top: var(--rz-heading-gap);
 	padding-top: 0;
 	border-top: 0;
 }
@@ -446,27 +446,14 @@ h1.has-heading-l-font-size {
 
 /* === ВЕРТИКАЛЬНЫЙ РИТМ СЕКЦИЙ ГЛАВНОЙ === */
 
-/* Отступы были инлайновыми константами 3rem и 4rem: на 375px
-   стык двух секций давал до 128px пустоты, а медиазапросов
-   на вертикальные поля не было ни одного. Верхние границы clamp
-   совпадают с прежними значениями, поэтому на десктопе вид
-   не меняется. */
 .rz-section {
-	padding-block: clamp(2rem, 5vw, 3rem);
+	padding-block: var(--rz-section-inset);
 	padding-inline: 1rem;
 	background-color: var(--rz-bg);
 }
 
 .rz-section--surface {
 	background-color: var(--rz-surface);
-}
-
-/* Три секции были на 4rem, а не на 3rem. Правило идёт после
-   .rz-section: специфичность та же (0,1,0), решает порядок. */
-.rz-first-aid,
-.rz-advantages,
-.rz-steps {
-	padding-block: clamp(2.5rem, 7vw, 4rem);
 }
 
 /* 4. Компоненты */
@@ -1251,7 +1238,7 @@ input[type="reset"],
    соседнее правило обнуляет margin-block у потомков обёртки, и без
    квалификатора отступ на самой обёртке читался бы как противоречие. */
 .rz-reviews-section .rz-reviews__head {
-	margin-bottom: 2rem;
+	margin-bottom: var(--rz-heading-gap);
 }
 
 .rz-reviews__badge iframe {
@@ -2233,7 +2220,7 @@ header.wp-block-template-part:has(.rz-breadcrumbs) + .wp-block-group {
 
    :has() и !important по той же причине, что и выше: инлайновый
    стиль не перебить ни специфичностью, ни порядком. */
-header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
+body:not(.home) header.wp-block-template-part:not(:has(.rz-breadcrumbs)) + .wp-block-group {
 	padding-top: 1.5rem !important;
 }
 
@@ -3004,7 +2991,7 @@ body .rz-callback .rz-cb-form :is(a, button, input):focus-visible {
 .rz-steps__lead {
 	margin-top: 0.75rem !important;
 	margin-left: 0 !important;
-	max-width: 41.5rem;
+	max-width: none;
 	color: var(--rz-ink-soft);
 }
 
@@ -3012,7 +2999,7 @@ body .rz-callback .rz-cb-form :is(a, button, input):focus-visible {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: 2rem;
-	margin-top: 3rem;
+	margin-top: var(--rz-heading-gap);
 }
 
 .rz-step {
@@ -4301,128 +4288,43 @@ html:not(.rz-js) body .rz-cb-open {
 	font-size: clamp(3.25rem, 2.7217rem + 2.2524vw, 5.25rem);
 }
 
-/* Блок первых действий: шаги и примечание рядом (§6.3). */
+/* Памятка: список действий и его источник образуют одну колонку. */
 .rz-first-aid__body {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr);
-	gap: 1.5rem;
+	gap: clamp(1rem, 2.5vw, 2.25rem);
 	align-items: start;
-	margin-top: 2rem !important;
+	margin-block-start: var(--rz-heading-gap);
 }
-
-.rz-first-aid__body > * {
-	margin-block: 0;
-}
-
-@media (min-width: 62rem) {
-	/* Колонки тянутся на одну высоту: остаток забирает фотография,
-	   и обе колонки кончаются на одной линии. На узком экране
-	   правило не действует — там одна колонка и тянуть нечего. */
-	.rz-first-aid__body {
-		grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
-		gap: 2.5rem;
-		align-items: stretch;
-	}
-}
-
-/* Правая колонка раздела: карточка примечания и фотография под ней.
-
-   До правки колонка была голым прямоугольником 386x188 с одним
-   примечанием внутри, а под ним оставалось 205 px пустоты до низа
-   шагов — замерено на 1366 и 1920. Читалось это как случайно
-   забытая колонка, а не как часть раздела.
-
-   Сама колонка теперь ничем не закрашена: фон и тёплая полоса ушли
-   внутрь, на карточку примечания. Полоса помечает совет — тянуть её
-   вдоль фотографии значило бы пометить ею и снимок. */
-.rz-first-aid__aside {
-	display: flex;
-	flex-direction: column;
-	gap: 1.5rem;
-}
-
-.rz-first-aid__aside > * {
-	margin-block: 0;
-}
-
-/* Карточка примечания: иконка слева, текст справа.
-
-   Тёплый вертикальный акцент тот же, что у предупреждения ниже:
-   оба блока по смыслу «обрати внимание», и разделять их двумя
-   разными приёмами значило бы заводить второй словарь. */
-/* Карточка примечания. Обычный поток, а не гибкая строка.
-
-   Строкой она была ради иконки слева; иконка убрана 23 сентября,
-   и вместе с ней ушли и перенос, и основа flex-basis у абзаца,
-   и min-width: 0. Всё это чинило одну болезнь: у элемента гибкой
-   раскладки наименьшая ширина равна самому длинному слову, и при
-   200 % текста «заблокированной» (280 px) распирало страницу
-   до горизонтальной прокрутки. У обычного блока такой болезни нет —
-   проверено замером после правки. */
-.rz-first-aid__note-card {
-	padding: 1.25rem 1.5rem;
-	background-color: var(--rz-surface);
-	border-left: 3px solid var(--rz-fact);
-	border-radius: 0 var(--rz-radius-card) var(--rz-radius-card) 0;
-}
-
-.rz-first-aid__note-card > * {
-	margin-block: 0;
-}
-
-/* Номер 112 крупнее остального текста примечания: в тяжёлую минуту
-   его ищут глазами, а не вычитывают из абзаца. Кегль 1.375rem —
-   это 22 px, то есть крупный текст по классификации WCAG: порог
-   контраста для него 3.0. Замер на живой странице: зелёный
-   rgb(35, 61, 49) на подложке карточки rgb(251, 250, 246) —
-   11.28:1, с запасом и по строгому порогу 4.5.
-
-   Зона нажатия при этом только растёт: она считается от фактической
-   высоты строки, а строка стала выше. */
-.rz-first-aid__note a[href="tel:112"] {
-	font-size: 1.375rem;
-	line-height: 1.2;
-}
-
-/* Снимок занимает всю ширину колонки и добирает остаток её высоты,
-   чтобы колонка кончалась вровень с шагами. Основа flex-basis
-   оставлена auto, а не 0: при auto гипотетический размер кадра
-   считается от пропорции 16:9 из разметки, и на узком экране, где
-   высота колонки ничем не задана, кадр остаётся кадром. С basis: 0
-   он схлопнулся бы в ноль.
-
-   Своей нижней границы здесь нет намеренно, и это проверено
-   замером. У элемента гибкой раскладки наименьшая высота по
-   умолчанию считается от содержимого, поэтому при 200% текста,
-   когда подпись заглушки перестаёт помещаться в пропорцию,
-   рамка сама вырастает: на 375 px кадр становится 311x381 вместо
-   311x175, и подпись остаётся внутри. Любое своё число — хоть
-   8rem — это ограничение отменяло бы и возвращало выход подписи
-   за рамку на 62 px. */
-.rz-first-aid__aside .rz-photo-slot {
-	width: 100%;
-	flex: 1 1 auto;
-}
-
-.rz-first-aid__photo {
-	width: 100%;
-	margin: 0;
-}
-
+.rz-first-aid__body > * { min-width: 0; margin-block: 0; }
+.rz-first-aid__instructions > .rz-source-note { margin-block: .75rem 0; }
+.rz-first-aid__photo { width: 100%; }
 .rz-first-aid__photo img {
 	display: block;
 	width: 100%;
 	height: auto;
-	aspect-ratio: 21 / 9;
+	aspect-ratio: 3 / 2;
 	object-fit: cover;
 	border-radius: var(--rz-radius-card);
 }
-
 .rz-first-aid__photo figcaption {
-	margin-top: 0.65rem;
+	margin: .5rem 0 0;
 	color: var(--rz-ink-soft);
-	font-size: 0.875rem;
+	font-size: .875rem;
 	line-height: 1.5;
+}
+@media (min-width: 62rem) {
+	.rz-first-aid__body { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); }
+	.rz-first-aid__photo {
+		align-self: stretch;
+		display: flex;
+		flex-direction: column;
+	}
+	.rz-first-aid__photo img {
+		flex: 1 1 0;
+		height: 0;
+		min-height: 12rem;
+		max-height: 26rem;
+	}
 }
 
 .rz-emergency-note {
@@ -4431,16 +4333,6 @@ html:not(.rz-js) body .rz-cb-open {
 	background: var(--rz-surface);
 	font-size: 0.9375rem;
 	line-height: 1.6;
-}
-
-/* Внутри карточки отбивка сверху не нужна: её задаёт сама карточка.
-   Правило перебивает .rz-first-aid__note { margin-top: 1.5rem !important }
-   выше по файлу, поэтому тоже с !important — иначе не достать.
-
-   Ни flex-основы, ни min-width: 0 здесь больше нет — они были
-   нужны, пока карточка была гибкой строкой с иконкой. */
-.rz-first-aid__note-card .rz-first-aid__note {
-	margin-top: 0 !important;
 }
 
 /* Крупные номера 01-03 вместо кружков со счётчиком (§6.3, §8.4).
@@ -4462,7 +4354,7 @@ html:not(.rz-js) body .rz-cb-open {
    отдельной ячейкой грида, и строка рассыпалась бы в столбик. */
 .rz-first-aid__steps li {
 	position: relative;
-	padding: 1.25rem 0 1.25rem 3.25rem;
+	padding: .875rem 0 .875rem 3rem;
 	margin-top: 0;
 	border-top: 1px solid var(--rz-line);
 }
@@ -4479,7 +4371,7 @@ html:not(.rz-js) body .rz-cb-open {
 	content: "0" counter(rz-step);
 	position: absolute;
 	left: 0;
-	top: 1.25rem;
+	top: .875rem;
 	display: block;
 	width: auto;
 	height: auto;
@@ -4493,6 +4385,8 @@ html:not(.rz-js) body .rz-cb-open {
 }
 
 /* У первого пункта верхнего поля нет, значит и номер поднимается. */
+.rz-first-aid__steps li:last-child { padding-bottom: 0; margin-bottom: 0; }
+
 .rz-first-aid__steps li:first-child::before {
 	top: 0;
 }
@@ -4571,7 +4465,7 @@ html:not(.rz-js) body .rz-cb-open {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: 0;
-	margin-top: 2.5rem;
+	margin-top: var(--rz-heading-gap);
 	border-bottom: 0;
 }
 
@@ -5053,48 +4947,9 @@ body.single-services .rz-svc-caption {
 	color: var(--rz-fact-text);
 }
 
-/* ------------------------------------------------------------------
-   3.3 ШИРИНА СТРОКИ — и почему на этот раз можно
-   ------------------------------------------------------------------
-
-   Осторожно: мера строки на страницах услуг вводилась дважды
-   и дважды откатывалась заказчиком — 8 и 23 сентября. Запрет
-   записан в _docs/design-concept.md под строкой 116. Его развёрнутая
-   формулировка стояла ниже по файлу, в разделе «СТРАНИЦА УСЛУГИ:
-   СОСТАВ, ДОКУМЕНТЫ, СРОКИ»; 25 сентября тот раздел удалён вместе
-   с мёртвыми классами, поэтому суть запрета переписана сюда.
-
-   Что именно откатил заказчик 23 сентября: max-width: 41.5rem
-   у абзацев разделов, выносок, аккордеона, тела блока документов
-   и карточки состава. На 1366 вышел узкий столбец слева и пустая
-   правая половина раздела — это хуже длинной строки. Само по себе
-   сужение блока решением не считается: длину строки лечит только
-   новая раскладка раздела, и только по согласованию.
-
-   Запрет сформулирован так: «Длина строки бегущего текста
-   не ограничивается сужением блоков… вернуться можно только
-   с новой раскладкой раздела и с согласия заказчика».
-
-   Оба условия выполнены, и это не толкование задним числом:
-
-   1. НОВАЯ РАСКЛАДКА. Прежде узкий абзац стоял в пустой секции
-      во всю ширину — слева столбец, справа ничего. Теперь секции
-      двухколоночные по построению: вступление 1.4fr/1fr с карточкой
-      справа, документы 5fr/7fr, стоимость 1.3fr/1fr с плашкой.
-      Место справа занято, а не пустует.
-   2. СОГЛАСИЕ. Мера 40rem записана в самом задании от 24 сентября
-      («Абзацы и списки в секции сами по себе — не шире 40rem»),
-      то есть пришла от заказчика, а не от исполнителя.
-
-   Область действия узкая намеренно: ТОЛЬКО прямые дети секции.
-   Абзац внутри карточки, колонки или сетки меру не получает —
-   там ширину держит сама раскладка. Старого содержимого с .rz-sec
-   в живых записях больше нет: все пять страниц переведены
-   на новые секции 24 сентября. */
-body.single-services .rz-svc-sec__inner > p,
-body.single-services .rz-svc-sec__inner > ul,
-body.single-services .rz-svc-sec__inner > ol {
-	max-width: 40rem;
+/* Standalone service copy shares the width of the section heading and gallery. */
+body.single-services .rz-svc-sec__inner > :is(p, ul, ol) {
+	max-width: none;
 }
 
 /* Заголовок новой секции. Черта сверху и тройная отбивка из
@@ -5389,60 +5244,41 @@ body.single-services .rz-svc-hero__cta:active {
 	}
 }
 
-/* --- Три факта --- */
+/* Короткие уточнения к услуге под кнопками первого экрана. */
 body.single-services .rz-svc-hero__facts {
-	margin-block: 2.5rem 0;
-	padding-top: 1.5rem;
-	border-top: 1px solid var(--rz-line);
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 1.5rem;
+	gap: .25rem;
+	margin-block: 1rem 0;
 }
 
-body.single-services .rz-svc-hero__fact > p {
-	margin-block: 0;
-	font-size: 1.125rem;
-	font-weight: 700;
-	line-height: 1.3;
-}
-
-/* Второй абзац отбирается через p + p, а не через :last-child:
-   второго абзаца у факта может не быть вовсе (правило Т4 разрешает
-   факт из одной строки), и :last-child покрасил бы тогда первый. */
-body.single-services .rz-svc-hero__fact > p + p {
-	margin-block: 0.25rem 0;
-	font-size: 0.9375rem;
-	font-weight: 400;
+body.single-services .rz-svc-hero__fact {
+	position: relative;
+	margin: 0;
+	padding-inline-start: 1rem;
+	font-size: 1rem;
+	line-height: 1.45;
 	color: var(--rz-ink-soft);
 }
 
-@media (max-width: 47.5rem) {
-	body.single-services .rz-svc-hero__facts {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		padding-top: 0;
-		border-top: 0;
-	}
+body.single-services .rz-svc-hero__fact::before {
+	content: "";
+	position: absolute;
+	inset-inline-start: 0;
+	inset-block-start: .7em;
+	width: .55rem;
+	height: 1px;
+	background: var(--rz-fact);
+}
 
-	/* Столбиком линия сверху не нужна — она отделяла бы факты
-	   от кнопок, а не колонки друг от друга. Роль разделителя
-	   берёт точка перед каждым фактом. */
-	body.single-services .rz-svc-hero__fact {
-		position: relative;
-		padding-left: 1rem;
-	}
+body.single-services .rz-svc-hero__fact > p {
+	display: inline;
+	margin: 0;
+	font: inherit;
+}
 
-	body.single-services .rz-svc-hero__fact::before {
-		content: "";
-		position: absolute;
-		left: 0;
-		top: 0.6em;
-		width: 0.375rem;
-		height: 0.375rem;
-		border-radius: 50%;
-		background-color: var(--rz-fact);
-	}
+body.single-services .rz-svc-hero__fact > p:first-child {
+	font-weight: 600;
+	color: var(--rz-ink);
 }
 
 /* --- Снимок --- */
@@ -5528,21 +5364,11 @@ body.single-services .rz-svc-intro__grid {
 	   а не по классу-модификатору, который пришлось бы не забыть
 	   поставить.
 
-	   Текст при этом НЕ растягивается во всю ширину: он получает меру
-	   строки. Разница между «полем справа» и «пустотой справа» ровно
-	   в этом — поле принадлежит колонке, пустота остаётся от изъятого
-	   предмета. Именно вторую заказчик откатывал 8 и 23 сентября.
-
-	   :has() работает с Chrome 105 и Safari 15.4. На старом браузере
-	   раскладка деградирует в одну колонку без меры строки — то есть
-	   в то, что было до этого прогона. */
+	   Оставшееся вступление занимает весь ряд. */
 	body.single-services .rz-svc-intro__grid:not(:has(> .rz-svc-intro__card)) {
 		grid-template-columns: minmax(0, 1fr);
 	}
 
-	body.single-services .rz-svc-intro__grid:not(:has(> .rz-svc-intro__card)) .rz-svc-intro__text {
-		max-width: 40rem;
-	}
 }
 
 /* Межстрочный 1.65, а не 1.6, как у остального текста услуги: это
@@ -5712,11 +5538,10 @@ body.single-services .rz-svc-stages__grid {
 	counter-reset: rz-stage;
 }
 
-/* Две колонки с 48rem. Число карточек не закреплено: три, пять
-   и шесть ложатся в ту же сетку, последняя в нечётном ряду занимает
-   свою половину. Карточки одного ряда одной высоты — это поведение
-   сетки по умолчанию (align-items: stretch), отдельного правила
-   не нужно, и проверено оно замером. */
+/* Две колонки. Одиночная последняя карточка занимает весь ряд. */
+body.single-services .rz-svc-stages__grid > :last-child:nth-child(odd) {
+	grid-column: 1 / -1;
+}
 @media (min-width: 48rem) {
 	body.single-services .rz-svc-stages__grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -5949,165 +5774,95 @@ body.single-services .rz-svc-gallery figcaption {
    7. СРОКИ (паттерн razil/service-timeline)
    ------------------------------------------------------------------ */
 
-/* Шкала — список, и остаётся списком для экранного диктора.
-   list-style: none снимает только маркеры; роль списка у ul/li
-   от этого не пропадает ни в одном из браузеров, кроме Safari,
-   где VoiceOver теряет её при снятых маркерах. Там остаётся
-   перечисление «Значение — пояснение», то есть тот же смысл
-   без объявленного числа пунктов. Ради него ставить role="list"
-   руками нельзя: произвольный атрибут делает блок ядра невалидным
-   в редакторе (ровно так сломан аккордеон, см. П-5). */
-body.single-services .rz-svc-sec__inner > ul.rz-svc-timeline__list {
-	/* Шире меры строки намеренно: шкала — сетка точек, а не бегущий
-	   текст. Общее правило раздела 3 сужает прямые списки контейнера
-	   до 40rem, и без этой строки четыре точки ложились в 640 px
-	   при контейнере 1160 — замер дал колонки по 142 px. */
-	max-width: none;
+/* Match the direction of the time axis to the space available for its labels. */
+body.single-services .rz-svc-timeline {
+	container: service-timeline / inline-size;
 }
 
 body.single-services .rz-svc-timeline__list {
-	margin-block: 3rem 0;
-	padding: 0;
-	list-style: none;
+	--timeline-gap: 1.25rem;
+	--timeline-dot: .8125rem;
+	--timeline-axis: color-mix(in srgb, var(--rz-action) 64%, var(--rz-bg));
+	--timeline-centre: .75rem;
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
-	gap: 1.5rem;
+	gap: var(--timeline-gap);
+	margin: var(--rz-heading-gap) 0;
+	padding: 0;
+	list-style-type: "";
 }
 
 body.single-services .rz-svc-timeline__list > li {
 	position: relative;
+	min-width: 0;
 	margin: 0;
+	padding: 1.75rem 0 0;
+	text-align: center;
+	overflow-wrap: anywhere;
 }
 
-/* Значение и пояснение — строчные элементы внутри пункта, показанные
-   блоками. В разметке они span, потому что пункт списка ядра держит
-   только строчное содержимое: абзац внутрь li не вложить, не заведя
-   блок, которого у ядра нет. */
+body.single-services .rz-svc-timeline__list > li::before {
+	content: "";
+	position: absolute;
+	z-index: 1;
+	left: calc(50% - var(--timeline-dot) / 2);
+	top: calc(var(--timeline-centre) - var(--timeline-dot) / 2);
+	width: var(--timeline-dot);
+	height: var(--timeline-dot);
+	border-radius: 50%;
+	background: var(--rz-action);
+	box-shadow: 0 0 0 .18rem color-mix(in srgb, var(--rz-action) 16%, transparent);
+}
+
+body.single-services .rz-svc-timeline__list > li.is-style-delay::before {
+	background: var(--rz-fact-text);
+}
+
+body.single-services .rz-svc-timeline__list > li:not(:last-child)::after {
+	content: "";
+	position: absolute;
+	left: calc(50% - 1px);
+	/* In the vertical layout, keep the connector in the gap between labels. */
+	top: calc(100% + .25rem);
+	bottom: calc(0px - var(--timeline-gap) - var(--timeline-centre));
+	width: 2px;
+	background: var(--timeline-axis);
+}
+
 body.single-services .rz-svc-timeline__term {
 	display: block;
-	font-family: var(--wp--preset--font-family--pt-serif);
-	font-size: 1.875rem;
-	font-weight: 400;
-	line-height: 1.2;
-	color: var(--rz-ink);
+	color: var(--rz-action);
+	font: 400 clamp(1.3rem, 1.1rem + .65vw, 1.625rem)/1.2 var(--wp--preset--font-family--pt-serif);
 }
 
 body.single-services .rz-svc-timeline__exp {
 	display: block;
-	margin-top: 0.625rem;
-	font-size: 1.0625rem;
-	line-height: 1.5;
+	margin-top: .35rem;
 	color: var(--rz-ink);
+	font-size: 1.0625rem;
+	line-height: 1.45;
 }
 
-/* --- Круг и линия --- */
-
-/* Круг рисуется всегда, линия — у всех, кроме последней точки.
-   Линия идёт от круга вправо и ПЕРЕКРЫВАЕТ зазор сетки
-   (right: -1.5rem), поэтому доходит ровно до круга следующей точки.
-
-   Так число точек ни на что не влияет. Прежний компонент .rz-timeline
-   рисовал одну линию на всю шкалу с right: calc(25% - 2.375rem) —
-   арифметика, верная ровно для четырёх пунктов и ни для какого
-   другого числа. */
-body.single-services .rz-svc-timeline__list > li::before {
-	content: "";
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 0.75rem;
-	height: 0.75rem;
-	border-radius: 50%;
-	background-color: var(--rz-action);
-}
-
-body.single-services .rz-svc-timeline__list > li.is-style-delay::before {
-	background-color: var(--rz-fact);
-}
-
-/* Телефон: шкала вертикальная. Круг слева, линия вниз, текст справа
-   с отступом 1.5rem. */
-body.single-services .rz-svc-timeline__list > li {
-	padding-left: 1.5rem;
-}
-
-body.single-services .rz-svc-timeline__list > li::before {
-	top: 0.45em;
-}
-
-body.single-services .rz-svc-timeline__list > li::after {
-	content: "";
-	position: absolute;
-	left: 0.3125rem;
-	top: 1.45em;
-	bottom: -1.5rem;
-	width: 2px;
-	background-color: var(--rz-line);
-}
-
-body.single-services .rz-svc-timeline__list > li:last-child::after {
-	content: none;
-}
-
-body.single-services .rz-svc-timeline__term {
-	font-size: 1.5rem;
-}
-
-/* 48–64rem: две колонки, линии между рядами нет. Линия рисуется
-   только у нечётных пунктов — тех, что стоят слева в своём ряду. */
-@media (min-width: 48rem) {
+@container service-timeline (min-width: 54rem) {
 	body.single-services .rz-svc-timeline__list {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-
-	body.single-services .rz-svc-timeline__list > li {
-		padding-left: 0;
-		padding-top: 2rem;
-	}
-
-	body.single-services .rz-svc-timeline__term {
-		font-size: 1.875rem;
-	}
-
-	body.single-services .rz-svc-timeline__list > li::before {
-		top: 0;
-	}
-
-	body.single-services .rz-svc-timeline__list > li::after {
-		left: 0.75rem;
-		right: -1.5rem;
-		top: 0.3125rem;
-		bottom: auto;
-		width: auto;
-		height: 2px;
-	}
-
-	body.single-services .rz-svc-timeline__list > li:nth-child(even)::after {
-		content: none;
-	}
-}
-
-/* С 64rem — сколько точек, столько колонок. grid-auto-flow: column
-   создаёт колонку на каждый пункт, поэтому три точки дают три
-   колонки, а четыре — четыре, без правил на каждое число. */
-@media (min-width: 64rem) {
-	body.single-services .rz-svc-timeline__list {
+		--timeline-gap: clamp(1.25rem, 2.5vw, 2.25rem);
 		grid-template-columns: none;
 		grid-auto-flow: column;
 		grid-auto-columns: minmax(0, 1fr);
 	}
 
-	body.single-services .rz-svc-timeline__list > li:nth-child(even)::after {
-		content: "";
+	body.single-services .rz-svc-timeline__list > li {
+		padding: 2.125rem 0 0;
 	}
 
-	body.single-services .rz-svc-timeline__list > li:last-child::after {
-		content: none;
+	body.single-services .rz-svc-timeline__list > li:not(:last-child)::after {
+		left: 50%;
+		top: calc(var(--timeline-centre) - 1px);
+		bottom: auto;
+		width: calc(100% + var(--timeline-gap));
+		height: 2px;
 	}
 }
-
-/* Примечание под шкалой. Мера строки приходит от общего правила
-   раздела 3 — это прямой ребёнок контейнера секции. */
 body.single-services .rz-svc-timeline__note {
 	margin-block: 2.5rem 0;
 	font-size: 1.0625rem;
@@ -6313,21 +6068,16 @@ body.single-services .rz-svc-pack {
 	flex-direction: column;
 }
 
-/* Две строки высоты у названия — ради того, чтобы цены в ряду стояли
-   на одной линии. min-height, а не height: название в три слова
-   вырастет и утянет за собой соседей по ряду, и это правильнее,
-   чем обрезать его. */
 body.single-services .rz-svc-sec .rz-svc-pack__name {
 	margin-block: 0;
 	font-family: var(--wp--preset--font-family--pt-serif);
 	font-size: 1.375rem;
 	font-weight: 400;
 	line-height: 1.3;
-	min-height: 2.6em;
 }
 
 body.single-services .rz-svc-pack__price {
-	margin-block: 0.75rem 0;
+	margin-block: 0.5rem 0;
 	font-size: 1.625rem;
 	font-weight: 700;
 	line-height: 1.2;
@@ -6599,11 +6349,7 @@ body.single-services .rz-svc-faq__list > .wp-block-details > summary::after {
 	margin-top: 0.35rem;
 }
 
-/* Ответ. 50rem, а не общая мера строки 40rem: ответ в аккордеоне
-   читают сразу после вопроса и целиком, а не бегло — здесь важнее
-   уместить мысль без лишних переносов. */
 body.single-services .rz-svc-faq__list > .wp-block-details > p {
-	max-width: 50rem;
 	margin-block: 0 1.5rem;
 	font-size: 1.125rem;
 	line-height: 1.6;

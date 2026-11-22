@@ -16,9 +16,7 @@
  * не попадают НИКОГДА. Чек-лист перед публикацией ищет обе строки
  * поиском по странице.
  *
- * ЦЕНЫ В КАРТОЧКАХ НА ОДНОЙ ЛИНИИ. Заголовок получает min-height
- * в две строки, поэтому цена под однословным названием стоит там же,
- * где под двухсловным. Без этого ряд карточек читался бы ступенькой.
+ * Строки сетки выравнивают цены по самому длинному названию в ряду.
  *
  * @package Razil
  */
@@ -30,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:group {"className":"rz-svc-card rz-svc-pack","layout":{"type":"default"}} -->
 <div class="wp-block-group rz-svc-card rz-svc-pack"><!-- wp:heading {"level":3,"className":"rz-svc-pack__name"} -->
 <h3 class="wp-block-heading rz-svc-pack__name">Базовый</h3><!-- /wp:heading -->
-<!-- wp:paragraph {"className":"rz-svc-pack__price"} --><p class="rz-svc-pack__price">от 50 000 ₽</p><!-- /wp:paragraph -->
+<!-- wp:paragraph {"className":"rz-svc-pack__price"} --><p class="rz-svc-pack__price"><a href="#usloviya-tsen">от 50 000 ₽<sup>*</sup></a></p><!-- /wp:paragraph -->
 <!-- wp:list {"className":"rz-svc-pack__list"} --><ul class="wp-block-list rz-svc-pack__list"><!-- wp:list-item --><li>Оформление документов для морга, ЗАГСа и кладбища</li><!-- /wp:list-item -->
 <!-- wp:list-item --><li>Бригада для проведения захоронения</li><!-- /wp:list-item -->
 <!-- wp:list-item --><li>Катафалк в день захоронения</li><!-- /wp:list-item -->
@@ -44,7 +42,7 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:group {"className":"rz-svc-card rz-svc-pack","layout":{"type":"default"}} -->
 <div class="wp-block-group rz-svc-card rz-svc-pack"><!-- wp:heading {"level":3,"className":"rz-svc-pack__name"} -->
 <h3 class="wp-block-heading rz-svc-pack__name">Стандартный</h3><!-- /wp:heading -->
-<!-- wp:paragraph {"className":"rz-svc-pack__price"} --><p class="rz-svc-pack__price">от 75 000 ₽</p><!-- /wp:paragraph -->
+<!-- wp:paragraph {"className":"rz-svc-pack__price"} --><p class="rz-svc-pack__price"><a href="#usloviya-tsen">от 75 000 ₽<sup>*</sup></a></p><!-- /wp:paragraph -->
 <!-- wp:list {"className":"rz-svc-pack__list"} --><ul class="wp-block-list rz-svc-pack__list"><!-- wp:list-item --><li>Оформление документов для морга, ЗАГСа и кладбища</li><!-- /wp:list-item -->
 <!-- wp:list-item --><li>Бригада для проведения захоронения</li><!-- /wp:list-item -->
 <!-- wp:list-item --><li>Катафалк в день захоронения</li><!-- /wp:list-item -->
@@ -59,7 +57,7 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:group {"className":"rz-svc-card rz-svc-pack","layout":{"type":"default"}} -->
 <div class="wp-block-group rz-svc-card rz-svc-pack"><!-- wp:heading {"level":3,"className":"rz-svc-pack__name"} -->
 <h3 class="wp-block-heading rz-svc-pack__name">Расширенный</h3><!-- /wp:heading -->
-<!-- wp:paragraph {"className":"rz-svc-pack__price"} --><p class="rz-svc-pack__price">от 110 000 ₽</p><!-- /wp:paragraph -->
+<!-- wp:paragraph {"className":"rz-svc-pack__price"} --><p class="rz-svc-pack__price"><a href="#usloviya-tsen">от 110 000 ₽<sup>*</sup></a></p><!-- /wp:paragraph -->
 <!-- wp:list {"className":"rz-svc-pack__list"} --><ul class="wp-block-list rz-svc-pack__list"><!-- wp:list-item --><li>Оформление необходимых документов</li><!-- /wp:list-item -->
 <!-- wp:list-item --><li>Бригада для проведения захоронения</li><!-- /wp:list-item -->
 <!-- wp:list-item --><li>Катафалк в день захоронения</li><!-- /wp:list-item -->
@@ -71,3 +69,4 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:list-item --><li>Гранитный памятник с надписью, высотой до 80 см</li><!-- /wp:list-item -->
 </ul><!-- /wp:list --></div><!-- /wp:group -->
 </div><!-- /wp:group -->
+<!-- wp:template-part {"slug":"package-price-note","theme":"razil"} /-->

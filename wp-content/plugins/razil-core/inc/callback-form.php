@@ -184,18 +184,22 @@ function razil_callback_form_markup( string $uid ): string {
 	 *
 	 * type="tel", а не number: номер — не число, и у number ломается ввод
 	 * плюса и скобок. inputmode подсказывает телефонную клавиатуру.
-	 * Шаблон допускает местные и международные номера, пробелы и скобки.
-	 * Сервер независимо проверяет тот же диапазон 6–15 цифр.
+	 * Новый номер начинается с +7. Сохранённое после ошибки значение
+	 * показываем как ввёл посетитель, включая другой код страны.
 	 */
+	$separator = '[\s\(\)\.\-]*';
+	$digit     = $separator . '[0-9]';
+	$pattern   = '(?:(?:\+?' . $separator . '7|' . $separator . '8)(?:' . $digit . '){10}|(?:' . $digit . '){10}|\+' . $separator . '[1-68-9](?:' . $digit . '){5,14})' . $separator;
+	$phone     = '' === (string) $was['phone'] ? '+7' : $was['phone'];
 	$out .= '<p class="rz-form__row">'
 		. '<label class="rz-form__label" for="' . esc_attr( $id_phone ) . '">Телефон</label>'
 		. '<input class="rz-form__input" type="tel" id="' . esc_attr( $id_phone ) . '"'
 		. ' name="' . esc_attr( $p . 'phone' ) . '" maxlength="' . esc_attr( (string) RAZIL_CALLBACK_PHONE_MAX ) . '"'
 		. ' inputmode="tel" autocomplete="tel"'
-		. ' pattern="\s*\+?(?:[\s\(\)\.\-]*[0-9]){6,15}[\s\(\)\.\-]*"'
+		. ' pattern="' . esc_attr( $pattern ) . '" placeholder="+7 (___) ___-__-__"'
 		. ' aria-describedby="' . esc_attr( $id_hint . ' ' . $id_error ) . '"'
-		. ' value="' . esc_attr( (string) $was['phone'] ) . '" required />'
-		. '<span class="rz-form__hint" id="' . esc_attr( $id_hint ) . '">Можно указать российский или международный номер с кодом страны.</span>'
+		. ' value="' . esc_attr( $phone ) . '" required />'
+		. '<span class="rz-form__hint" id="' . esc_attr( $id_hint ) . '">Введите 10 цифр после +7. Для иностранного номера замените +7 кодом страны.</span>'
 		. '<span class="rz-form__error" id="' . esc_attr( $id_error ) . '" aria-live="polite"></span>'
 		. '</p>';
 
@@ -316,12 +320,7 @@ function razil_callback_button_shortcode( $atts = array() ): string {
 add_shortcode( 'razil_callback_button', 'razil_callback_button_shortcode' );
 
 /**
- * Минимум и максимум цифр в номере.
- *
- * Нижняя граница — короткий городской номер вроде 60-52-90: в Хабаровске
- * их шесть знаков, и человек вполне может набрать только его. Верхняя — предел
- * международного формата E.164. Между ними не придираемся: форма не должна
- * спорить с человеком, которому сейчас не до неё.
+ * Границы для номеров с явно указанным иностранным кодом страны.
  */
 const RAZIL_CALLBACK_PHONE_MIN_DIGITS = 6;
 const RAZIL_CALLBACK_PHONE_MAX_DIGITS = 15;
@@ -361,7 +360,7 @@ function razil_callback_normalize_phone( string $raw ): string {
 	}
 
 	// 8 (4212) 60-52-90 и +7 4212 605290 — один и тот же номер.
-	if ( 11 === $len && ( '8' === $digits[0] || '7' === $digits[0] ) ) {
+	if ( 11 === $len && ( '7' === $digits[0] || ( ! $plus && '8' === $digits[0] ) ) ) {
 		return '+7' . substr( $digits, 1 );
 	}
 
@@ -370,7 +369,14 @@ function razil_callback_normalize_phone( string $raw ): string {
 		return '+7' . $digits;
 	}
 
-	return ( $plus ? '+' : '' ) . $digits;
+	if ( $plus && '7' !== $digits[0] && '0' !== $digits[0] ) {
+		return '+' . $digits;
+	}
+	// В старых заявках встречается шестизначный городской номер без кода.
+	if ( ! $plus && 6 === $len ) {
+		return $digits;
+	}
+	return '';
 }
 
 /**
@@ -543,15 +549,16 @@ function razil_callback_handle(): void {
 	$phone_raw = isset( $_POST[ $p . 'phone' ] )
 		? sanitize_text_field( wp_unslash( $_POST[ $p . 'phone' ] ) )
 		: '';
-	$phone_raw = mb_substr( $phone_raw, 0, RAZIL_CALLBACK_PHONE_MAX );
-	$phone     = razil_callback_normalize_phone( $phone_raw );
+	$phone = mb_strlen( $phone_raw ) <= RAZIL_CALLBACK_PHONE_MAX
+		? razil_callback_normalize_phone( $phone_raw ) : '';
 
 	$consent = isset( $_POST[ $p . 'consent' ] ) && '1' === (string) wp_unslash( $_POST[ $p . 'consent' ] );
 	// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 	$page = razil_callback_back_url();
 
-	if ( '' === $phone || ! $consent ) {
+	// Для новой заявки нужен полный номер с кодом страны.
+	if ( ! str_starts_with( $phone, '+' ) || ! $consent ) {
 		razil_callback_fail();
 	}
 	if ( '' === $name ) {

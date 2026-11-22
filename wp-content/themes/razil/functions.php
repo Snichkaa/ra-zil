@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Локально (WP_DEBUG включён) берём время изменения файла, чтобы правки в CSS
  * были видны без Ctrl+F5. На продакшене — фиксированная строка.
  */
-define( 'RAZIL_VERSION', '1.3.2' );
+define( 'RAZIL_VERSION', '1.3.3' );
 
 require_once get_theme_file_path( 'inc/site-pages.php' );
 require_once get_theme_file_path( 'inc/site-icon.php' );

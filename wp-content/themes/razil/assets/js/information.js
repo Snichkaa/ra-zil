@@ -1,12 +1,78 @@
 /* Information pages: on-demand panoramas, document outline and public details. */
 (() => {
   'use strict';
-  document.querySelectorAll('[data-copy-address]').forEach(button => {
+  async function copyText(value, button) {
+    if (window.isSecureContext && navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(value);
+        return true;
+      } catch {
+        // Some browsers restrict the clipboard API while allowing selection-based copying.
+      }
+    }
+    const field = document.createElement('textarea');
+    field.value = value;
+    field.readOnly = true;
+    field.style.cssText = 'position:fixed;top:0;left:-9999px';
+    document.body.append(field);
+    try {
+      field.select();
+      field.setSelectionRange(0, value.length);
+      return document.execCommand('copy');
+    } catch {
+      return false;
+    } finally {
+      field.remove();
+      button.focus({ preventScroll: true });
+    }
+  }
+
+  function selectText(element) {
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  function enableAddressCopy(button, address, status) {
+    let feedbackTimer;
     button.addEventListener('click', async () => {
-      const status = button.parentElement.querySelector('[data-copy-status]');
-      try { await navigator.clipboard.writeText(button.dataset.copyAddress); status.textContent = 'Адрес скопирован.'; }
-      catch (_) { status.textContent = 'Адрес: ' + button.dataset.copyAddress; }
+      const copied = await copyText(address, button);
+      window.clearTimeout(feedbackTimer);
+      if (copied) {
+        status.textContent = 'Адрес скопирован.';
+        feedbackTimer = window.setTimeout(() => { status.textContent = ''; }, 3000);
+        return;
+      }
+      const selected = document.createElement('span');
+      selected.textContent = address;
+      status.replaceChildren('Скопируйте адрес вручную: ', selected);
+      selectText(selected);
     });
+  }
+
+  const address = document.getElementById('office-address')?.textContent.trim();
+  if (address) {
+    document.querySelectorAll('.rz-contact-address').forEach(label => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'rz-address-trigger';
+      button.title = 'Скопировать адрес';
+      button.setAttribute('aria-label', 'Скопировать адрес: ' + address);
+      button.append(...label.childNodes);
+      label.append(button);
+      const status = document.createElement('span');
+      status.className = 'rz-address-feedback';
+      status.setAttribute('role', 'status');
+      label.after(status);
+      enableAddressCopy(button, address, status);
+    });
+  }
+  // Contacts saved with the previous layout have a separate copy control.
+  document.querySelectorAll('[data-copy-address]').forEach(button => {
+    const status = button.parentElement.querySelector('[data-copy-status]');
+    if (status) enableAddressCopy(button, button.dataset.copyAddress, status);
   });
   document.querySelectorAll('[data-rz-tour]').forEach(tour => {
     const start = tour.querySelector('[data-tour-start]');
@@ -113,26 +179,10 @@
       const target = document.getElementById(button.dataset.copyTarget);
       if (!target) return;
       const message = document.querySelector('[data-copy-status]');
-      try {
-        if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(target.textContent.trim());
-        else {
-          const field = document.createElement('textarea');
-          field.value = target.textContent.trim();
-          field.style.cssText = 'position:fixed;left:-9999px;top:0';
-          document.body.append(field);
-          field.select();
-          const copied = document.execCommand('copy');
-          field.remove();
-          button.focus({ preventScroll: true });
-          if (!copied) throw new Error('Clipboard unavailable');
-        }
+      if (await copyText(target.textContent.trim(), button)) {
         message.textContent = button.dataset.copyLabel + ': скопировано.';
-      } catch (_) {
-        const range = document.createRange();
-        range.selectNodeContents(target);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
+      } else {
+        selectText(target);
         message.textContent = 'Текст выделен. Скопируйте его через меню браузера или сочетанием Ctrl+C.';
       }
     });

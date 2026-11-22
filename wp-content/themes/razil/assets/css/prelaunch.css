@@ -1,37 +1,96 @@
-/* Shared release improvements: landmarks, contact paths and comparison. */
+/* Landmarks, contact actions and the shared package-price note. */
 .rz-main { min-width: 0; margin-block: 0; }
 .rz-main > * { margin-block-start: 0; }
 .rz-main:focus { outline: none; }
 :where(a, button, input, select, textarea, summary, [tabindex="0"]):focus-visible { outline: 3px solid #986929; outline-offset: 4px; }
-.rz-hero-shortcuts { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-top: 1rem; }
-.rz-hero-shortcuts a { display: inline-flex; align-items: center; min-height: 44px; padding: .5rem .75rem; border: 1px solid currentColor; border-radius: .35rem; color: var(--rz-ink, #263f33); background: rgba(255,255,255,.86); font-size: 1rem; line-height: 1.3; text-underline-offset: .2em; }
-#chto-delat, #office-directions, #stoimost, #istochniki { scroll-margin-top: 6rem; }
+.rz-hero-shortcuts {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0 clamp(.875rem, 2.5vw, 1.75rem);
+	margin-block-start: .375rem;
+}
+.home .rz-hero-shortcuts a {
+	display: inline-flex;
+	align-items: center;
+	gap: .375em;
+	min-height: 44px;
+	color: var(--rz-hero-on-photo);
+	font-size: 1rem;
+	font-weight: 600;
+	line-height: 1.35;
+	text-decoration: underline;
+	text-decoration-color: color-mix(in srgb, currentColor 50%, transparent);
+	text-underline-offset: .22em;
+}
+.rz-hero-shortcuts a::after {
+	content: "";
+	width: .4em;
+	height: .4em;
+	border: solid currentColor;
+	border-width: 1.5px 1.5px 0 0;
+	transform: rotate(45deg);
+}
+.rz-hero-shortcuts a[href^="#"]::after { transform: rotate(135deg) translateY(.12em); }
+.home .rz-hero-shortcuts a:is(:hover, :focus-visible) { text-decoration-color: currentColor; }
+#chto-delat, #office-directions, :where(#stoimost, #istochniki) { scroll-margin-top: 6rem; }
 .rz-source-note { font-size: .875rem; line-height: 1.5; color: var(--rz-muted, #565c55); }
 .rz-contact-summary { padding: 1.25rem; border: 1px solid var(--rz-line, #d8d5cc); border-radius: .75rem; background: var(--rz-surface, #fcfaf5); margin-block: 1rem 1.5rem; }
 .rz-contact-summary p { margin: 0 0 .75rem; }
 .rz-contact-summary .rz-info-actions { flex-wrap: wrap; gap: .75rem 1rem; }
 .rz-contact-summary .rz-info-actions a, .rz-copy-address { min-height: 44px; display: inline-flex; align-items: center; }
-.rz-copy-address { font: inherit; color: inherit; background: transparent; border: 1px solid currentColor; border-radius: .3rem; padding: .4rem .6rem; cursor: pointer; }
+.rz-address-trigger, .rz-copy-address {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  text-decoration: underline dotted var(--rz-ink-soft);
+  text-underline-offset: .18em;
+  cursor: copy;
+}
+.rz-address-trigger:is(:hover, :focus-visible) {
+  color: var(--rz-action);
+  text-decoration-style: solid;
+}
+.rz-address-feedback {
+  display: block;
+  margin-block: 0;
+  color: var(--rz-action);
+  font-size: .9375rem;
+  line-height: 1.4;
+}
+.rz-address-feedback:empty { position: absolute; width: 1px; height: 1px; overflow: hidden; }
 .rz-cb-dialog__cancel--top { position: sticky; top: 0; z-index: 2; display: block; margin: 0 0 .75rem auto; width: auto; background: var(--rz-surface, #fcfaf5); }
 .rz-cb-form__context { font-weight: 600; overflow-wrap: anywhere; }
 .rz-cb-form__context:empty { display: none; }
-.rz-comparison { max-width: min(72.5rem, calc(100% - 2rem)); margin: 2rem auto; overflow-x: auto; border: 1px solid var(--rz-line, #d8d5cc); border-radius: .5rem; }
-.rz-comparison table { width: 100%; min-width: 680px; border-collapse: collapse; font-size: 1rem; line-height: 1.5; }
-.rz-comparison th, .rz-comparison td { padding: .8rem; text-align: left; vertical-align: top; border: 1px solid var(--rz-line, #d8d5cc); white-space: normal; }
-.rz-comparison caption { padding: 1rem; font-weight: 600; text-align: left; }
-.rz-comparison thead { background: var(--rz-surface, #fcfaf5); }
-.rz-main > .rz-comparison + p { max-width: min(72.5rem, calc(100% - 2rem)); margin-inline: auto; }
+.rz-price-note {
+	margin-block: 1rem 0;
+	padding-block-start: .75rem;
+	border-block-start: 1px solid var(--rz-line);
+	color: var(--rz-ink-soft);
+	font-size: .875rem;
+	line-height: 1.5;
+	scroll-margin-block-start: calc(var(--rz-header-h) + 1rem);
+}
+:is(.rz-service-card__price, .rz-svc-pack__price) a[href="#usloviya-tsen"] {
+	color: inherit;
+	text-decoration: none;
+}
+:is(.rz-service-card__price, .rz-svc-pack__price) a:is(:hover, :focus-visible) { text-decoration: underline; }
 @media (max-width: 47.99rem) {
- .rz-hero-shortcuts { gap: .5rem; }
- .rz-hero-shortcuts a { font-size: .9375rem; }
+ .home .rz-hero-shortcuts a { font-size: .9375rem; }
  .rz-contact-summary { padding: 1rem; }
  .rz-cb-dialog { max-height: calc(100dvh - 1rem); overflow-y: auto; }
 }
 @media print {
+ .rz-address-trigger { min-height: 0; text-decoration: none; }
+ .rz-address-feedback { display: none; }
  header, footer, .rz-header, .rz-footer, .rz-sticky-call, .rz-callback, .rz-cta, dialog, .rz-tour, video, iframe, .rz-hero-shortcuts, .rz-copy-address { display: none !important; }
  main { width: 100%; max-width: none; color: #000; background: white; }
- .rz-comparison { max-width: none; overflow: visible; }
- .rz-comparison table { min-width: 0; font-size: 9pt; }
  h1, h2, h3 { break-after: avoid; }
  a { color: #000; }
 }

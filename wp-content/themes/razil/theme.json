@@ -409,6 +409,11 @@
 			"name": "sticky-call",
 			"title": "Кнопка звонка",
 			"area": "footer"
+		},
+		{
+			"name": "package-price-note",
+			"title": "Примечание к ценам комплексов",
+			"area": "uncategorized"
 		}
 	]
 }
