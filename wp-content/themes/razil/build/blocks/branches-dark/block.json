@@ -6,5 +6,5 @@
   "category": "razil",
   "attributes": {},
   "render": "file:./render.php",
-  "style": "file:./style.scss"
+  "style": "file:./style.css"
 }

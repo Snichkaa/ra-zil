@@ -33,13 +33,14 @@ if ( ! empty( $attributes['items'] ) && is_array( $attributes['items'] ) ) {
 } else {
 	/*
 	 * Ограничение выборки. Ноль означает «без ограничения»: на странице
-	 * отзывов нужны все записи, на главной — только несколько свежих,
-	 * иначе карусель растёт вместе с архивом.
+	 * отзывов нужны все записи, на главной — вся отмеченная подборка,
+	 * чтобы новые отзывы добавлялись к прежним.
 	 */
 	$rz_limit = isset( $attributes['limit'] ) ? (int) $attributes['limit'] : 0;
 
 	// --- из базы
-	$rz_query = new WP_Query(
+	$rz_home_selection = is_front_page() && function_exists( 'razil_featured_reviews' );
+	$rz_query = $rz_home_selection ? null : new WP_Query(
 		array(
 			'post_type'              => 'reviews',
 			'post_status'            => 'publish',
@@ -52,7 +53,7 @@ if ( ! empty( $attributes['items'] ) && is_array( $attributes['items'] ) ) {
 		)
 	);
 
-	foreach ( $rz_query->posts as $rz_post ) {
+	foreach ( $rz_home_selection ? razil_featured_reviews( $rz_limit ) : $rz_query->posts as $rz_post ) {
 		$rz_stamp = get_post_timestamp( $rz_post );
 
 		$rz_items[] = array(
@@ -63,6 +64,7 @@ if ( ! empty( $attributes['items'] ) && is_array( $attributes['items'] ) ) {
 			// 0 означает «оценка не указана», а не «ноль звёзд»: блок звёзд тогда не выводится.
 			'rating' => (int) get_post_meta( $rz_post->ID, '_razil_rating', true ),
 			'source' => (string) get_post_meta( $rz_post->ID, '_razil_source', true ),
+			'url' => (string) get_post_meta( $rz_post->ID, '_razil_source_url', true ),
 		);
 	}
 }
@@ -115,7 +117,11 @@ $rz_card = static function ( array $item ) use ( $rz_star_svg ): string {
 	}
 
 	if ( '' !== $item['source'] ) {
-		$out .= '<p class="rz-review__source">' . esc_html( 'Источник: ' . $item['source'] ) . '</p>';
+		$source = esc_html( 'Источник: ' . $item['source'] );
+		if ( ! empty( $item['url'] ) && '2gis.ru' === wp_parse_url( $item['url'], PHP_URL_HOST ) ) {
+			$source = '<a href="' . esc_url( $item['url'] ) . '" target="_blank" rel="noopener noreferrer">' . $source . '</a>';
+		}
+		$out .= '<p class="rz-review__source">' . $source . '</p>';
 	}
 
 	$out .= '</footer></article>';

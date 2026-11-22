@@ -3,12 +3,13 @@
  *
  * Без сборки — файл подключается напрямую в подвале.
  *
- * Прокрутку фона при открытом меню намеренно НЕ запираем.
- * Прежняя версия ставила document.body.style.overflow. Изначально
- * от этого отказались из-за position: sticky у формы отзывов -
- * её больше нет, но решение остаётся в силе по другой причине:
- * запирание body даёт скачок страницы вверх на мобильных.
- * Панель занимает экран ниже шапки и прокручивается сама.
+ * Прокрутку фона при открытом меню запирает CSS, а не этот скрипт.
+ * Прежняя версия ставила document.body.style.overflow из кода и от
+ * этого отказалась: запирание body даёт скачок страницы вверх
+ * на мобильных. Довод в силе, поэтому запирание сделано иначе —
+ * правилом html:has(.rz-menu:not([hidden])) { overflow: hidden }
+ * в main.css. Состояние меню и так выражено атрибутом hidden,
+ * второй источник правды в виде класса на html не заводится.
  */
 ( function () {
 	'use strict';
@@ -283,6 +284,22 @@
 		}
 
 		cbReturn = opener || null;
+		if ( opener ) {
+			var topic = opener.getAttribute( 'data-rz-cb-topic' ) || 'general';
+			var service = opener.getAttribute( 'data-rz-cb-service' ) || '0';
+			var label = opener.getAttribute( 'data-rz-cb-service-label' ) || '';
+			cbDialog.querySelector( '[name="rz_cb_topic"]' ).value = topic;
+			cbDialog.querySelector( '[name="rz_cb_service"]' ).value = service;
+			cbDialog.querySelector( '[data-rz-cb-context]' ).textContent = label;
+			cbDialog.querySelector( '#rz-cb-dialog-title' ).textContent = topic === 'price'
+				? 'Обсудить стоимость по телефону' : topic === 'hall' ? 'Обсудить прощание в зале' : 'Заказать обратный звонок';
+		}
+		else {
+			// Restore the service-specific heading after a server-side error.
+			var restoredTopic = cbDialog.querySelector( '[name="rz_cb_topic"]' ).value;
+			cbDialog.querySelector( '#rz-cb-dialog-title' ).textContent = restoredTopic === 'price'
+				? 'Обсудить стоимость по телефону' : restoredTopic === 'hall' ? 'Обсудить прощание в зале' : 'Заказать обратный звонок';
+		}
 		cbDialog.showModal();
 
 		// Сообщение об ошибке важнее поля: если окно открылось само после
@@ -315,6 +332,7 @@
 
 		// Esc закрывает окно силами браузера, здесь только возврат фокуса.
 		cbDialog.addEventListener( 'close', function () {
+			if ( cbDialog.hasAttribute( 'data-rz-captcha-suspended' ) || cbDialog.open ) { return; }
 			if ( cbReturn && document.contains( cbReturn ) ) {
 				cbReturn.focus();
 			}
@@ -346,6 +364,120 @@
 		if ( cbDialog.hasAttribute( 'data-rz-cb-autoopen' ) ) {
 			openCallbackDialog( null );
 		}
+	}
+
+	// Format the default +7 number while preserving other explicit country codes.
+	function formatCallbackPhone( value, completeNumber ) {
+		if ( ! /^\+?[\d\s().-]+$/.test( value ) ) { return value; }
+		var digits = value.replace( /\D/g, '' );
+		var national;
+		if ( value[0] === '+' && digits[0] === '7' ) {
+			national = digits.slice( 1 );
+		} else if ( completeNumber && value[0] !== '+' && digits.length === 10 ) {
+			national = digits;
+		} else if ( completeNumber && value[0] !== '+' && /^[78]\d{10}$/.test( digits ) ) {
+			national = digits.slice( 1 );
+		} else {
+			return value;
+		}
+		// Keep an overlong pasted number visible so the visitor can correct it.
+		if ( national.length > 10 ) { return value; }
+		var formatted = '+7';
+		if ( national.length ) { formatted += ' (' + national.slice( 0, 3 ); }
+		if ( national.length > 3 ) { formatted += ') ' + national.slice( 3, 6 ); }
+		if ( national.length > 6 ) { formatted += '-' + national.slice( 6, 8 ); }
+		if ( national.length > 8 ) { formatted += '-' + national.slice( 8 ); }
+		return formatted;
+	}
+
+	document.querySelectorAll( '.rz-cb-form' ).forEach( function ( form ) {
+		var request = form.querySelector( '[name="rz_cb_request"]' );
+		if ( request && window.crypto && window.crypto.randomUUID ) { request.value = window.crypto.randomUUID(); }
+		var phone = form.querySelector( 'input[type="tel"]' );
+		var error = form.querySelector( '.rz-form__error' );
+		if ( ! phone || ! error ) { return; }
+		function message() {
+			var value = phone.value.trim();
+			if ( ! value || value === '+7' ) { return 'Укажите телефон, по которому мы сможем вам позвонить.'; }
+			if ( ! phone.validity.patternMismatch ) { return ''; }
+			return /^\+[^7]/.test( value )
+				? 'Проверьте код страны и номер телефона.'
+				: 'Для российского номера введите 10 цифр после +7.';
+		}
+		function validate( show ) {
+			var text = message();
+			phone.setCustomValidity( text );
+			if ( show ) {
+				error.textContent = text;
+				phone.setAttribute( 'aria-invalid', text ? 'true' : 'false' );
+			}
+		}
+		function formatField( completeNumber ) {
+			var previous = phone.value;
+			var formatted = formatCallbackPhone( previous.trim(), completeNumber );
+			if ( formatted === previous ) { return; }
+			var cursor = phone.selectionStart;
+			var digitsBefore = previous.slice( 0, cursor ).replace( /\D/g, '' ).length;
+			phone.value = formatted;
+			if ( cursor === previous.length ) { return; }
+			// Map the caret by digits, so adding brackets or a dash does not move it to the end.
+			var next = 0;
+			while ( next < formatted.length && digitsBefore > 0 ) {
+				if ( /\d/.test( formatted[next] ) ) { digitsBefore--; }
+				next++;
+			}
+			phone.setSelectionRange( next, next );
+		}
+		phone.addEventListener( 'paste', function ( event ) {
+			if ( ! event.clipboardData ) { return; }
+			var remainder = phone.value.slice( 0, phone.selectionStart ) + phone.value.slice( phone.selectionEnd );
+			var pasted = event.clipboardData.getData( 'text' ).trim();
+			// A complete number pasted into a fresh field replaces its default prefix.
+			if ( ! /^(?:\+7)?\s*$/.test( remainder ) || ! /^(?:\+|[\d\s().-]{10})/.test( pasted ) ) { return; }
+			event.preventDefault();
+			phone.value = formatCallbackPhone( pasted, true );
+			phone.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+		} );
+		phone.addEventListener( 'beforeinput', function ( event ) {
+			var cursor = phone.selectionStart;
+			if ( phone.selectionEnd !== cursor || cursor < 2 || ! phone.value.startsWith( '+7' ) ) { return; }
+			var adjacent;
+			if ( event.inputType === 'deleteContentForward' ) {
+				adjacent = phone.value.slice( cursor ).match( /^\D+\d/ );
+				if ( adjacent ) { phone.setSelectionRange( cursor, cursor + adjacent[0].length ); }
+			} else if ( event.inputType === 'deleteContentBackward' ) {
+				adjacent = phone.value.slice( 2, cursor ).match( /\d\D+$/ );
+				if ( adjacent ) { phone.setSelectionRange( cursor - adjacent[0].length, cursor ); }
+			}
+		} );
+		phone.addEventListener( 'focus', function () {
+			if ( ! phone.value ) { phone.value = '+7'; validate( false ); }
+		} );
+		phone.addEventListener( 'input', function () {
+			formatField( false );
+			validate( phone.hasAttribute( 'aria-invalid' ) || ( phone.value.startsWith( '+7' ) && phone.value.replace( /\D/g, '' ).length > 11 ) );
+		} );
+		phone.addEventListener( 'blur', function () {
+			formatField( true );
+			validate( !! phone.value && phone.value !== '+7' );
+		} );
+		phone.addEventListener( 'invalid', function () { validate( true ); } );
+		// Restored form values need the same validation as freshly typed ones.
+		formatField( true );
+		validate( false );
+	} );
+
+	// Start near-page photographs ahead of a fast scroll. Distant images stay lazy.
+	if ( 'IntersectionObserver' in window ) {
+		var photoWatch = new IntersectionObserver( function ( entries ) {
+			entries.forEach( function ( entry ) {
+				if ( entry.isIntersecting ) {
+					entry.target.loading = 'eager';
+					photoWatch.unobserve( entry.target );
+				}
+			} );
+		}, { rootMargin: '300px 0px' } );
+		document.querySelectorAll( 'img[loading="lazy"]' ).forEach( function ( img ) { photoWatch.observe( img ); } );
 	}
 
 	/* ==================================================== ВОПРОСЫ И ОТВЕТЫ */
@@ -380,6 +512,55 @@
 	 * а не поломка.
 	 */
 	var faq = document.querySelectorAll( '.entry-content .wp-block-details' );
+
+	/*
+	 * Одновременно открыт один вопрос (§21.7 концепции).
+	 *
+	 * Правило действует внутри группы, а не на всю страницу:
+	 * на странице услуги таких групп может быть две — прайс
+	 * и вопросы, — и раскрытая строка прайса не должна закрывать ответ
+	 * в другом разделе.
+	 *
+	 * Групп две разновидности, и это не дублирование:
+	 *
+	 *   [data-accordion]   старая разметка, ещё лежащая в базе;
+	 *   .rz-svc-faq__list  новый паттерн razil/service-faq.
+	 *
+	 * Атрибут data-accordion делал группу НЕВАЛИДНОЙ в редакторе:
+	 * core/group произвольных атрибутов не сохраняет, и владелец сайта
+	 * видел «Блок содержит неожиданное содержимое». Класс блок
+	 * сохраняет штатно, поэтому новая разметка опознаётся по классу.
+	 * Старый отбор остаётся, пока старая разметка есть в базе.
+	 *
+	 * Событие toggle, а не click: оно приходит и при открытии
+	 * с клавиатуры, и при программном изменении open, которое делает
+	 * плавное раскрытие ниже по файлу. На click правило работало бы
+	 * только мышью.
+	 *
+	 * Закрывается только уже открытое: присваивание open = false
+	 * закрытому элементу события не порождает, но проверка дешевле,
+	 * чем полагаться на это.
+	 */
+	Array.prototype.forEach.call(
+		document.querySelectorAll( '[data-accordion], .rz-svc-faq__list' ),
+		function ( group ) {
+			var items = group.querySelectorAll( 'details' );
+
+			Array.prototype.forEach.call( items, function ( item ) {
+				item.addEventListener( 'toggle', function () {
+					if ( ! item.open ) {
+						return;
+					}
+
+					Array.prototype.forEach.call( items, function ( other ) {
+						if ( other !== item && other.open ) {
+							other.open = false;
+						}
+					} );
+				} );
+			} );
+		}
+	);
 
 	if ( faq.length ) {
 		/*
@@ -464,7 +645,67 @@
 		return;
 	}
 
-	var DESKTOP = window.matchMedia( '(min-width: 62rem)' );
+	// Тот же порог, что у правила показа навигации в main.css.
+	// Разойдутся — панель будет закрываться там, где бургер ещё виден,
+	// или наоборот останется открытой без кнопки, которой её закрыть.
+	var DESKTOP = window.matchMedia( '(min-width: 65.625rem)' );
+
+	/* ============================================ ВЫСОТА ЗАКРЕПЛЁННОЙ ШАПКИ */
+
+	/**
+	 * Переменная --rz-header-h всегда равна фактической высоте шапки.
+	 *
+	 * Шапка закреплена, из потока выпала, и место под себя не занимает —
+	 * его отводит padding-top у body. Пока высота задана числом в CSS,
+	 * эти два числа живут отдельно и расходятся при первом же случае,
+	 * когда шапка окажется выше задуманного. Так и вышло: при
+	 * увеличении текста до 200% на 375 px шапка занимала 200 px против
+	 * 160 px компенсации, и верхние 40 px каждого раздела уходили
+	 * под неё — заголовок «Основные услуги» перекрывался бургером.
+	 *
+	 * Здесь переменная переписывается измеренной высотой, и разойтись
+	 * двум числам становится физически не с чем: padding-top у body,
+	 * scroll-padding-top у html, положение мобильной панели и сдвиг
+	 * под админ-панель читают одну и ту же переменную.
+	 *
+	 * Значение в CSS остаётся и работает запасным: без JavaScript
+	 * шапка получает свои 5rem, и это верно для обычного масштаба.
+	 *
+	 * Запись только при смене округлённого значения. Без этой проверки
+	 * получилась бы петля: смена переменной меняет отбивку body, та —
+	 * высоту документа, та — наличие полосы прокрутки, а та — ширину
+	 * окна и, через неё, высоту самой шапки.
+	 */
+	var headerH = 0;
+
+	function syncHeaderHeight() {
+		var h = Math.round( header.getBoundingClientRect().height );
+
+		// Ноль означает, что шапку временно спрятали или ещё не сверстали.
+		// Записывать его нельзя: содержимое подскочит под шапку.
+		if ( ! h || h === headerH ) {
+			return;
+		}
+
+		headerH = h;
+		document.documentElement.style.setProperty( '--rz-header-h', h + 'px' );
+	}
+
+	syncHeaderHeight();
+
+	if ( 'ResizeObserver' in window ) {
+		new ResizeObserver( syncHeaderHeight ).observe( header );
+	} else {
+		// Старый браузер: хотя бы на смену размеров окна отзовёмся.
+		window.addEventListener( 'resize', syncHeaderHeight );
+	}
+
+	// Шрифты догружаются после первой отрисовки и меняют высоту строки
+	// в названии рядом с эмблемой. ResizeObserver это поймает сам,
+	// но на браузере без него замер надо повторить.
+	if ( document.fonts && document.fonts.ready && ! ( 'ResizeObserver' in window ) ) {
+		document.fonts.ready.then( syncHeaderHeight );
+	}
 
 	/* ==================================================== МОБИЛЬНОЕ МЕНЮ */
 
@@ -590,6 +831,13 @@
 		// Тень — на всех ширинах.
 		header.classList.toggle( 'rz-header--scrolled', y > STEP );
 
+		// На главной действие появляется, когда основная кнопка ушла
+		// выше видимой области, и снова скрывается при возврате к ней.
+		if ( stickyCall && homeCall ) {
+			stickyCall.classList.toggle( 'is-visible',
+				homeCall.getBoundingClientRect().bottom <= header.getBoundingClientRect().bottom );
+		}
+
 		var smart = ! DESKTOP.matches && ! CALM.matches;
 
 		if ( ! smart || isOpen() || y <= TOP_ZONE ) {
@@ -626,27 +874,22 @@
 	/* ==================================================== КНОПКА ЗВОНКА */
 
 	/**
-	 * Кнопка появляется, когда первый экран целиком ушёл из вида,
-	 * и дальше остаётся до конца страницы.
-	 *
-	 * Появление одностороннее намеренно. Раньше кнопка ещё и пряталась,
-	 * когда в кадр попадал призыв .rz-cta внизу страницы. У границы призыва
-	 * это давало мерцание: малейшее движение прокрутки вверх-вниз
-	 * переключало видимость туда и обратно. Вдобавок на страницах услуг
-	 * призыв скрыт, у скрытого элемента нулевые размеры, и наблюдатель вёл
-	 * себя там иначе, чем на остальных страницах. Одностороннее появление
-	 * снимает и мерцание, и разницу между страницами: наблюдатель за
-	 * призывом убран совсем.
-	 *
-	 * Наблюдатель, а не обработчик scroll: привязка к элементу, а не
-	 * к числу пикселей, и браузер сам считает пересечения вне
-	 * основного потока.
-	 *
-	 * Ширину не проверяем: кнопка показывается на всех, медиазапроса
-	 * у неё больше нет. Состояние по умолчанию скрытое, поэтому без JS
-	 * кнопка не появляется вовсе и не мелькает при загрузке.
+	 * На главной видимость обновляет общий обработчик прокрутки:
+	 * ориентир — основная кнопка звонка, размеры экрана не ограничены.
+	 * На внутренних страницах сохраняется однократное появление после
+	 * первого экрана; CSS показывает кнопку только на мобильных.
+	 * Пока большой блок связи в кадре, кнопку скрывает hushWatch ниже.
+	 * Начальное состояние скрыто, поэтому при загрузке нет мигания.
 	 */
 	var stickyCall = document.querySelector( '.rz-sticky-call' );
+	var homeCall = document.querySelector( '.home .rz-hero a[href^="tel:"]' );
+
+	if ( stickyCall && homeCall ) {
+		window.addEventListener( 'resize', onScroll );
+		if ( document.fonts && document.fonts.ready ) {
+			document.fonts.ready.then( onScroll );
+		}
+	}
 
 	// На внутренних страницах героя нет. Первая секция контента там
 	// тянется почти на всю страницу и из кадра не уходит, поэтому
@@ -654,7 +897,7 @@
 	var firstScreen = document.querySelector( '.rz-hero' ) ||
 		document.querySelector( 'h1' );
 
-	if ( stickyCall && firstScreen && 'IntersectionObserver' in window ) {
+	if ( stickyCall && ! homeCall && firstScreen && 'IntersectionObserver' in window ) {
 		var stickyWatch = new IntersectionObserver( function ( entries ) {
 			if ( entries[ 0 ].isIntersecting ) {
 				return;
@@ -669,7 +912,57 @@
 		stickyWatch.observe( firstScreen );
 	}
 
+	/*
+	 * Кнопка молчит, пока на экране призыв позвонить или оставить
+	 * заявку.
+	 *
+	 * Это закрывает СРАЗУ ДВА открытых пункта: пункт 2 отчёта
+	 * от 21 сентября («кнопка звонка задевает угол ссылки призыва
+	 * на 375 px, 20 px по высоте… лечится только новым поведением —
+	 * прятать кнопку, пока призыв в кадре») и требование задачи 11
+	 * этого прогона про финальный блок заявки. Болезнь одна:
+	 * висящая кнопка стоит в углу окна и не знает, что под ней.
+	 *
+	 * Цели две, потому что блоков призыва на сайте два: .rz-cta
+	 * на главной и прочих страницах, .rz-callback на услугах
+	 * и в каталоге. Общего класса у них нет, заводить его ради
+	 * одного селектора незачем.
+	 *
+	 * Счётчик, а не флаг: целей может быть видно несколько разом,
+	 * и уход одной из кадра не означает, что кнопку пора возвращать.
+	 *
+	 * Без IntersectionObserver кнопка просто остаётся видимой —
+	 * это прежнее поведение, а не поломка.
+	 */
+	var hushTargets = document.querySelectorAll( '.rz-cta, .rz-callback' );
+
+	if ( stickyCall && hushTargets.length && 'IntersectionObserver' in window ) {
+		var hushCount = 0;
+
+		var hushWatch = new IntersectionObserver( function ( entries ) {
+			Array.prototype.forEach.call( entries, function ( entry ) {
+				hushCount += entry.isIntersecting ? 1 : -1;
+			} );
+
+			if ( hushCount < 0 ) {
+				hushCount = 0;
+			}
+
+			stickyCall.classList.toggle( 'is-hushed', hushCount > 0 );
+		} );
+
+		Array.prototype.forEach.call( hushTargets, function ( target ) {
+			hushWatch.observe( target );
+		} );
+	}
+
 	// Состояние тени при загрузке страницы с уже прокрученной позицией
 	// (возврат назад, переход по якорю).
+	document.addEventListener( 'click', function ( event ) {
+		var link = event.target.closest && event.target.closest( '.skip-link' );
+		if ( ! link ) { return; }
+		var main = document.querySelector( 'main' );
+		if ( main ) { main.tabIndex = -1; main.focus(); }
+	} );
 	onFrame();
 }() );
