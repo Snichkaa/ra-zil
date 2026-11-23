@@ -62,7 +62,7 @@ defined( 'ABSPATH' ) || exit;
 <!-- /wp:list-item -->
 
 <!-- wp:list-item -->
-<li><strong>Вызовите полицию — <a href="tel:102">102</a>.</strong> Сотрудник оформит необходимые документы.</li>
+<li><strong>Вызовите полицию, если требуется её участие.</strong> Телефон — <a href="tel:102">102</a>.</li>
 <!-- /wp:list-item --></ol>
 <!-- /wp:list -->
 
@@ -71,6 +71,8 @@ defined( 'ABSPATH' ) || exit;
 <div class="wp-block-button rz-svc-card__call"><a class="wp-block-button__link wp-element-button" href="tel:+74212605290"><span class="rz-svc-hero__call-text">Позвонить круглосуточно</span></a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
-<!-- /wp:group --></div>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"agent-warning","theme":"razil","className":"rz-agent-warning"} /--></div>
 <!-- /wp:group --></div>
 <!-- /wp:group -->

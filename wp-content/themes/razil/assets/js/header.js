@@ -366,22 +366,17 @@
 		}
 	}
 
-	// Format the default +7 number while preserving other explicit country codes.
-	function formatCallbackPhone( value, completeNumber ) {
-		if ( ! /^\+?[\d\s().-]+$/.test( value ) ) { return value; }
-		var digits = value.replace( /\D/g, '' );
-		var national;
-		if ( value[0] === '+' && digits[0] === '7' ) {
-			national = digits.slice( 1 );
-		} else if ( completeNumber && value[0] !== '+' && digits.length === 10 ) {
-			national = digits;
-		} else if ( completeNumber && value[0] !== '+' && /^[78]\d{10}$/.test( digits ) ) {
-			national = digits.slice( 1 );
-		} else {
-			return value;
+	function formatCallbackPhone( value ) {
+		value = value.trim();
+		if ( ! /^\+?[\d\s().-]*$/.test( value ) ) { return null; }
+		var national = value.replace( /\D/g, '' );
+		if ( value[0] === '+' ) {
+			if ( national && national[0] !== '7' ) { return null; }
+			national = national.slice( 1 );
+		} else if ( /^[78]\d{10}$/.test( national ) ) {
+			national = national.slice( 1 );
 		}
-		// Keep an overlong pasted number visible so the visitor can correct it.
-		if ( national.length > 10 ) { return value; }
+		if ( national.length > 10 ) { return null; }
 		var formatted = '+7';
 		if ( national.length ) { formatted += ' (' + national.slice( 0, 3 ); }
 		if ( national.length > 3 ) { formatted += ') ' + national.slice( 3, 6 ); }
@@ -396,13 +391,14 @@
 		var phone = form.querySelector( 'input[type="tel"]' );
 		var error = form.querySelector( '.rz-form__error' );
 		if ( ! phone || ! error ) { return; }
+		var lastPhone = '+7';
+		var invalidInsertion = false;
 		function message() {
 			var value = phone.value.trim();
+			if ( invalidInsertion ) { return 'Не удалось вставить номер. Введите 10 цифр после +7.'; }
 			if ( ! value || value === '+7' ) { return 'Укажите телефон, по которому мы сможем вам позвонить.'; }
 			if ( ! phone.validity.patternMismatch ) { return ''; }
-			return /^\+[^7]/.test( value )
-				? 'Проверьте код страны и номер телефона.'
-				: 'Для российского номера введите 10 цифр после +7.';
+			return 'Введите 10 цифр после +7.';
 		}
 		function validate( show ) {
 			var text = message();
@@ -412,9 +408,11 @@
 				phone.setAttribute( 'aria-invalid', text ? 'true' : 'false' );
 			}
 		}
-		function formatField( completeNumber ) {
+		function formatField() {
 			var previous = phone.value;
-			var formatted = formatCallbackPhone( previous.trim(), completeNumber );
+			var formatted = formatCallbackPhone( previous );
+			if ( formatted === null ) { formatted = lastPhone; }
+			lastPhone = formatted;
 			if ( formatted === previous ) { return; }
 			var cursor = phone.selectionStart;
 			var digitsBefore = previous.slice( 0, cursor ).replace( /\D/g, '' ).length;
@@ -426,20 +424,47 @@
 				if ( /\d/.test( formatted[next] ) ) { digitsBefore--; }
 				next++;
 			}
+			next = Math.max( 2, next );
 			phone.setSelectionRange( next, next );
 		}
-		phone.addEventListener( 'paste', function ( event ) {
-			if ( ! event.clipboardData ) { return; }
-			var remainder = phone.value.slice( 0, phone.selectionStart ) + phone.value.slice( phone.selectionEnd );
-			var pasted = event.clipboardData.getData( 'text' ).trim();
-			// A complete number pasted into a fresh field replaces its default prefix.
-			if ( ! /^(?:\+7)?\s*$/.test( remainder ) || ! /^(?:\+|[\d\s().-]{10})/.test( pasted ) ) { return; }
+		function insertPhoneText( event, text ) {
 			event.preventDefault();
-			phone.value = formatCallbackPhone( pasted, true );
+			var start = Math.max( 2, phone.selectionStart );
+			var end = Math.max( 2, phone.selectionEnd );
+			var remainder = phone.value.slice( 2, start ) + phone.value.slice( end );
+			var pasted = text.trim();
+			var fullReplacement = ! /\d/.test( remainder );
+			var candidate = fullReplacement ? pasted : phone.value.slice( 0, start ) + pasted + phone.value.slice( end );
+			var formatted = formatCallbackPhone( candidate );
+			if ( formatted === null ) {
+				invalidInsertion = true;
+				validate( true );
+				return;
+			}
+			if ( fullReplacement ) {
+				phone.value = formatted;
+			} else {
+				phone.setRangeText( pasted, start, end, 'end' );
+			}
 			phone.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+		}
+		phone.addEventListener( 'paste', function ( event ) {
+			if ( event.clipboardData ) { insertPhoneText( event, event.clipboardData.getData( 'text' ) ); }
 		} );
 		phone.addEventListener( 'beforeinput', function ( event ) {
 			var cursor = phone.selectionStart;
+			if ( event.isComposing || ! event.cancelable ) { return; }
+			if ( event.inputType === 'insertText' || event.inputType === 'insertReplacementText' || event.inputType === 'insertFromDrop' ) {
+				if ( event.data && event.data.length > 1 ) { insertPhoneText( event, event.data ); return; }
+				if ( event.data && ! /^[0-9]+$/.test( event.data ) ) { event.preventDefault(); return; }
+				if ( cursor < 2 ) { phone.setSelectionRange( 2, Math.max( 2, phone.selectionEnd ) ); }
+				return;
+			}
+			if ( event.inputType.startsWith( 'delete' ) && cursor < 2 ) {
+				phone.setSelectionRange( 2, Math.max( 2, phone.selectionEnd ) );
+				cursor = 2;
+			}
+			if ( event.inputType === 'deleteContentBackward' && phone.selectionEnd === 2 ) { event.preventDefault(); return; }
 			if ( phone.selectionEnd !== cursor || cursor < 2 || ! phone.value.startsWith( '+7' ) ) { return; }
 			var adjacent;
 			if ( event.inputType === 'deleteContentForward' ) {
@@ -450,20 +475,21 @@
 				if ( adjacent ) { phone.setSelectionRange( cursor - adjacent[0].length, cursor ); }
 			}
 		} );
-		phone.addEventListener( 'focus', function () {
-			if ( ! phone.value ) { phone.value = '+7'; validate( false ); }
-		} );
-		phone.addEventListener( 'input', function () {
-			formatField( false );
-			validate( phone.hasAttribute( 'aria-invalid' ) || ( phone.value.startsWith( '+7' ) && phone.value.replace( /\D/g, '' ).length > 11 ) );
-		} );
+		function onPhoneInput( event ) {
+			if ( event.isComposing ) { return; }
+			invalidInsertion = false;
+			formatField();
+			validate( phone.hasAttribute( 'aria-invalid' ) );
+		}
+		phone.addEventListener( 'input', onPhoneInput );
+		phone.addEventListener( 'compositionend', onPhoneInput );
 		phone.addEventListener( 'blur', function () {
-			formatField( true );
+			formatField();
 			validate( !! phone.value && phone.value !== '+7' );
 		} );
 		phone.addEventListener( 'invalid', function () { validate( true ); } );
 		// Restored form values need the same validation as freshly typed ones.
-		formatField( true );
+		formatField();
 		validate( false );
 	} );
 

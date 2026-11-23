@@ -414,6 +414,11 @@
 			"name": "package-price-note",
 			"title": "Примечание к ценам комплексов",
 			"area": "uncategorized"
+		},
+		{
+			"name": "agent-warning",
+			"title": "Предупреждение о посторонних агентах",
+			"area": "uncategorized"
 		}
 	]
 }

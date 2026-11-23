@@ -3769,12 +3769,8 @@ html {
 	font-weight: 700;
 }
 
-.rz-first-aid__note,
-.rz-first-aid__warning {
-	margin-top: 1.5rem !important;
-}
-
 .rz-first-aid__note {
+	margin-top: 1.5rem !important;
 	color: var(--rz-ink-soft);
 }
 
@@ -4288,7 +4284,7 @@ html:not(.rz-js) body .rz-cb-open {
 	font-size: clamp(3.25rem, 2.7217rem + 2.2524vw, 5.25rem);
 }
 
-/* Памятка: список действий и его источник образуют одну колонку. */
+/* Памятка: шаги рядом с фотографией, предупреждение под ними. */
 .rz-first-aid__body {
 	display: grid;
 	gap: clamp(1rem, 2.5vw, 2.25rem);
@@ -4296,7 +4292,6 @@ html:not(.rz-js) body .rz-cb-open {
 	margin-block-start: var(--rz-heading-gap);
 }
 .rz-first-aid__body > * { min-width: 0; margin-block: 0; }
-.rz-first-aid__instructions > .rz-source-note { margin-block: .75rem 0; }
 .rz-first-aid__photo { width: 100%; }
 .rz-first-aid__photo img {
 	display: block;
@@ -4422,6 +4417,8 @@ html:not(.rz-js) body .rz-cb-open {
 	border: 0;
 	border-radius: 0 var(--rz-radius-card) var(--rz-radius-card) 0;
 }
+
+.rz-svc-sec__inner > .rz-agent-warning { grid-column: 1 / -1; }
 
 /* Карточка услуги тянется на всю высоту колонки, поэтому цены
    в ряду стоят на одной линии. height, а не min-height: колонки

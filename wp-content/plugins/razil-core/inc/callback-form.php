@@ -184,22 +184,22 @@ function razil_callback_form_markup( string $uid ): string {
 	 *
 	 * type="tel", а не number: номер — не число, и у number ломается ввод
 	 * плюса и скобок. inputmode подсказывает телефонную клавиатуру.
-	 * Новый номер начинается с +7. Сохранённое после ошибки значение
-	 * показываем как ввёл посетитель, включая другой код страны.
+	 * Новый номер начинается с +7. Без JavaScript можно также ввести
+	 * десять цифр или полный номер с восьмёркой.
 	 */
 	$separator = '[\s\(\)\.\-]*';
 	$digit     = $separator . '[0-9]';
-	$pattern   = '(?:(?:\+?' . $separator . '7|' . $separator . '8)(?:' . $digit . '){10}|(?:' . $digit . '){10}|\+' . $separator . '[1-68-9](?:' . $digit . '){5,14})' . $separator;
+	$pattern   = '(?:\+?' . $separator . '7|' . $separator . '8)?(?:' . $digit . '){10}' . $separator;
 	$phone     = '' === (string) $was['phone'] ? '+7' : $was['phone'];
 	$out .= '<p class="rz-form__row">'
 		. '<label class="rz-form__label" for="' . esc_attr( $id_phone ) . '">Телефон</label>'
 		. '<input class="rz-form__input" type="tel" id="' . esc_attr( $id_phone ) . '"'
-		. ' name="' . esc_attr( $p . 'phone' ) . '" maxlength="' . esc_attr( (string) RAZIL_CALLBACK_PHONE_MAX ) . '"'
+		. ' name="' . esc_attr( $p . 'phone' ) . '" maxlength="18"'
 		. ' inputmode="tel" autocomplete="tel"'
 		. ' pattern="' . esc_attr( $pattern ) . '" placeholder="+7 (___) ___-__-__"'
 		. ' aria-describedby="' . esc_attr( $id_hint . ' ' . $id_error ) . '"'
 		. ' value="' . esc_attr( $phone ) . '" required />'
-		. '<span class="rz-form__hint" id="' . esc_attr( $id_hint ) . '">Введите 10 цифр после +7. Для иностранного номера замените +7 кодом страны.</span>'
+		. '<span class="rz-form__hint" id="' . esc_attr( $id_hint ) . '">Введите 10 цифр после +7.</span>'
 		. '<span class="rz-form__error" id="' . esc_attr( $id_error ) . '" aria-live="polite"></span>'
 		. '</p>';
 
@@ -546,8 +546,8 @@ function razil_callback_handle(): void {
 		: '';
 	$name = mb_substr( $name, 0, RAZIL_CALLBACK_NAME_MAX );
 
-	$phone_raw = isset( $_POST[ $p . 'phone' ] )
-		? sanitize_text_field( wp_unslash( $_POST[ $p . 'phone' ] ) )
+	$phone_raw = isset( $_POST[ $p . 'phone' ] ) && is_string( $_POST[ $p . 'phone' ] )
+		? wp_unslash( $_POST[ $p . 'phone' ] )
 		: '';
 	$phone = mb_strlen( $phone_raw ) <= RAZIL_CALLBACK_PHONE_MAX
 		? razil_callback_normalize_phone( $phone_raw ) : '';
@@ -557,8 +557,7 @@ function razil_callback_handle(): void {
 
 	$page = razil_callback_back_url();
 
-	// Для новой заявки нужен полный номер с кодом страны.
-	if ( ! str_starts_with( $phone, '+' ) || ! $consent ) {
+	if ( ! preg_match( '/^\+7[0-9]{10}$/D', $phone ) || ! $consent ) {
 		razil_callback_fail();
 	}
 	if ( '' === $name ) {
