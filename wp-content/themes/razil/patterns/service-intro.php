@@ -48,10 +48,6 @@ defined( 'ABSPATH' ) || exit;
 <h2 class="wp-block-heading rz-svc-card__title">Если уход наступил дома</h2>
 <!-- /wp:heading -->
 
-<!-- wp:paragraph {"className":"rz-emergency-note"} -->
-<p class="rz-emergency-note">Если человек без сознания или вы не уверены, что наступила смерть, сразу звоните <a href="tel:103">103</a> или <a href="tel:112">112</a> и следуйте указаниям диспетчера.</p>
-<!-- /wp:paragraph -->
-
 <!-- wp:list {"ordered":true,"className":"rz-svc-steps"} -->
 <ol class="wp-block-list rz-svc-steps"><!-- wp:list-item -->
 <li><strong>Позвоните нам:</strong> <a href="tel:+74212605290">+7 (4212) 60-52-90</a>. Специалист объяснит порядок действий и поможет с организацией.</li>
@@ -71,8 +67,6 @@ defined( 'ABSPATH' ) || exit;
 <div class="wp-block-button rz-svc-card__call"><a class="wp-block-button__link wp-element-button" href="tel:+74212605290"><span class="rz-svc-hero__call-text">Позвонить круглосуточно</span></a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
-<!-- /wp:group -->
-
-<!-- wp:template-part {"slug":"agent-warning","theme":"razil","className":"rz-agent-warning"} /--></div>
+<!-- /wp:group --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group -->
